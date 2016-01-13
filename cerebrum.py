@@ -36,11 +36,13 @@ def detectFaces(frame):
         scaleFactor = 1.5,
         minNeighbors = 3,
         minSize = (64, 64),
+        maxSize = (128, 128),
         flags = 0
     )
 
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        print('face of size ('+ str(w) +'x'+ str(h) +') found at ('+ str(x) +', '+ str(y) +')')
 
     return faces
 
@@ -91,8 +93,8 @@ if __name__ == '__main__':
 
             elif user_input == 'stream':
                 camera = cv2.VideoCapture(0)
-                camera.set(cv2.CAP_PROP_FRAME_WIDTH, 400)
-                camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 300)
+                camera.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
+                camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 320)
                 stream(camera)
 
             else:
