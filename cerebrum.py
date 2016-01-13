@@ -33,8 +33,8 @@ def detectFaces(frame):
 
     faces = faceCascade.detectMultiScale(
         grayscale,
-        scaleFactor = 2.0,
-        minNeighbors = 2,
+        scaleFactor = 1.5,
+        minNeighbors = 3,
         minSize = (64, 64),
         flags = 0
     )
