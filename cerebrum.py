@@ -33,12 +33,15 @@ def detectFaces(frame):
 
     faces = faceCascade.detectMultiScale(
         grayscale,
-        scaleFactor = 1.5,
+        scaleFactor = 1.25,
         minNeighbors = 3,
-        minSize = (64, 64),
-        maxSize = (128, 128),
+        minSize = (48, 48),
+        maxSize = (160, 160),
         flags = 0
     )
+
+    if len(faces) > 1:
+        print(len(faces), 'faces found')
 
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
