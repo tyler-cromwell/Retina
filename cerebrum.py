@@ -86,7 +86,7 @@ if __name__ == '__main__':
         print('Type \'help\' for information')
 
         while True:
-            user_input = input('> ')
+            user_input = input('cerebrum> ')
 
             if user_input == 'help':
                 print('Commands:')
