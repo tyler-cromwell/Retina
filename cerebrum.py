@@ -22,9 +22,27 @@
 print('Importing libraries...')
 
 import readline
+import sys
 import cv2
 
 readline.parse_and_bind('tab: complete')
+
+def detectFaces(frame):
+    faceCascade = cv2.CascadeClassifier(sys.argv[1])
+    grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    faces = faceCascade.detectMultiScale(
+        grayscale,
+        scaleFactor = 2.0,
+        minNeighbors = 2,
+        minSize = (64, 64),
+        flags = 0
+    )
+
+    for (x, y, w, h) in faces:
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+    return faces
 
 
 def stream(camera):
@@ -37,6 +55,8 @@ def stream(camera):
 
     while True:
         retval, frame = camera.read()
+
+        detectFaces(frame)
 
         cv2.imshow('Video Stream', frame)
 
@@ -68,8 +88,8 @@ if __name__ == '__main__':
 
             elif user_input == 'stream':
                 camera = cv2.VideoCapture(0)
-                camera.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-                camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+                camera.set(cv2.CAP_PROP_FRAME_WIDTH, 400)
+                camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 300)
                 stream(camera)
 
             else:
