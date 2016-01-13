@@ -27,6 +27,9 @@ import cv2
 
 readline.parse_and_bind('tab: complete')
 
+WINDOW_NAME = 'Video Stream'
+
+
 def detectFaces(frame):
     faceCascade = cv2.CascadeClassifier(sys.argv[1])
     grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -56,7 +59,7 @@ def stream(camera):
         str(int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT)))
     )
 
-    cv2.namedWindow('Video Stream', cv2.WINDOW_AUTOSIZE)
+    cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_AUTOSIZE)
     
     if not camera.isOpened():
         camera.open(0)
@@ -66,12 +69,12 @@ def stream(camera):
 
         detectFaces(frame)
 
-        cv2.imshow('Video Stream', frame)
+        cv2.imshow(WINDOW_NAME, frame)
 
         key = cv2.waitKey(1)
 
         if key == 27:
-            cv2.destroyWindow('Video Stream')
+            cv2.destroyWindow(WINDOW_NAME)
             cv2.waitKey(1); cv2.waitKey(1);
             cv2.waitKey(1); cv2.waitKey(1);
             camera.release();
