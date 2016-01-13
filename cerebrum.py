@@ -46,7 +46,10 @@ def detectFaces(frame):
 
 
 def stream(camera):
-    print('Streaming...')
+    print('Capture Resolution: '+
+        str(int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))) +'x'+
+        str(int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    )
 
     cv2.namedWindow('Video Stream', cv2.WINDOW_AUTOSIZE)
     
