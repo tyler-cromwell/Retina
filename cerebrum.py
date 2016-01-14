@@ -27,8 +27,6 @@ import cv2
 
 readline.parse_and_bind('tab: complete')
 
-WINDOW_NAME = 'Video Stream'
-
 
 def detectFaces(frame):
     faceCascade = cv2.CascadeClassifier(sys.argv[1])
@@ -38,9 +36,9 @@ def detectFaces(frame):
         grayscale,
         scaleFactor = 1.25,
         minNeighbors = 3,
+        flags = 0,
         minSize = (48, 48),
-        maxSize = (160, 160),
-        flags = 0
+        maxSize = (160, 160)
     )
 
     if len(faces) > 1:
@@ -53,13 +51,18 @@ def detectFaces(frame):
     return faces
 
 
-def stream(camera):
+def stream():
+    windowName = 'Camera 0'
+    camera = cv2.VideoCapture(0)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 320)
+
     print('Capture Resolution: '+
         str(int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))) +'x'+
         str(int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT)))
     )
 
-    cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_AUTOSIZE)
+    cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     
     if not camera.isOpened():
         camera.open(0)
@@ -69,12 +72,12 @@ def stream(camera):
 
         detectFaces(frame)
 
-        cv2.imshow(WINDOW_NAME, frame)
+        cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)
 
         if key == 27:
-            cv2.destroyWindow(WINDOW_NAME)
+            cv2.destroyWindow(windowName)
             cv2.waitKey(1); cv2.waitKey(1);
             cv2.waitKey(1); cv2.waitKey(1);
             camera.release();
@@ -98,10 +101,7 @@ if __name__ == '__main__':
                 break
 
             elif user_input == 'stream':
-                camera = cv2.VideoCapture(0)
-                camera.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
-                camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 320)
-                stream(camera)
+                stream()
 
             else:
                 print('Unknown command: \"'+ user_input +'\"')
