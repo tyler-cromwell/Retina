@@ -1,0 +1,7 @@
+[Faces]
+width: 480
+height: 320
+scaleFactor: 1.25
+minNeighbors: 3
+minSize: 48, 48
+maxSize: 160, 160

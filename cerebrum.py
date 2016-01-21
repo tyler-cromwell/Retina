@@ -21,24 +21,36 @@
 
 print('Importing libraries...')
 
+""" Python libraries """
+import configparser
+import re
 import readline
 import sys
+
+""" OpenCV library """
 import cv2
 
+""" Readline settings """
 readline.parse_and_bind('tab: complete')
+
+""" Global variables """
+config = None
 
 
 def detectFaces(frame):
-    faceCascade = cv2.CascadeClassifier(sys.argv[1])
+    faceCascade = cv2.CascadeClassifier(sys.argv[2])
     grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    faces_minSize = re.split('\s*,\s*', config.get('Faces', 'minSize'))
+    faces_maxSize = re.split('\s*,\s*', config.get('Faces', 'maxSize'))
 
     faces = faceCascade.detectMultiScale(
         grayscale,
-        scaleFactor = 1.25,
-        minNeighbors = 3,
+        scaleFactor = float(config.get('Faces', 'scaleFactor')),
+        minNeighbors = int(config.get('Faces', 'minNeighbors')),
         flags = 0,
-        minSize = (48, 48),
-        maxSize = (160, 160)
+        minSize = tuple(map(int, faces_minSize)),
+        maxSize = tuple(map(int, faces_maxSize))
     )
 
     if len(faces) > 1:
@@ -55,9 +67,10 @@ def detectFaces(frame):
 def stream():
     flags = 0
     windowName = 'Camera 0'
+
     camera = cv2.VideoCapture(0)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 320)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(config.get('Faces', 'height')))
 
     print('Capture Resolution: '+
         str(int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))) +'x'+
@@ -93,6 +106,9 @@ def stream():
 
 if __name__ == '__main__':
     try:
+        config = configparser.ConfigParser()
+        config.read(sys.argv[1])
+
         print('Type \'help\' for information')
 
         while True:
