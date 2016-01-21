@@ -46,12 +46,14 @@ def detectFaces(frame):
 
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.putText(frame, 'Face', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
         print('face of size ('+ str(w) +'x'+ str(h) +') found at ('+ str(x) +', '+ str(y) +')')
 
     return faces
 
 
 def stream():
+    flags = 0
     windowName = 'Camera 0'
     camera = cv2.VideoCapture(0)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
@@ -70,18 +72,23 @@ def stream():
     while True:
         retval, frame = camera.read()
 
-        detectFaces(frame)
+        """ Check flags """
+        if flags & 1:
+            detectFaces(frame)
 
         cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)
 
+        """ Determine action """
         if key == 27:
             cv2.destroyWindow(windowName)
             cv2.waitKey(1); cv2.waitKey(1);
             cv2.waitKey(1); cv2.waitKey(1);
-            camera.release();
-            break;
+            camera.release()
+            break
+        elif key == ord('f'):
+            flags = flags ^ 1
 
 
 if __name__ == '__main__':
