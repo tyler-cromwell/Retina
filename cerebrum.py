@@ -26,6 +26,7 @@ import configparser
 import re
 import readline
 import sys
+import time
 
 """ OpenCV library """
 import cv2
@@ -62,14 +63,14 @@ def detectFaces(frame):
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         cv2.putText(frame, 'Face', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-        print('face of size ('+ str(w) +'x'+ str(h) +') found at ('+ str(x) +', '+ str(y) +')')
+        print('Face of size ('+ str(w) +'x'+ str(h) +') found at ('+ str(x) +', '+ str(y) +')')
 
     return faces
 
 
 def stream():
     flags = 0
-    windowName = 'Camera '+ CAMERA_DEFAULT
+    windowName = 'Camera '+ str(CAMERA_DEFAULT)
 
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
@@ -86,12 +87,17 @@ def stream():
         camera.open(CAMERA_DEFAULT)
 
     while True:
+        start = time.time()
         retval, frame = camera.read()
 
         """ Check flags """
         if flags & 1:
             detectFaces(frame)
 
+        end = time.time()
+        fps = 1 // (end - start)
+
+        cv2.putText(frame, 'FPS: '+ str(fps), (0, 12), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
         cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)
