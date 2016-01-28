@@ -33,6 +33,9 @@ import cv2
 """ Readline settings """
 readline.parse_and_bind('tab: complete')
 
+""" Global constants """
+CAMERA_DEFAULT = 0
+
 """ Global variables """
 config = None
 
@@ -66,9 +69,9 @@ def detectFaces(frame):
 
 def stream():
     flags = 0
-    windowName = 'Camera 0'
+    windowName = 'Camera '+ CAMERA_DEFAULT
 
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(CAMERA_DEFAULT)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(config.get('Faces', 'height')))
 
@@ -80,7 +83,7 @@ def stream():
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     
     if not camera.isOpened():
-        camera.open(0)
+        camera.open(CAMERA_DEFAULT)
 
     while True:
         retval, frame = camera.read()
