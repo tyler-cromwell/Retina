@@ -63,22 +63,21 @@ def detectFaces(frame):
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         cv2.putText(frame, 'Face', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-        print('Face of size ('+ str(w) +'x'+ str(h) +') found at ('+ str(x) +', '+ str(y) +')')
+        print('Face of size (%dx%d) found at (%d, %d)' % (w, h, x, y))
 
     return faces
 
 
 def stream():
     flags = 0
-    windowName = 'Camera '+ str(CAMERA_DEFAULT)
+    windowName = 'Camera %d' % (CAMERA_DEFAULT)
 
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(config.get('Faces', 'height')))
 
-    print('Capture Resolution: '+
-        str(int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))) +'x'+
-        str(int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    print('Capture Resolution: %dx%d' %
+        (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
     )
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
@@ -97,7 +96,7 @@ def stream():
         end = time.time()
         fps = 1 // (end - start)
 
-        cv2.putText(frame, 'FPS: '+ str(fps), (0, 12), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        cv2.putText(frame, 'FPS: %d' % (fps), (0, 12), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
         cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)
