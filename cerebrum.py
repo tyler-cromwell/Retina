@@ -68,7 +68,10 @@ def detectFaces(frame):
     return faces
 
 
-def stream():
+if __name__ == '__main__':
+    config = configparser.ConfigParser()
+    config.read(sys.argv[1])
+
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
 
@@ -110,34 +113,3 @@ def stream():
             break
         elif key == ord('f'):
             flags = flags ^ 1
-
-
-if __name__ == '__main__':
-    try:
-        config = configparser.ConfigParser()
-        config.read(sys.argv[1])
-
-        print('Type \'help\' for information')
-
-        while True:
-            user_input = input('cerebrum> ')
-
-            if user_input == 'help':
-                print('Commands:')
-                print('  exit: exits the program')
-                print('  quit: exits the program')
-                print('  stream: opens a video stream')
-
-            elif user_input == 'exit' or user_input == 'quit':
-                break
-
-            elif user_input == 'stream':
-                stream()
-
-            else:
-                print('Unknown command: \"'+ user_input +'\"')
-
-    except EOFError:
-        print()
-    except KeyboardInterrupt:
-        print()
