@@ -41,20 +41,20 @@ CAMERA_DEFAULT = 0
 config = None
 
 
-def detectFaces(frame):
+"""
+Searches for faces in the given frame.
+"""
+def detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize):
     faceCascade = cv2.CascadeClassifier(sys.argv[2])
     grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    faces_minSize = re.split('\s*,\s*', config.get('Faces', 'minSize'))
-    faces_maxSize = re.split('\s*,\s*', config.get('Faces', 'maxSize'))
-
     faces = faceCascade.detectMultiScale(
         grayscale,
-        scaleFactor = float(config.get('Faces', 'scaleFactor')),
-        minNeighbors = int(config.get('Faces', 'minNeighbors')),
+        scaleFactor = scaleFactor,
+        minNeighbors = minNeighbors,
         flags = 0,
-        minSize = tuple(map(int, faces_minSize)),
-        maxSize = tuple(map(int, faces_maxSize))
+        minSize = tuple(map(int, minSize)),
+        maxSize = tuple(map(int, maxSize))
     )
 
     if len(faces) > 1:
@@ -68,13 +68,23 @@ def detectFaces(frame):
     return faces
 
 
+"""
+Main "function".
+"""
 if __name__ == '__main__':
-    config = configparser.ConfigParser()
-    config.read(sys.argv[1])
-
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
 
+    """ Parse face detection options """
+    config = configparser.ConfigParser()
+    config.read(sys.argv[1])
+
+    scaleFactor = float(config.get('Faces', 'scaleFactor'))
+    minNeighbors = int(config.get('Faces', 'minNeighbors'))
+    minSize = re.split('\s*,\s*', config.get('Faces', 'minSize'))
+    maxSize = re.split('\s*,\s*', config.get('Faces', 'maxSize'))
+
+    """ """
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(config.get('Faces', 'height')))
@@ -94,7 +104,7 @@ if __name__ == '__main__':
 
         """ Check flags """
         if flags & 1:
-            detectFaces(frame)
+            detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize)
 
         end = time.time()
         fps = 1 // (end - start)
