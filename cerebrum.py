@@ -57,13 +57,10 @@ def detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize):
         maxSize = tuple(map(int, maxSize))
     )
 
-    if len(faces) > 1:
-        print(len(faces), 'faces found')
-
-    for (x, y, w, h) in faces:
+    for i, (x, y, w, h) in enumerate(faces):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        cv2.putText(frame, 'Face', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-        print('Face of size (%dx%d) found at (%d, %d)' % (w, h, x, y))
+        cv2.putText(frame, 'Face %d' % i, (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        print('Face %d of size (%dx%d) found at (%d, %d)' % (i, w, h, x, y))
 
     return faces
 
@@ -84,7 +81,7 @@ if __name__ == '__main__':
     minSize = re.split('\s*,\s*', config.get('Faces', 'minSize'))
     maxSize = re.split('\s*,\s*', config.get('Faces', 'maxSize'))
 
-    """ """
+    """ Set camera resolution """
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(config.get('Faces', 'height')))
