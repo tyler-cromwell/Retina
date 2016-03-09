@@ -76,6 +76,8 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read(sys.argv[1])
 
+    width = int(config.get('Faces', 'width'))
+    height = int(config.get('Faces', 'height'))
     scaleFactor = float(config.get('Faces', 'scaleFactor'))
     minNeighbors = int(config.get('Faces', 'minNeighbors'))
     minSize = re.split('\s*,\s*', config.get('Faces', 'minSize'))
@@ -83,8 +85,8 @@ if __name__ == '__main__':
 
     """ Set camera resolution """
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(config.get('Faces', 'width')))
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(config.get('Faces', 'height')))
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
     print('Capture Resolution: %dx%d' %
         (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))

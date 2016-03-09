@@ -3,5 +3,5 @@ width: 640
 height: 360
 scaleFactor: 1.15
 minNeighbors: 5
-minSize: 64, 64
-maxSize: 256, 256
+minSize: 70, 70
+maxSize: 210, 210
