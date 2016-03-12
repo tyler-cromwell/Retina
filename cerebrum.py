@@ -58,7 +58,7 @@ def detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize):
     )
 
     for i, (x, y, w, h) in enumerate(faces):
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
         cv2.putText(frame, 'Face %d' % i, (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
         print('Face %d of size (%dx%d) found at (%d, %d)' % (i, w, h, x, y))
 
