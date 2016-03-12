@@ -24,15 +24,11 @@ print('Importing libraries...')
 """ Python libraries """
 import configparser
 import re
-import readline
 import sys
 import time
 
 """ OpenCV library """
 import cv2
-
-""" Readline settings """
-readline.parse_and_bind('tab: complete')
 
 """ Global constants """
 CAMERA_DEFAULT = 0
