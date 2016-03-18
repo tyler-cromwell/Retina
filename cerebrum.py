@@ -19,15 +19,16 @@
   If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-print('Importing libraries...')
-
 """ Python libraries """
+print('Importing standard libraries...')
 import configparser
 import re
 import sys
 import time
+import tkinter
 
 """ OpenCV library """
+print('Importing OpenCV...')
 import cv2
 
 """ Global constants """
@@ -55,8 +56,7 @@ def detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize):
 
     for i, (x, y, w, h) in enumerate(faces):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-        cv2.putText(frame, 'Face %d' % i, (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-        print('Face %d of size (%dx%d) found at (%d, %d)' % (i, w, h, x, y))
+        cv2.putText(frame, 'Unknown Face %d' % i, (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
     return faces
 
@@ -88,7 +88,13 @@ if __name__ == '__main__':
         (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
     )
 
+    """ Get screen resolution """
+    tk = tkinter.Tk()
+    screen_width = tk.winfo_screenwidth()
+    screen_height = tk.winfo_screenheight()
+
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
+    cv2.moveWindow(windowName, (screen_width - width) // 2, 0)
     
     if not camera.isOpened():
         camera.open(CAMERA_DEFAULT)
