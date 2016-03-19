@@ -36,13 +36,13 @@ CAMERA_DEFAULT = 0
 
 """ Global variables """
 config = None
+faceCascade = cv2.CascadeClassifier(sys.argv[2])
 
 
 """
 Searches for faces in the given frame.
 """
 def detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize):
-    faceCascade = cv2.CascadeClassifier(sys.argv[2])
     grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     faces = faceCascade.detectMultiScale(
@@ -110,7 +110,7 @@ if __name__ == '__main__':
         end = time.time()
         fps = 1 // (end - start)
 
-        cv2.putText(frame, 'FPS: %d' % (fps), (0, 12), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        print('FPS: %d\r' % (fps), end='')
         cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)
