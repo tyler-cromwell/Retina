@@ -1,7 +1,7 @@
 [Faces]
 width: 640
 height: 360
-scaleFactor: 1.15
+scaleFactor: 1.2
 minNeighbors: 5
 minSize: 70, 70
-maxSize: 210, 210
+maxSize: 200, 200
