@@ -14,6 +14,7 @@ cd $OPENCV/build
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=/usr/local \
+      -D WITH_OPENCL=ON \
       -D WITH_OPENGL=ON \
       -D WITH_TBB=ON \
       -D INSTALL_C_EXAMPLES=OFF \
