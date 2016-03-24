@@ -3,5 +3,5 @@ width: 800
 height: 448
 scaleFactor: 1.1
 minNeighbors: 8
-minSize: 50, 50
-maxSize: 220, 220
+minSize: 60, 60
+maxSize: 300, 300
