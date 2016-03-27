@@ -20,45 +20,18 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-print('Importing standard libraries...')
-import configparser
-import re
 import sys
 import time
 import tkinter
 
-""" OpenCV library """
-print('Importing OpenCV...')
+""" External libraries """
 import cv2
+
+""" Local classes """
+import detector
 
 """ Global constants """
 CAMERA_DEFAULT = 0
-
-""" Global variables """
-config = None
-faceCascade = cv2.CascadeClassifier(sys.argv[2])
-
-
-"""
-Searches for faces in the given frame.
-"""
-def detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize):
-    grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    faces = faceCascade.detectMultiScale(
-        grayscale,
-        scaleFactor = scaleFactor,
-        minNeighbors = minNeighbors,
-        flags = 0,
-        minSize = tuple(map(int, minSize)),
-        maxSize = tuple(map(int, maxSize))
-    )
-
-    for i, (x, y, w, h) in enumerate(faces):
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-        cv2.putText(frame, 'Unknown Face %d' % i, (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-
-    return faces
 
 
 """
@@ -68,16 +41,15 @@ if __name__ == '__main__':
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
 
-    """ Parse face detection options """
-    config = configparser.ConfigParser()
-    config.read(sys.argv[1])
+    """ Initialize face detector """
+    faceDetector = detector.Detector(sys.argv[2], sys.argv[1])
+    width = faceDetector.get_width()
+    height = faceDetector.get_height()
 
-    width = int(config.get('Faces', 'width'))
-    height = int(config.get('Faces', 'height'))
-    scaleFactor = float(config.get('Faces', 'scaleFactor'))
-    minNeighbors = int(config.get('Faces', 'minNeighbors'))
-    minSize = re.split('\s*,\s*', config.get('Faces', 'minSize'))
-    maxSize = re.split('\s*,\s*', config.get('Faces', 'maxSize'))
+    """ Get screen resolution """
+    tk = tkinter.Tk()
+    screen_width = tk.winfo_screenwidth()
+    screen_height = tk.winfo_screenheight()
 
     """ Set camera resolution """
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
@@ -88,14 +60,10 @@ if __name__ == '__main__':
         (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
     )
 
-    """ Get screen resolution """
-    tk = tkinter.Tk()
-    screen_width = tk.winfo_screenwidth()
-    screen_height = tk.winfo_screenheight()
-
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(windowName, (screen_width - width) // 2, 0)
-    
+
+    """ Begin using the camera """
     if not camera.isOpened():
         camera.open(CAMERA_DEFAULT)
 
@@ -105,7 +73,7 @@ if __name__ == '__main__':
 
         """ Check flags """
         if flags & 1:
-            detectFaces(frame, scaleFactor, minNeighbors, minSize, maxSize)
+            faceDetector.search(frame)
 
         end = time.time()
         fps = 1 // (end - start)
