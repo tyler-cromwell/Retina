@@ -29,12 +29,13 @@ class Detector:
     def __init__(self, classifier, config_file):
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
-        self.width = int(self.config.get('Faces', 'width'))
-        self.height = int(self.config.get('Faces', 'height'))
-        self.scaleFactor = float(self.config.get('Faces', 'scaleFactor'))
-        self.minNeighbors = int(self.config.get('Faces', 'minNeighbors'))
-        self.minSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Faces', 'minSize'))))
-        self.maxSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Faces', 'maxSize'))))
+        self.width = int(self.config.get('General', 'width'))
+        self.height = int(self.config.get('General', 'height'))
+        self.flags = int(self.config.get('Classifier', 'flags'))
+        self.scaleFactor = float(self.config.get('Classifier', 'scaleFactor'))
+        self.minNeighbors = int(self.config.get('Classifier', 'minNeighbors'))
+        self.minSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Classifier', 'minSize'))))
+        self.maxSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Classifier', 'maxSize'))))
         self.objectCascade = cv2.CascadeClassifier(classifier)
 
 
@@ -43,9 +44,9 @@ class Detector:
 
         objects = self.objectCascade.detectMultiScale(
             grayscale,
+            flags = self.flags,
             scaleFactor = self.scaleFactor,
             minNeighbors = self.minNeighbors,
-            flags = 0,
             minSize = self.minSize,
             maxSize = self.maxSize
         )
