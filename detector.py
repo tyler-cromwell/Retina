@@ -24,6 +24,7 @@ import re
 """ External libraries """
 import cv2
 
+
 class Detector:
     def __init__(self, classifier, config_file):
         self.config = configparser.ConfigParser()

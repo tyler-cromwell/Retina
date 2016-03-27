@@ -20,6 +20,8 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
+import getopt
+import os
 import sys
 import time
 import tkinter
@@ -35,14 +37,34 @@ CAMERA_DEFAULT = 0
 
 
 """
+Returns the path of the settings file.
+"""
+def opt_settings(arg):
+    for ent in os.listdir('settings/'):
+        if ent.endswith('.txt') and ent[0:-4] == arg:
+            return 'settings/'+arg+'.txt'
+
+
+"""
 Main "function".
 """
 if __name__ == '__main__':
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
+    settings = None
+
+    """ Parse command-line arguments """
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], '', ['settings='])
+    except getopt.GetoptError as error:
+        print('Invalid argument')
+        exit(0)
+    for o, a, in opts:
+        if o == '--settings':
+            settings = opt_settings(a)
 
     """ Initialize face detector """
-    faceDetector = detector.Detector(sys.argv[2], sys.argv[1])
+    faceDetector = detector.Detector(sys.argv[2], settings)
     width = faceDetector.get_width()
     height = faceDetector.get_height()
 
