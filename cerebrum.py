@@ -46,25 +46,41 @@ def opt_settings(arg):
 
 
 """
+Displays program usage information.
+"""
+def print_usage():
+    print('Usage:\t./cerebrum.py --settings=MACHINE --classifier=PATH')
+    print('  --settings=MACHINE\tA file located under \'settings/\' (no extension)')
+    print('  --classifier=PATH\tThe path to a Face Detection classifier')
+
+
+"""
 Main "function".
 """
 if __name__ == '__main__':
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
+    faceClassifier = None
     settings = None
 
     """ Parse command-line arguments """
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '', ['settings='])
+        opts, args = getopt.getopt(sys.argv[1:], '', ['help', 'classifier=', 'settings='])
     except getopt.GetoptError as error:
-        print('Invalid argument')
+        print('Invalid argument: \''+ str(error) +'\'\n')
+        print_usage()
         exit(0)
     for o, a, in opts:
-        if o == '--settings':
+        if o == '--help':
+            print_usage()
+            exit(0)
+        elif o == '--classifier':
+            faceClassifier = a
+        elif o == '--settings':
             settings = opt_settings(a)
 
     """ Initialize face detector """
-    faceDetector = detector.Detector(sys.argv[2], settings)
+    faceDetector = detector.Detector(faceClassifier, settings)
     width = faceDetector.get_width()
     height = faceDetector.get_height()
 
