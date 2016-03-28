@@ -29,7 +29,7 @@ import tkinter
 """ External libraries """
 import cv2
 
-""" Local classes """
+""" Local modules """
 import detector
 
 """ Global constants """
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
         """ Check flags """
         if flags & 1:
-            faceDetector.search(frame)
+            faceDetector.detect(frame)
 
         end = time.time()
         fps = 1 // (end - start)

@@ -27,6 +27,7 @@ import cv2
 
 class Detector:
     def __init__(self, classifier, config_file):
+        self.classifier = cv2.CascadeClassifier(classifier)
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
         self.width = int(self.config.get('General', 'width'))
@@ -36,14 +37,16 @@ class Detector:
         self.minNeighbors = int(self.config.get('Classifier', 'minNeighbors'))
         self.minSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Classifier', 'minSize'))))
         self.maxSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Classifier', 'maxSize'))))
-        self.objectCascade = cv2.CascadeClassifier(classifier)
 
 
-    def search(self, frame):
-        grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    def detect(self, frame, grayscale=True):
+        temp_frame = frame
 
-        objects = self.objectCascade.detectMultiScale(
-            grayscale,
+        if grayscale:
+            temp_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        objects = self.classifier.detectMultiScale(
+            temp_frame,
             flags = self.flags,
             scaleFactor = self.scaleFactor,
             minNeighbors = self.minNeighbors,
