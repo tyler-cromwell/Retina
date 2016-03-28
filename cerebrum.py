@@ -65,7 +65,9 @@ if __name__ == '__main__':
 
     """ Parse command-line arguments """
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '', ['help', 'classifier=', 'settings='])
+        short_opts = ['']
+        long_opts = ['help', 'classifier=', 'settings=']
+        opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
         print_usage()
