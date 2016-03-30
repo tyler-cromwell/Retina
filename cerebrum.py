@@ -49,9 +49,10 @@ def opt_settings(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py --settings=MACHINE --classifier=PATH')
-    print('  --settings=MACHINE\tA file located under \'settings/\' (no extension)')
+    print('Usage:\t./cerebrum.py --classifier=PATH --settings=MACHINE')
+    print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
+    print('  --settings=MACHINE\tA file located under \'settings/\' (no extension)')
 
 
 """

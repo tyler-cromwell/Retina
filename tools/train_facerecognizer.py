@@ -37,7 +37,8 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py --classifier=PATH --label=NAME')
+    print('Usage:\t./train_facerecognizer.py --classifier=PATH --label=NAME')
+    print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
 
