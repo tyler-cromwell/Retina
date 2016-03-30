@@ -72,6 +72,7 @@ if __name__ == '__main__':
         print('Invalid argument: \''+ str(error) +'\'\n')
         print_usage()
         exit(0)
+
     for o, a, in opts:
         if o == '--help':
             print_usage()
