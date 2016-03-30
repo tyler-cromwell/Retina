@@ -73,6 +73,10 @@ if __name__ == '__main__':
         print_usage()
         exit(0)
 
+    if len(opts) == 0:
+        print_usage()
+        exit(0)
+
     for o, a, in opts:
         if o == '--help':
             print_usage()
