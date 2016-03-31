@@ -27,16 +27,16 @@ import cv2
 
 class Detector:
     def __init__(self, classifier, config_file):
-        self.classifier = cv2.CascadeClassifier(classifier)
-        self.config = configparser.ConfigParser()
-        self.config.read(config_file)
-        self.width = int(self.config.get('General', 'width'))
-        self.height = int(self.config.get('General', 'height'))
-        self.flags = int(self.config.get('Classifier', 'flags'))
-        self.scaleFactor = float(self.config.get('Classifier', 'scaleFactor'))
-        self.minNeighbors = int(self.config.get('Classifier', 'minNeighbors'))
-        self.minSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Classifier', 'minSize'))))
-        self.maxSize = tuple(map(int, re.split('\s*,\s*', self.config.get('Classifier', 'maxSize'))))
+        config = configparser.ConfigParser()
+        config.read(config_file)
+        self._classifier = cv2.CascadeClassifier(classifier)
+        self._width = int(config.get('General', 'width'))
+        self._height = int(config.get('General', 'height'))
+        self._flags = int(config.get('Classifier', 'flags'))
+        self._scaleFactor = float(config.get('Classifier', 'scaleFactor'))
+        self._minNeighbors = int(config.get('Classifier', 'minNeighbors'))
+        self._minSize = tuple(map(int, re.split('\s*,\s*', config.get('Classifier', 'minSize'))))
+        self._maxSize = tuple(map(int, re.split('\s*,\s*', config.get('Classifier', 'maxSize'))))
 
 
     def detect(self, frame, grayscale=True):
@@ -45,13 +45,13 @@ class Detector:
         if grayscale:
             temp_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        objects = self.classifier.detectMultiScale(
+        objects = self._classifier.detectMultiScale(
             temp_frame,
-            flags = self.flags,
-            scaleFactor = self.scaleFactor,
-            minNeighbors = self.minNeighbors,
-            minSize = self.minSize,
-            maxSize = self.maxSize
+            flags = self._flags,
+            scaleFactor = self._scaleFactor,
+            minNeighbors = self._minNeighbors,
+            minSize = self._minSize,
+            maxSize = self._maxSize
         )
 
         for i, (x, y, w, h) in enumerate(objects):
@@ -62,8 +62,8 @@ class Detector:
 
 
     def get_width(self):
-        return self.width
+        return self._width
 
 
     def get_height(self):
-        return self.height
+        return self._height
