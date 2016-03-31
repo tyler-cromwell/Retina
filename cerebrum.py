@@ -56,9 +56,9 @@ def print_usage():
 
 
 """
-Main "function".
+Main function.
 """
-if __name__ == '__main__':
+def main():
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
     faceClassifier = None
@@ -96,12 +96,12 @@ if __name__ == '__main__':
     tk = tkinter.Tk()
     screen_width = tk.winfo_screenwidth()
     screen_height = tk.winfo_screenheight()
+    print('Display resolution: %dx%d' % (screen_width, screen_height))
 
     """ Set camera resolution """
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-
     print('Capture Resolution: %dx%d' %
         (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
     )
@@ -111,7 +111,9 @@ if __name__ == '__main__':
 
     """ Begin using the camera """
     if not camera.isOpened():
-        camera.open(CAMERA_DEFAULT)
+        if not camera.open(CAMERA_DEFAULT):
+            print('Failed to open Camera', CAMERA_DEFAULT)
+            exit(1)
 
     while True:
         start = time.time()
@@ -138,3 +140,14 @@ if __name__ == '__main__':
             break
         elif key == ord('f'):
             flags = flags ^ 1
+
+
+"""
+Program entry.
+"""
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        exit(0)
