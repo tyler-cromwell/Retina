@@ -34,6 +34,28 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 """
+Returns the path of the classifier file.
+"""
+def opt_classifier(arg):
+    if os.path.isfile(arg):
+        return arg
+    else:
+        print('Invalid classifier: '+ arg)
+        exit(1)
+
+
+"""
+Returns the path of the training set.
+"""
+def opt_label(arg):
+    if os.path.isdir(ROOT_DIR +'/data/faces/'+ arg):
+        return arg
+    else:
+        print('Invalid training set: '+ arg)
+        exit(1)
+
+
+"""
 Displays program usage information.
 """
 def print_usage():
@@ -45,9 +67,9 @@ def print_usage():
 
 
 """
-Main "function".
+Main function.
 """
-if __name__ == '__main__':
+def main():
     faceClassifier = None
     label = None
 
@@ -67,9 +89,9 @@ if __name__ == '__main__':
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = a
+            faceClassifier = opt_classifier(a)
         elif o == '--label':
-            label = a
+            label = opt_label(a)
 
     """ Initialize variables """
     faceDetector = cv2.CascadeClassifier(faceClassifier)
@@ -98,3 +120,14 @@ if __name__ == '__main__':
     """ Save the newly trained recognizer """
     os.makedirs(ROOT_DIR +'/data/recognizers/', exist_ok=True)
     faceRecognizer.save(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
+
+
+"""
+Program entry.
+"""
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        exit(0)

@@ -52,7 +52,7 @@ def opt_classifier(arg):
 Returns the path of the settings file.
 """
 def opt_settings(arg):
-    if os.path.isfile(ROOT_DIR+ '/settings/'+ arg +'.txt'):
+    if os.path.isfile(ROOT_DIR +'/settings/'+ arg +'.txt'):
         return ROOT_DIR +'/settings/'+ arg +'.txt'
     else:
         print('Invalid machine settings: '+ arg)
