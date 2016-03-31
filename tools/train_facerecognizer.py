@@ -41,6 +41,7 @@ def print_usage():
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
+    exit(0)
 
 
 """
@@ -58,16 +59,13 @@ if __name__ == '__main__':
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
         print_usage()
-        exit(0)
 
     if len(opts) == 0:
         print_usage()
-        exit(0)
 
     for o, a in opts:
         if o == '--help':
             print_usage()
-            exit(0)
         elif o == '--classifier':
             faceClassifier = a
         elif o == '--label':

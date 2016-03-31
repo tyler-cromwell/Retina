@@ -55,6 +55,7 @@ def print_usage():
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
     print('  --settings=MACHINE\tA file located under \'settings/\' (no extension)')
+    exit(0)
 
 
 """
@@ -74,16 +75,13 @@ def main():
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
         print_usage()
-        exit(0)
 
     if len(opts) == 0:
         print_usage()
-        exit(0)
 
     for o, a, in opts:
         if o == '--help':
             print_usage()
-            exit(0)
         elif o == '--classifier':
             faceClassifier = a
         elif o == '--settings':
