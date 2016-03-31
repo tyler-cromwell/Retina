@@ -40,9 +40,11 @@ CAMERA_DEFAULT = 0
 Returns the path of the settings file.
 """
 def opt_settings(arg):
-    for ent in os.listdir('settings/'):
-        if ent.endswith('.txt') and ent[0:-4] == arg:
-            return 'settings/'+arg+'.txt'
+    if os.path.isfile(arg +'.txt'):
+        return 'settings/'+ arg +'.txt'
+    else:
+        print('Invalid machine settings: '+ arg)
+        exit(1)
 
 
 """
