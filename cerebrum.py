@@ -34,14 +34,26 @@ import detector
 
 """ Global constants """
 CAMERA_DEFAULT = 0
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+"""
+Returns the path of the classifier file.
+"""
+def opt_classifier(arg):
+    if os.path.isfile(arg):
+        return arg
+    else:
+        print('Invalid classifier: '+ arg)
+        exit(1)
 
 
 """
 Returns the path of the settings file.
 """
 def opt_settings(arg):
-    if os.path.isfile(arg +'.txt'):
-        return 'settings/'+ arg +'.txt'
+    if os.path.isfile(ROOT_DIR+ '/settings/'+ arg +'.txt'):
+        return ROOT_DIR +'/settings/'+ arg +'.txt'
     else:
         print('Invalid machine settings: '+ arg)
         exit(1)
@@ -83,7 +95,7 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = a
+            faceClassifier = opt_classifier(a)
         elif o == '--settings':
             settings = opt_settings(a)
 
