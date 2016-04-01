@@ -29,12 +29,15 @@ import tkinter
 """ External libraries """
 import cv2
 
+""" Setup Cerebrum module path """
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_DIR)
+
 """ Local modules """
-import detector
+import modules.detector
 
 """ Global constants """
 CAMERA_DEFAULT = 0
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 """

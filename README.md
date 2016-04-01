@@ -6,5 +6,6 @@ Cerebrum is a Face Recognition application. It uses OpenCV and has "optimizied" 
 The name comes from the part of the Human brain responsible for vision and learning.
 
 ## Project Hierarchy
+- `modules` - Internal data models and helper functions.
 - `settings` - Hardware specific settings for each of my machines.
 - `tools` - Various tools for working with Cerebrum.
