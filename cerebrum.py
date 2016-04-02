@@ -30,8 +30,8 @@ import tkinter
 import cv2
 
 """ Local modules """
-from modules import detector
 from modules import misc
+from modules import recognizer
 
 """ Global constants """
 CAMERA_DEFAULT = 0
@@ -64,9 +64,10 @@ def opt_settings(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py --classifier=PATH --settings=MACHINE')
+    print('Usage:\t./cerebrum.py --classifier=PATH --lable=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
+    print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=MACHINE\tA file located under \'settings/\' (no extension)')
     exit(0)
 
@@ -78,12 +79,13 @@ def main():
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
     faceClassifier = None
+    label = None
     settings = None
 
     """ Parse command-line arguments """
     try:
         short_opts = ['']
-        long_opts = ['help', 'classifier=', 'settings=']
+        long_opts = ['help', 'classifier=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
@@ -97,13 +99,15 @@ def main():
             print_usage()
         elif o == '--classifier':
             faceClassifier = opt_classifier(a)
+        elif o == '--label':
+            label = a
         elif o == '--settings':
             settings = opt_settings(a)
 
-    """ Initialize face detector """
-    faceDetector = detector.Detector(faceClassifier, settings)
-    width = faceDetector.get_width()
-    height = faceDetector.get_height()
+    """ Initialize face recognizer """
+    faceRecognizer = recognizer.Recognizer(faceClassifier, label, settings)
+    width = faceRecognizer.get_width()
+    height = faceRecognizer.get_height()
 
     """ Get screen resolution """
     displayWidth, displayHeight = misc.get_display_resolution()
@@ -132,16 +136,16 @@ def main():
 
         """ Check flags """
         if flags & 1:
-            objects = faceDetector.detect(frame)
+            labels, objects = faceRecognizer.recognize(frame)
 
             for i, (x, y, w, h) in enumerate(objects):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-                cv2.putText(frame, 'Object %d' % i, (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+                cv2.putText(frame, labels[i], (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
         end = time.time()
         fps = 1 // (end - start)
 
-        print('FPS: %d\r' % (fps), end='')
+        print('FPS: [%d]\r' % (fps), end='')
         cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)

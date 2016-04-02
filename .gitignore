@@ -1,6 +1,7 @@
 *.swp
 *.txt
 
+data/
 __pycache__/
 
 !settings/*.txt
