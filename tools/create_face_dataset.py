@@ -20,21 +20,24 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import hashlib
 import getopt
 import os
 import sys
+import tkinter
 
 """ External libraries """
-import numpy
-from PIL import Image
 import cv2
 
 """ Setup Cerebrum module path """
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
 
+""" Local modules """
 from modules import detector
+from modules import misc
+
+""" Global constants """
+CAMERA_DEFAULT = 0
 
 
 """
@@ -45,17 +48,6 @@ def opt_classifier(arg):
         return arg
     else:
         print('Invalid classifier: '+ arg)
-        exit(1)
-
-
-"""
-Returns the path of the training set.
-"""
-def opt_label(arg):
-    if os.path.isdir(ROOT_DIR +'/data/faces/'+ arg):
-        return arg
-    else:
-        print('Invalid training set: '+ arg)
         exit(1)
 
 
@@ -74,10 +66,10 @@ def opt_settings(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./train_facerecognizer.py --classifier=PATH --label=NAME --settings=MACHINE')
+    print('Usage:\t./create_face_dataset.py --classifier=PATH --label=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
-    print('  --label=NAME\t\tThe name of the person\'s face to recognize')
+    print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
     print('  --settings=MACHINE\tA file located under \'settings/\' (no extension)')
     exit(0)
 
@@ -86,7 +78,7 @@ def print_usage():
 Main function.
 """
 def main():
-    faceClassifier = None
+    windowName = 'Camera %d' % (CAMERA_DEFAULT)
     label = None
     settings = None
 
@@ -108,38 +100,78 @@ def main():
         elif o == '--classifier':
             faceClassifier = opt_classifier(a)
         elif o == '--label':
-            label = opt_label(a)
+            label = a
         elif o == '--settings':
             settings = opt_settings(a)
 
-    """ Initialize variables """
-    training_path = ROOT_DIR +'/data/faces/'+ label +'/'
+    setDir = ROOT_DIR +'/data/faces/'+ label +'/'
+
+    """ Ensure training set parent directory exists """
+    os.makedirs(setDir, exist_ok=True)
+
+    """ Get screen resolution """
+    displayWidth, displayHeight = misc.get_display_resolution()
+    print('Display resolution: %dx%d' % (displayWidth, displayHeight))
+
+    """ Initialize face detector """
     faceDetector = detector.Detector(faceClassifier, settings)
-    faceRecognizer = cv2.face.createLBPHFaceRecognizer()
-    image_paths = []
-    images = []
-    labels = []
+    width = faceDetector.get_width()
+    height = faceDetector.get_height()
 
-    """ Get the absolute path of each image """
-    for entry in os.listdir(training_path):
-        image_paths.append(os.path.join(training_path, entry))
+    """ Set camera resolution """
+    camera = cv2.VideoCapture(CAMERA_DEFAULT)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+    print('Capture Resolution: %dx%d' %
+        (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    )
 
-    """ Add each of the persons images to the training set """
-    for path in image_paths:
-        gray_image = Image.open(path).convert('L')
-        image = numpy.array(gray_image, 'uint8')
-        faces = faceDetector.detect(image, False)
+    cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
+    cv2.moveWindow(windowName, (displayWidth - width) // 2, 0)
 
-        for (x, y, w, h) in faces:
-            images.append(image[y: y+h, x: x+w])
-            labels.append(int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8))
+    """ Define poses """
+    poses = [
+        'Happy', 'Sad', 'Angry', 'Surprised', 'Silly', 'Glasses',
+        'No Glasses', 'Normal', 'Right eye', 'Left eye', 'Both eyes',
+    ]
+    t = 0
 
-    """ Train """
-    faceRecognizer.train(images, numpy.array(labels))
+    """ Begin using the camera """
+    if not camera.isOpened():
+        if not camera.open(CAMERA_DEFAULT):
+            print('Failed to open Camera', CAMERA_DEFAULT)
+            exit(1)
 
-    """ Save the newly trained recognizer """
-    os.makedirs(ROOT_DIR +'/data/recognizers/', exist_ok=True)
-    faceRecognizer.save(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
+    while True:
+        retval, frame = camera.read()
+        faces = faceDetector.detect(frame)
+
+        if 8 <= t and t <= 10:
+            cv2.putText(frame, 'Expected Pose: '+ poses[t] +' closed', (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        else:
+            cv2.putText(frame, 'Expected Pose: '+ poses[t], (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+
+        cv2.putText(frame, 'Press \'w\' to take photo', (0, 25), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+
+        cv2.imshow(windowName, frame)
+        key = cv2.waitKey(1)
+
+        if key == 27:
+            cv2.destroyWindow(windowName)
+            cv2.waitKey(1); cv2.waitKey(1);
+            cv2.waitKey(1); cv2.waitKey(1);
+            camera.release()
+            break
+        elif key == ord('w') and len(faces) >= 1:
+            retval, frame = camera.read()   # Get frame without drawings
+            x, y, w, h = faces[0]
+            cropped = frame[y: y+h, x: x+w]
+            cv2.imwrite(setDir + label +'.'+ poses[t].lower().replace(' ', '') +'.png', cropped)
+
+            if t < 10:
+                t = t + 1
+            else:
+                break
 
 
 """
