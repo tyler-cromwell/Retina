@@ -17,4 +17,12 @@
   If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-__all__ = ['detector', 'misc']
+""" Python libraries """
+import tkinter
+
+
+def get_display_resolution():
+    tk = tkinter.Tk()
+    width = tk.winfo_screenwidth()
+    height = tk.winfo_screenheight()
+    return (width, height)

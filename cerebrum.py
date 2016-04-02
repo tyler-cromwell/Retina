@@ -31,6 +31,7 @@ import cv2
 
 """ Local modules """
 from modules import detector
+from modules import misc
 
 """ Global constants """
 CAMERA_DEFAULT = 0
@@ -105,10 +106,8 @@ def main():
     height = faceDetector.get_height()
 
     """ Get screen resolution """
-    tk = tkinter.Tk()
-    screen_width = tk.winfo_screenwidth()
-    screen_height = tk.winfo_screenheight()
-    print('Display resolution: %dx%d' % (screen_width, screen_height))
+    displayWidth, displayHeight = misc.get_display_resolution()
+    print('Display resolution: %dx%d' % (displayWidth, displayHeight))
 
     """ Set camera resolution """
     camera = cv2.VideoCapture(CAMERA_DEFAULT)
@@ -119,7 +118,7 @@ def main():
     )
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(windowName, (screen_width - width) // 2, 0)
+    cv2.moveWindow(windowName, (displayWidth - width) // 2, 0)
 
     """ Begin using the camera """
     if not camera.isOpened():
