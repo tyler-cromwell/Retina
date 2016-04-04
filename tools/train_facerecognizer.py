@@ -34,18 +34,9 @@ import cv2
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
 
+""" Local modules """
 from modules import detector
-
-
-"""
-Returns the path of the classifier file.
-"""
-def opt_classifier(arg):
-    if os.path.isfile(arg):
-        return arg
-    else:
-        print('Invalid classifier: '+ arg)
-        exit(1)
+from modules import opt
 
 
 """
@@ -56,17 +47,6 @@ def opt_label(arg):
         return arg
     else:
         print('Invalid training set: '+ arg)
-        exit(1)
-
-
-"""
-Returns the path of the settings file.
-"""
-def opt_settings(arg):
-    if os.path.isfile(ROOT_DIR +'/settings/'+ arg +'.txt'):
-        return ROOT_DIR +'/settings/'+ arg +'.txt'
-    else:
-        print('Invalid machine settings: '+ arg)
         exit(1)
 
 
@@ -106,11 +86,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt_classifier(a)
+            faceClassifier = opt.opt_classifier(a)
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
-            settings = opt_settings(a)
+            settings = opt.opt_settings(ROOT_DIR, a)
 
     """ Initialize variables """
     training_path = ROOT_DIR +'/data/faces/'+ label +'/'

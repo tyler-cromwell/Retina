@@ -35,31 +35,10 @@ sys.path.append(ROOT_DIR)
 """ Local modules """
 from modules import detector
 from modules import misc
+from modules import opt
 
 """ Global constants """
 CAMERA_DEFAULT = 0
-
-
-"""
-Returns the path of the classifier file.
-"""
-def opt_classifier(arg):
-    if os.path.isfile(arg):
-        return arg
-    else:
-        print('Invalid classifier: '+ arg)
-        exit(1)
-
-
-"""
-Returns the path of the settings file.
-"""
-def opt_settings(arg):
-    if os.path.isfile(ROOT_DIR +'/settings/'+ arg +'.txt'):
-        return ROOT_DIR +'/settings/'+ arg +'.txt'
-    else:
-        print('Invalid machine settings: '+ arg)
-        exit(1)
 
 
 """
@@ -98,11 +77,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt_classifier(a)
+            faceClassifier = opt.opt_classifier(a)
         elif o == '--label':
             label = a
         elif o == '--settings':
-            settings = opt_settings(a)
+            settings = opt.opt_settings(ROOT_DIR, a)
 
     setDir = ROOT_DIR +'/data/faces/'+ label +'/'
 

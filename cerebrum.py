@@ -31,6 +31,7 @@ import cv2
 
 """ Local modules """
 from modules import misc
+from modules import opt
 from modules import recognizer
 
 """ Global constants """
@@ -39,32 +40,10 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 """
-Returns the path of the classifier file.
-"""
-def opt_classifier(arg):
-    if os.path.isfile(arg):
-        return arg
-    else:
-        print('Invalid classifier: '+ arg)
-        exit(1)
-
-
-"""
-Returns the path of the settings file.
-"""
-def opt_settings(arg):
-    if os.path.isfile(ROOT_DIR +'/settings/'+ arg +'.txt'):
-        return ROOT_DIR +'/settings/'+ arg +'.txt'
-    else:
-        print('Invalid machine settings: '+ arg)
-        exit(1)
-
-
-"""
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py --classifier=PATH --lable=NAME --settings=MACHINE')
+    print('Usage:\t./cerebrum.py --classifier=PATH --label=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe path to a Face Detection classifier')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
@@ -98,11 +77,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt_classifier(a)
+            faceClassifier = opt.opt_classifier(a)
         elif o == '--label':
             label = a
         elif o == '--settings':
-            settings = opt_settings(a)
+            settings = opt.opt_settings(ROOT_DIR, a)
 
     """ Initialize face recognizer """
     faceRecognizer = recognizer.Recognizer(faceClassifier, label, settings)
