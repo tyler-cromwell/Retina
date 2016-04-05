@@ -93,7 +93,9 @@ def main():
             settings = opt.opt_settings(ROOT_DIR, a)
 
     """ Initialize variables """
+    filename = label +'.xml'
     training_path = ROOT_DIR +'/data/faces/'+ label +'/'
+    recognizer_path = ROOT_DIR +'/data/recognizers/'+ label +'.xml'
     faceDetector = detector.Detector(faceClassifier, settings)
     faceRecognizer = cv2.face.createLBPHFaceRecognizer()
     image_paths = []
@@ -101,10 +103,13 @@ def main():
     labels = []
 
     """ Get the absolute path of each image """
+    print('Collecting training images... ', end='')
     for entry in os.listdir(training_path):
         image_paths.append(os.path.join(training_path, entry))
+    print('DONE')
 
     """ Add each of the persons images to the training set """
+    print('Detecting faces and assigning labels... ', end='')
     for path in image_paths:
         gray_image = Image.open(path).convert('L')
         image = numpy.array(gray_image, 'uint8')
@@ -113,13 +118,18 @@ def main():
         for (x, y, w, h) in faces:
             images.append(image[y: y+h, x: x+w])
             labels.append(int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8))
+    print('DONE')
 
     """ Train """
+    print('Training recognizer... ', end='')
     faceRecognizer.train(images, numpy.array(labels))
+    print('DONE')
 
     """ Save the newly trained recognizer """
+    print('Saving recognizer: '+ filename +'... ', end='')
     os.makedirs(ROOT_DIR +'/data/recognizers/', exist_ok=True)
-    faceRecognizer.save(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
+    faceRecognizer.save(recognizer_path)
+    print('DONE')
 
 
 """
