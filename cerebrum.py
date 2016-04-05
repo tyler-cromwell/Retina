@@ -122,7 +122,7 @@ def main():
 
             for i, (x, y, w, h) in enumerate(objects):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-                cv2.putText(frame, labels[i], (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+                cv2.putText(frame, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
         end = time.time()
         fps = 1 // (end - start)
