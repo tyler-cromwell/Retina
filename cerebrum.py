@@ -41,6 +41,17 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 """
+Ensures the recognizer given by 'path' exists
+"""
+def opt_label(label):
+    if os.path.isfile(ROOT_DIR +'/data/recognizers/'+ label +'.xml'):
+        return label
+    else:
+        print('Invalid recognizer: '+ label)
+        exit(1)
+
+
+"""
 Displays program usage information.
 """
 def print_usage():
@@ -80,7 +91,7 @@ def main():
         elif o == '--classifier':
             faceClassifier = opt.opt_classifier(a)
         elif o == '--label':
-            label = a
+            label = opt_label(a)
         elif o == '--settings':
             settings = opt.opt_settings(ROOT_DIR, a)
 
