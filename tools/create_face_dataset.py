@@ -93,10 +93,10 @@ def main():
 
     faceDetector = detector.Detector(faceClassifier, settings)
     stream = camera.Camera(CAMERA_DEFAULT, settings)
-    print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight())
+    print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(windowName, (displayWidth - width) // 2, 0)
+    cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
 
     poses = [
         'Happy', 'Sad', 'Angry', 'Surprised', 'Silly', 'Glasses',
