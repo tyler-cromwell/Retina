@@ -98,11 +98,11 @@ def main():
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
 
+    p = 0
     poses = [
-        'Happy', 'Sad', 'Angry', 'Surprised', 'Silly', 'Glasses',
-        'No Glasses', 'Normal', 'Right eye', 'Left eye', 'Both eyes',
+        'Happy', 'Sad', 'Angry', 'Surprised', 'Silly',
+        'Normal', 'Right eye', 'Left eye', 'Both eyes',
     ]
-    t = 0
 
     """ Begin using the camera """
     if not stream.isOpened():
@@ -117,12 +117,20 @@ def main():
         for i, (x, y, w, h) in enumerate(faces):
              cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
-        if 8 <= t and t <= 10:
-            cv2.putText(frame, 'Expected Pose: '+ poses[t] +' closed', (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        if (6 <= p and p <= 8) or (15 <= p and p <= 17):
+            msg_pose = 'Expected Pose: '+ poses[p % len(poses)] +' closed'
         else:
-            cv2.putText(frame, 'Expected Pose: '+ poses[t], (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+            msg_pose = 'Expected Pose: '+ poses[p % len(poses)]
 
-        cv2.putText(frame, 'Press \'w\' to take photo', (0, 25), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        if p < len(poses):
+            msg_glasses = 'Glasses?: On'
+        else:
+            msg_glasses = 'Glasses?: Off'
+
+        cv2.putText(frame, 'Photos remaining: [%d/%d]' % (p, 2 * len(poses)), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, msg_pose, (0, 25), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, msg_glasses, (0, 40), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, 'Press \'w\' to take photo', (0, 55), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
 
         cv2.imshow(windowName, frame)
         key = cv2.waitKey(1)
@@ -137,10 +145,10 @@ def main():
             retval, frame = stream.read()   # Get frame without drawings
             x, y, w, h = faces[0]
             cropped = frame[y: y+h, x: x+w]
-            cv2.imwrite(setDir + label +'.'+ poses[t].lower().replace(' ', '') +'.png', cropped)
+            cv2.imwrite(setDir + label +'.'+ str(p) +'.png', cropped)
 
-            if t < 10:
-                t = t + 1
+            if p < (2 * len(poses)) - 1:
+                p = p + 1
             else:
                 break
 
