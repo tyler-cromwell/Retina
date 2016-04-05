@@ -34,8 +34,8 @@ from modules import detector
 
 
 class Recognizer(detector.Detector):
-    def __init__(self, classifier, label, config_file):
-        detector.Detector.__init__(self, classifier, config_file)
+    def __init__(self, classifier, label, settings):
+        detector.Detector.__init__(self, classifier, settings)
         self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=100)
         self._recognizer.load(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
         self._label = label

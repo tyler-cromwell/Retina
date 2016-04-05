@@ -26,9 +26,9 @@ import cv2
 
 
 class Detector:
-    def __init__(self, classifier, config_file):
+    def __init__(self, classifier, settings):
         config = configparser.ConfigParser()
-        config.read(config_file)
+        config.read(settings)
         self._classifier = cv2.CascadeClassifier(classifier)
         self._width = int(config.get('General', 'width'))
         self._height = int(config.get('General', 'height'))
