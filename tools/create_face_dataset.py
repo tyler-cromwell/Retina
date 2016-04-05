@@ -33,6 +33,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
 
 """ Local modules """
+from modules import camera
 from modules import detector
 from modules import misc
 from modules import opt
@@ -83,32 +84,20 @@ def main():
         elif o == '--settings':
             settings = opt.opt_settings(ROOT_DIR, a)
 
+    """ Setup training set, objects, and window """
     setDir = ROOT_DIR +'/data/faces/'+ label +'/'
-
-    """ Ensure training set parent directory exists """
     os.makedirs(setDir, exist_ok=True)
 
-    """ Get screen resolution """
     displayWidth, displayHeight = misc.get_display_resolution()
     print('Display resolution: %dx%d' % (displayWidth, displayHeight))
 
-    """ Initialize face detector """
     faceDetector = detector.Detector(faceClassifier, settings)
-    width = faceDetector.get_width()
-    height = faceDetector.get_height()
-
-    """ Set camera resolution """
-    camera = cv2.VideoCapture(CAMERA_DEFAULT)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-    print('Capture Resolution: %dx%d' %
-        (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    )
+    stream = camera.Camera(CAMERA_DEFAULT, settings)
+    print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight())
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(windowName, (displayWidth - width) // 2, 0)
 
-    """ Define poses """
     poses = [
         'Happy', 'Sad', 'Angry', 'Surprised', 'Silly', 'Glasses',
         'No Glasses', 'Normal', 'Right eye', 'Left eye', 'Both eyes',
@@ -116,13 +105,13 @@ def main():
     t = 0
 
     """ Begin using the camera """
-    if not camera.isOpened():
-        if not camera.open(CAMERA_DEFAULT):
+    if not stream.isOpened():
+        if not stream.open(CAMERA_DEFAULT):
             print('Failed to open Camera', CAMERA_DEFAULT)
             exit(1)
 
     while True:
-        retval, frame = camera.read()
+        retval, frame = stream.read()
         faces = faceDetector.detect(frame)
 
         if 8 <= t and t <= 10:
@@ -139,10 +128,10 @@ def main():
             cv2.destroyWindow(windowName)
             cv2.waitKey(1); cv2.waitKey(1);
             cv2.waitKey(1); cv2.waitKey(1);
-            camera.release()
+            stream.release()
             break
         elif key == ord('w') and len(faces) >= 1:
-            retval, frame = camera.read()   # Get frame without drawings
+            retval, frame = stream.read()   # Get frame without drawings
             x, y, w, h = faces[0]
             cropped = frame[y: y+h, x: x+w]
             cv2.imwrite(setDir + label +'.'+ poses[t].lower().replace(' ', '') +'.png', cropped)
@@ -151,6 +140,8 @@ def main():
                 t = t + 1
             else:
                 break
+
+    stream.release()
 
 
 """

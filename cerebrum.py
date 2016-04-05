@@ -30,6 +30,7 @@ import tkinter
 import cv2
 
 """ Local modules """
+from modules import camera
 from modules import misc
 from modules import opt
 from modules import recognizer
@@ -83,35 +84,26 @@ def main():
         elif o == '--settings':
             settings = opt.opt_settings(ROOT_DIR, a)
 
-    """ Initialize face recognizer """
-    faceRecognizer = recognizer.Recognizer(faceClassifier, label, settings)
-    width = faceRecognizer.get_width()
-    height = faceRecognizer.get_height()
-
-    """ Get screen resolution """
+    """ Setup objects and window """
     displayWidth, displayHeight = misc.get_display_resolution()
     print('Display resolution: %dx%d' % (displayWidth, displayHeight))
 
-    """ Set camera resolution """
-    camera = cv2.VideoCapture(CAMERA_DEFAULT)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-    print('Capture Resolution: %dx%d' %
-        (camera.get(cv2.CAP_PROP_FRAME_WIDTH), camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    )
+    faceRecognizer = recognizer.Recognizer(faceClassifier, label, settings)
+    stream = camera.Camera(CAMERA_DEFAULT, settings)
+    print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(windowName, (displayWidth - width) // 2, 0)
+    cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
 
     """ Begin using the camera """
-    if not camera.isOpened():
-        if not camera.open(CAMERA_DEFAULT):
+    if not stream.isOpened():
+        if not stream.open(CAMERA_DEFAULT):
             print('Failed to open Camera', CAMERA_DEFAULT)
             exit(1)
 
     while True:
         start = time.time()
-        retval, frame = camera.read()
+        retval, frame = stream.read()
 
         """ Check flags """
         if flags & 1:
@@ -134,7 +126,7 @@ def main():
             cv2.destroyWindow(windowName)
             cv2.waitKey(1); cv2.waitKey(1);
             cv2.waitKey(1); cv2.waitKey(1);
-            camera.release()
+            stream.release()
             break
         elif key == ord('f'):
             flags = flags ^ 1

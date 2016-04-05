@@ -30,8 +30,6 @@ class Detector:
         config = configparser.ConfigParser()
         config.read(settings)
         self._classifier = cv2.CascadeClassifier(classifier)
-        self._width = int(config.get('General', 'width'))
-        self._height = int(config.get('General', 'height'))
         self._flags = int(config.get('Classifier', 'flags'))
         self._scaleFactor = float(config.get('Classifier', 'scaleFactor'))
         self._minNeighbors = int(config.get('Classifier', 'minNeighbors'))
@@ -55,11 +53,3 @@ class Detector:
         )
 
         return objects
-
-
-    def get_width(self):
-        return self._width
-
-
-    def get_height(self):
-        return self._height

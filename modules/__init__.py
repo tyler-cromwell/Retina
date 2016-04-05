@@ -17,4 +17,4 @@
   If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-__all__ = ['detector', 'misc', 'opt', 'recognizer']
+__all__ = ['camera', 'detector', 'misc', 'opt', 'recognizer']
