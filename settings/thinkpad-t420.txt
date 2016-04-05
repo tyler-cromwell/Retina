@@ -2,9 +2,12 @@
 width: 800
 height: 448
 
-[Classifier]
+[Detector]
 flags: 0
 scaleFactor: 1.1
 minNeighbors: 8
 minSize: 60, 60
 maxSize: 300, 300
+
+[Recognizer]
+threshold: 80

@@ -18,6 +18,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
+import configparser
 import hashlib
 import os
 import sys
@@ -36,7 +37,10 @@ from modules import detector
 class Recognizer(detector.Detector):
     def __init__(self, classifier, label, settings):
         super().__init__(classifier, settings)
-        self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=100)
+        config = configparser.ConfigParser()
+        config.read(settings)
+        self._threshold = int(config.get('Recognizer', 'threshold'))
+        self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
         self._recognizer.load(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
         self._label = label
         self._hash = int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8)
