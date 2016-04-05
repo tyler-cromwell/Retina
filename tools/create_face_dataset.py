@@ -114,6 +114,9 @@ def main():
         retval, frame = stream.read()
         faces = faceDetector.detect(frame)
 
+        for i, (x, y, w, h) in enumerate(faces):
+             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
+
         if 8 <= t and t <= 10:
             cv2.putText(frame, 'Expected Pose: '+ poses[t] +' closed', (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         else:
