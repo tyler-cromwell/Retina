@@ -39,6 +39,7 @@ class Recognizer(detector.Detector):
         super().__init__(classifier, settings)
         config = configparser.ConfigParser()
         config.read(settings)
+
         self._threshold = int(config.get('Recognizer', 'threshold'))
         self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
         self._recognizer.load(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
@@ -47,12 +48,12 @@ class Recognizer(detector.Detector):
 
 
     def recognize(self, frame):
-        grayframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.detect(grayframe, False)
         labels = []
+        faces = self.detect(frame, False)
 
         for (x, y, w, h) in faces:
-            predicted_label = self._recognizer.predict(grayframe[y: y+h, x: x+w])
+            image = preprocess(frame, (x, y, w, h))
+            predicted_label = self._recognizer.predict(image)
 
             if predicted_label == self._hash:
                 labels.append(self._label)
@@ -60,3 +61,12 @@ class Recognizer(detector.Detector):
                 labels.append('Unknown')
 
         return (labels, faces)
+
+
+def preprocess(frame, (x, y, w, h)):
+    cropped = frame[y: y+h, x: x+w]
+    resized = cv2.resize(cropped, (200, 200))
+    blurred = cv2.GaussianBlur(resized, (5, 5), 0)
+    grayed = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+    equalized = cv2.equalizeHist(grayed)
+    return equalized

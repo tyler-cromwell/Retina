@@ -37,6 +37,7 @@ from modules import camera
 from modules import detector
 from modules import misc
 from modules import opt
+from modules import recognizer
 
 """ Global constants """
 CAMERA_DEFAULT = 0
@@ -100,9 +101,11 @@ def main():
 
     p = 0
     poses = [
-        'Happy', 'Sad', 'Angry', 'Surprised', 'Silly',
-        'Normal', 'Right eye', 'Left eye', 'Both eyes',
+        'Happy', 'Sad', 'Angry', 'Surprised', 'Silly', 'Normal',
+        'Right eye closed', 'Left eye closed', 'Both eyes closed'
     ]
+
+    msg_pose = 'Expected Pose: '+ poses[p % len(poses)]
 
     """ Begin using the camera """
     if not stream.isOpened():
@@ -114,13 +117,8 @@ def main():
         retval, frame = stream.read()
         faces = faceDetector.detect(frame)
 
-        for i, (x, y, w, h) in enumerate(faces):
+        for (x, y, w, h) in faces:
              cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-
-        if (6 <= p and p <= 8) or (15 <= p and p <= 17):
-            msg_pose = 'Expected Pose: '+ poses[p % len(poses)] +' closed'
-        else:
-            msg_pose = 'Expected Pose: '+ poses[p % len(poses)]
 
         if p < len(poses):
             msg_glasses = 'Glasses?: On'
@@ -143,9 +141,10 @@ def main():
             break
         elif key == ord('w') and len(faces) >= 1:
             retval, frame = stream.read()   # Get frame without drawings
-            x, y, w, h = faces[0]
-            cropped = frame[y: y+h, x: x+w]
-            cv2.imwrite(setDir + label +'.'+ str(p) +'.png', cropped)
+            (x, y, w, h) = faces[0]
+
+            image = recognizer.preprocess(frame, (x, y, w, h))
+            cv2.imwrite(setDir + label +'.'+ str(p) +'.png', image)
 
             if p < (2 * len(poses)) - 1:
                 p = p + 1
