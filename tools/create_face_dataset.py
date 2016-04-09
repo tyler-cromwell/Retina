@@ -143,7 +143,7 @@ def main():
             retval, frame = stream.read()   # Get frame without drawings
             (x, y, w, h) = faces[0]
 
-            image = recognizer.preprocess(frame, (x, y, w, h))
+            image = recognizer.preprocess(frame, x, y, w, h)
             cv2.imwrite(setDir + label +'.'+ str(p) +'.png', image)
 
             if p < (2 * len(poses)) - 1:

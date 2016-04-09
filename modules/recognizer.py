@@ -52,7 +52,7 @@ class Recognizer(detector.Detector):
         faces = self.detect(frame, False)
 
         for (x, y, w, h) in faces:
-            image = preprocess(frame, (x, y, w, h))
+            image = preprocess(frame, x, y, w, h)
             predicted_label = self._recognizer.predict(image)
 
             if predicted_label == self._hash:
@@ -63,7 +63,7 @@ class Recognizer(detector.Detector):
         return (labels, faces)
 
 
-def preprocess(frame, (x, y, w, h)):
+def preprocess(frame, x, y, w, h):
     cropped = frame[y: y+h, x: x+w]
     resized = cv2.resize(cropped, (200, 200))
     blurred = cv2.GaussianBlur(resized, (5, 5), 0)
