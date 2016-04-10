@@ -105,8 +105,6 @@ def main():
         'Right eye closed', 'Left eye closed', 'Both eyes closed'
     ]
 
-    msg_pose = 'Expected Pose: '+ poses[p % len(poses)]
-
     """ Begin using the camera """
     if not stream.isOpened():
         if not stream.open(CAMERA_DEFAULT):
@@ -124,6 +122,8 @@ def main():
             msg_glasses = 'Glasses?: On'
         else:
             msg_glasses = 'Glasses?: Off'
+
+        msg_pose = 'Expected Pose: '+ poses[p % len(poses)]
 
         cv2.putText(frame, 'Photos remaining: [%d/%d]' % (p, 2 * len(poses)), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.putText(frame, msg_pose, (0, 25), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
