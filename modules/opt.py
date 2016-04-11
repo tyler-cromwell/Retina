@@ -26,7 +26,7 @@ import os
 Use the Mac Address OUI to determine what machine we're running on.
 Defaults to the Raspberry Pi 2 (b8:27:eb:__:__:__).
 """
-def opt_default_settings(root_dir):
+def default_settings(root_dir):
     defaults = root_dir +'/settings/raspberrypi2.txt'
     mac = open('/sys/class/net/enp0s25/address').read().rstrip().split(':')
 
@@ -39,7 +39,7 @@ def opt_default_settings(root_dir):
 """
 Ensures the classifier given by 'path' exists
 """
-def opt_classifier(path):
+def classifier(path):
     if os.path.isfile(path):
         return path
     else:
@@ -50,7 +50,7 @@ def opt_classifier(path):
 """
 Ensures the settings file given by 'settings' exists
 """
-def opt_settings(path):
+def settings(path):
     if os.path.isfile(path):
         return path
     else:

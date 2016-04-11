@@ -68,7 +68,7 @@ Main function.
 def main():
     faceClassifier = None
     label = None
-    settings = opt.opt_default_settings(ROOT_DIR)
+    settings = opt.default_settings(ROOT_DIR)
 
     """ Parse command-line arguments """
     try:
@@ -86,11 +86,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt.opt_classifier(a)
+            faceClassifier = opt.classifier(a)
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
-            settings = opt.opt_settings(a)
+            settings = opt.settings(a)
 
     if faceClassifier == None:
         print('\n  Classifier not specified!\n')
