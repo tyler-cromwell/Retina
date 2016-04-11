@@ -60,8 +60,9 @@ Main function.
 """
 def main():
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
+    faceClassifier = None
     label = None
-    settings = None
+    settings = opt.opt_default_settings(ROOT_DIR)
 
     """ Parse command-line arguments """
     try:
@@ -83,7 +84,17 @@ def main():
         elif o == '--label':
             label = a
         elif o == '--settings':
-            settings = opt.opt_settings(ROOT_DIR, a)
+            settings = opt.opt_settings(a)
+
+    if faceClassifier == None:
+        print('\n  Classifier not specified!\n')
+        print_usage()
+    elif label == None:
+        print('\n  Label not specified!\n')
+        print_usage()
+    elif settings == None:
+        print('\n  Settings not specified!\n')
+        print_usage()
 
     """ Setup training set, objects, and window """
     setDir = ROOT_DIR +'/data/faces/'+ label +'/'
