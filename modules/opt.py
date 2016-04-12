@@ -28,7 +28,7 @@ Defaults to the Raspberry Pi 2 (b8:27:eb:__:__:__).
 """
 def default_settings(root_dir):
     defaults = root_dir +'/settings/raspberrypi2.txt'
-    mac = open('/sys/class/net/enp0s25/address').read().rstrip().split(':')
+    mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
 
     if mac[0:3] == ['b8', '27', 'eb'] and os.path.isfile(defaults):
         return defaults
