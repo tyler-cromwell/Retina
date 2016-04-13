@@ -28,7 +28,12 @@ Defaults to the Raspberry Pi 2 (b8:27:eb:__:__:__).
 """
 def default_settings(root_dir):
     defaults = root_dir +'/settings/raspberrypi2.txt'
-    mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
+    mac = None
+
+    try:
+        mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
+    except OSError as ose:
+        return None
 
     if mac[0:3] == ['b8', '27', 'eb'] and os.path.isfile(defaults):
         return defaults
@@ -43,7 +48,7 @@ def classifier(path):
     if os.path.isfile(path):
         return path
     else:
-        print('Invalid classifier: '+ arg)
+        print('Invalid classifier: '+ path)
         exit(1)
 
 
