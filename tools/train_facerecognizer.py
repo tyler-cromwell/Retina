@@ -56,9 +56,9 @@ Displays program usage information.
 def print_usage():
     print('Usage:\t./train_facerecognizer.py --classifier=PATH --label=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
-    print('  --classifier=PATH\tThe path to a Face Detection classifier')
+    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
-    print('  --settings=MACHINE\tThe path to a file located under \'settings/\'')
+    print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
     exit(0)
 
 
