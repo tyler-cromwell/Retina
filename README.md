@@ -10,6 +10,12 @@ The name comes from the part of the Human brain responsible for vision and learn
 - `settings` - Hardware specific settings for each of my machines.
 - `tools` - Various tools for working with Cerebrum.
 
+## Dependencies
+- CMake (for building OpenCV)
+- GNU Make (also for building OpenCV)
+- OpenCV (preferably 3.1 or higher)
+- Python 3
+
 ## Installation
 1) First things first, clone or download OpenCV and OpenCV's extra modules from [here][opencv] and [here][opencv_contrib] (unzip if compressed).<br/>
 2) Set the `OPENCV` and `OPENCV_CONTRIB_MODULES` variables in `tools/prepare.sh` to the path of each of the OpenCV directories (if the values differ).<br/>
