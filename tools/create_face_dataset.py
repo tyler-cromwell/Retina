@@ -86,13 +86,13 @@ def main():
         elif o == '--settings':
             settings = opt.settings(a)
 
-    if faceClassifier == None:
+    if not faceClassifier:
         print('\n  Classifier not specified!\n')
         print_usage()
-    elif label == None:
+    elif not label:
         print('\n  Label not specified!\n')
         print_usage()
-    elif settings == None:
+    elif not settings:
         print('\n  Settings not specified!\n')
         print_usage()
 

@@ -48,9 +48,7 @@ def classifier(path):
     if os.path.isfile(path):
         return path
     else:
-        print('Invalid classifier: '+ path)
-        exit(1)
-
+        return None
 
 """
 Ensures the settings file given by 'settings' exists
@@ -59,5 +57,4 @@ def settings(path):
     if os.path.isfile(path):
         return path
     else:
-        print('Invalid settings file: '+ path)
-        exit(1)
+        return None

@@ -47,8 +47,7 @@ def opt_label(label):
     if os.path.isfile(ROOT_DIR +'/data/recognizers/'+ label +'.xml'):
         return label
     else:
-        print('Invalid recognizer: '+ label)
-        exit(1)
+        return None
 
 
 """
@@ -89,19 +88,20 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
+            print(a)
             faceClassifier = opt.classifier(a)
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
             settings = opt.settings(a)
 
-    if faceClassifier == None:
+    if not faceClassifier:
         print('\n  Classifier not specified!\n')
         print_usage()
-    elif label == None:
+    elif not label:
         print('\n  Label not specified!\n')
         print_usage()
-    elif settings == None:
+    elif not settings:
         print('\n  Settings not specified!\n')
         print_usage()
 

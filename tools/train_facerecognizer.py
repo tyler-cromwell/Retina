@@ -46,8 +46,7 @@ def opt_label(arg):
     if os.path.isdir(ROOT_DIR +'/data/faces/'+ arg):
         return arg
     else:
-        print('Invalid training set: '+ arg)
-        exit(1)
+        return None
 
 
 """
@@ -92,13 +91,13 @@ def main():
         elif o == '--settings':
             settings = opt.settings(a)
 
-    if faceClassifier == None:
+    if not faceClassifier:
         print('\n  Classifier not specified!\n')
         print_usage()
-    elif label == None:
+    elif not label:
         print('\n  Label not specified!\n')
         print_usage()
-    elif settings == None:
+    elif not settings:
         print('\n  Settings not specified\n')
         print_usage()
 
