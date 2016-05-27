@@ -54,7 +54,7 @@ def opt_label(label):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py --classifier=PATH --label=NAME --settings=MACHINE')
+    print('Usage:\t./cerebrum.py [--classifier=PATH] --label=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
@@ -88,17 +88,13 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            print(a)
             faceClassifier = opt.classifier(a)
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
             settings = opt.settings(a)
 
-    if not faceClassifier:
-        print('\n  Classifier not specified!\n')
-        print_usage()
-    elif not label:
+    if not label:
         print('\n  Label not specified!\n')
         print_usage()
     elif not settings:

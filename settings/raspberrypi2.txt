@@ -3,6 +3,7 @@ width: 640
 height: 360
 
 [Detector]
+classifier: lbpcascade_frontalface.xml
 flags: 0
 scaleFactor: 1.3
 minNeighbors: 5

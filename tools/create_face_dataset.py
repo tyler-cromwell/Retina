@@ -47,7 +47,7 @@ CAMERA_DEFAULT = 0
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./create_face_dataset.py --classifier=PATH --label=NAME --settings=MACHINE')
+    print('Usage:\t./create_face_dataset.py [--classifier=PATH] --label=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier')
     print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
@@ -86,10 +86,7 @@ def main():
         elif o == '--settings':
             settings = opt.settings(a)
 
-    if not faceClassifier:
-        print('\n  Classifier not specified!\n')
-        print_usage()
-    elif not label:
+    if not label:
         print('\n  Label not specified!\n')
         print_usage()
     elif not settings:

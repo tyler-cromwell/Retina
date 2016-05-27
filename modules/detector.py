@@ -20,16 +20,26 @@
 """ Python libraries """
 import configparser
 import re
+import os
+import sys
 
 """ External libraries """
 import cv2
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
 
 
 class Detector:
     def __init__(self, classifier, settings):
         config = configparser.ConfigParser()
         config.read(settings)
-        self._classifier = cv2.CascadeClassifier(classifier)
+
+        if classifier:
+            self._classifier = cv2.CascadeClassifier(classifier)
+        else:
+            self._classifier = cv2.CascadeClassifier(ROOT_DIR +'/data/classifiers/'+ config.get('Detector', 'classifier'))
+
         self._flags = int(config.get('Detector', 'flags'))
         self._scaleFactor = float(config.get('Detector', 'scaleFactor'))
         self._minNeighbors = int(config.get('Detector', 'minNeighbors'))
