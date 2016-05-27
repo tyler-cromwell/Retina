@@ -23,25 +23,6 @@ import os
 
 
 """
-Use the Mac Address OUI to determine what machine we're running on.
-Defaults to the Raspberry Pi 2 (b8:27:eb:__:__:__).
-"""
-def default_settings(root_dir):
-    defaults = root_dir +'/settings/raspberrypi2.txt'
-    mac = None
-
-    try:
-        mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
-    except OSError as ose:
-        return None
-
-    if mac[0:3] == ['b8', '27', 'eb'] and os.path.isfile(defaults):
-        return defaults
-    else:
-        return None
-
-
-"""
 Ensures the classifier given by 'path' exists
 """
 def classifier(path):
@@ -50,11 +31,34 @@ def classifier(path):
     else:
         return None
 
+
 """
-Ensures the settings file given by 'settings' exists
+Use the Mac Address OUI to determine what machine we're running on.
+Defaults to the Raspberry Pi 2 (b8:27:eb:__:__:__).
 """
-def settings(path):
-    if os.path.isfile(path):
-        return path
+def default_settings():
+    mac = None
+
+    try:
+        mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
+    except OSError as ose:
+        return None
+
+    if mac[0:3] == ['b8', '27', 'eb']:
+        return 'raspberrypi2'
     else:
         return None
+
+
+"""
+Maps simple settings filenames to their absolute paths.
+"""
+def map_settings():
+    settings = {}
+    ents = os.listdir('settings/')
+
+    for ent in ents:
+        key = ent[0:-4]
+        settings[key] = os.path.abspath('settings/'+ ent)
+
+    return settings

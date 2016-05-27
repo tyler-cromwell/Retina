@@ -53,11 +53,13 @@ def opt_label(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./train_facerecognizer.py [--classifier=PATH] --label=NAME --settings=MACHINE')
+    print('Usage:\t./train_facerecognizer.py [--classifier=PATH] --label=NAME [--settings=MACHINE]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
+    print('      Required if not running on a Raspberry Pi 2')
+    print('      [beagleboneblack, mydesktop, raspberrypi2, thinkpad-t420]')
     exit(0)
 
 
@@ -67,7 +69,8 @@ Main function.
 def main():
     faceClassifier = None
     label = None
-    settings = opt.default_settings(ROOT_DIR)
+    settings = opt.map_settings()
+    key = opt.default_settings()
 
     """ Parse command-line arguments """
     try:
@@ -89,12 +92,12 @@ def main():
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
-            settings = opt.settings(a)
+            key = a
 
     if not label:
         print('\n  Label not specified!\n')
         print_usage()
-    elif not settings:
+    elif not key in settings.keys():
         print('\n  Settings not specified\n')
         print_usage()
 
@@ -102,7 +105,7 @@ def main():
     filename = label +'.xml'
     training_path = ROOT_DIR +'/data/faces/'+ label +'/'
     recognizer_path = ROOT_DIR +'/data/recognizers/'+ label +'.xml'
-    faceDetector = detector.Detector(faceClassifier, settings)
+    faceDetector = detector.Detector(faceClassifier, settings[key])
     faceRecognizer = cv2.face.createLBPHFaceRecognizer()
     image_paths = []
     images = []
