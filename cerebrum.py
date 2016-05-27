@@ -56,7 +56,7 @@ Displays program usage information.
 def print_usage():
     print('Usage:\t./cerebrum.py [--classifier=PATH] --label=NAME --settings=MACHINE')
     print('  --help\t\tPrints this text')
-    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier')
+    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=MACHINE\tThe aboslute path of a file located under \'settings/\'')
     exit(0)
