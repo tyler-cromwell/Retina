@@ -26,9 +26,6 @@ import sys
 """ External libraries """
 import cv2
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(ROOT_DIR)
-
 
 class Detector:
     def __init__(self, classifier, settings):
@@ -38,7 +35,7 @@ class Detector:
         if classifier:
             self._classifier = cv2.CascadeClassifier(classifier)
         else:
-            self._classifier = cv2.CascadeClassifier(ROOT_DIR +'/data/classifiers/'+ config.get('Detector', 'classifier'))
+            self._classifier = cv2.CascadeClassifier(sys.path[0] +'/data/classifiers/'+ config.get('Detector', 'classifier'))
 
         self._flags = int(config.get('Detector', 'flags'))
         self._scaleFactor = float(config.get('Detector', 'scaleFactor'))

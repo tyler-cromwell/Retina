@@ -28,10 +28,6 @@ import tkinter
 """ External libraries """
 import cv2
 
-""" Setup Cerebrum module path """
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(ROOT_DIR)
-
 """ Local modules """
 from modules import camera
 from modules import detector
@@ -97,7 +93,7 @@ def main():
         print_usage()
 
     """ Setup training set, objects, and window """
-    setDir = ROOT_DIR +'/data/faces/'+ label +'/'
+    setDir = sys.path[0] +'/data/faces/'+ label +'/'
     os.makedirs(setDir, exist_ok=True)
 
     displayWidth, displayHeight = misc.get_display_resolution()

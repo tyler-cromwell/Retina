@@ -26,10 +26,6 @@ import sys
 """ External libraries """
 import cv2
 
-""" Setup Cerebrum module path """
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(ROOT_DIR)
-
 """ Local modules """
 from modules import detector
 
@@ -42,7 +38,7 @@ class Recognizer(detector.Detector):
 
         self._threshold = int(config.get('Recognizer', 'threshold'))
         self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
-        self._recognizer.load(ROOT_DIR +'/data/recognizers/'+ label +'.xml')
+        self._recognizer.load(sys.path[0] +'/data/recognizers/'+ label +'.xml')
         self._label = label
         self._hash = int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8)
 

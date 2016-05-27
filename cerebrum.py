@@ -37,14 +37,13 @@ from modules import recognizer
 
 """ Global constants """
 CAMERA_DEFAULT = 0
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 """
 Ensures the recognizer given by 'path' exists
 """
 def opt_label(label):
-    if os.path.isfile(ROOT_DIR +'/data/recognizers/'+ label +'.xml'):
+    if os.path.isfile(sys.path[0] +'/data/recognizers/'+ label +'.xml'):
         return label
     else:
         return None

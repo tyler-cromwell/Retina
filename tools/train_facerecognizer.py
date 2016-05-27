@@ -30,10 +30,6 @@ import numpy
 from PIL import Image
 import cv2
 
-""" Setup Cerebrum module path """
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(ROOT_DIR)
-
 """ Local modules """
 from modules import detector
 from modules import opt
@@ -43,7 +39,7 @@ from modules import opt
 Returns the path of the training set.
 """
 def opt_label(arg):
-    if os.path.isdir(ROOT_DIR +'/data/faces/'+ arg):
+    if os.path.isdir(sys.path[0] +'/data/faces/'+ arg):
         return arg
     else:
         return None
@@ -103,8 +99,8 @@ def main():
 
     """ Initialize variables """
     filename = label +'.xml'
-    training_path = ROOT_DIR +'/data/faces/'+ label +'/'
-    recognizer_path = ROOT_DIR +'/data/recognizers/'+ label +'.xml'
+    training_path = sys.path[0] +'/data/faces/'+ label +'/'
+    recognizer_path = sys.path[0] +'/data/recognizers/'+ label +'.xml'
     faceDetector = detector.Detector(faceClassifier, settings[key])
     faceRecognizer = cv2.face.createLBPHFaceRecognizer()
     image_paths = []
@@ -136,7 +132,7 @@ def main():
 
     """ Save the newly trained recognizer """
     print('Saving recognizer: '+ filename +'... ', end='')
-    os.makedirs(ROOT_DIR +'/data/recognizers/', exist_ok=True)
+    os.makedirs(sys.path[0] +'/data/recognizers/', exist_ok=True)
     faceRecognizer.save(recognizer_path)
     print('DONE')
 
