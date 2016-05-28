@@ -21,7 +21,6 @@
 import configparser
 import hashlib
 import os
-import sys
 
 """ External libraries """
 import cv2
@@ -35,10 +34,11 @@ class Recognizer(detector.Detector):
         super().__init__(classifier, settings)
         config = configparser.ConfigParser()
         config.read(settings)
+        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         self._threshold = int(config.get('Recognizer', 'threshold'))
         self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
-        self._recognizer.load(sys.path[0] +'/data/recognizers/'+ label +'.xml')
+        self._recognizer.load(root_dir +'/data/recognizers/'+ label +'.xml')
         self._label = label
         self._hash = int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8)
 

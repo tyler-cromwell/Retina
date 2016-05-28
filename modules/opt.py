@@ -55,7 +55,8 @@ Maps simple settings filenames to their absolute paths.
 """
 def map_settings():
     settings = {}
-    ents = os.listdir('settings/')
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ents = os.listdir(root_dir +'/settings/')
 
     for ent in ents:
         key = ent[0:-4]

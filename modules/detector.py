@@ -21,7 +21,6 @@
 import configparser
 import re
 import os
-import sys
 
 """ External libraries """
 import cv2
@@ -35,7 +34,8 @@ class Detector:
         if classifier:
             self._classifier = cv2.CascadeClassifier(classifier)
         else:
-            self._classifier = cv2.CascadeClassifier(sys.path[0] +'/data/classifiers/'+ config.get('Detector', 'classifier'))
+            root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self._classifier = cv2.CascadeClassifier(root_dir +'/data/classifiers/'+ config.get('Detector', 'classifier'))
 
         self._flags = int(config.get('Detector', 'flags'))
         self._scaleFactor = float(config.get('Detector', 'scaleFactor'))

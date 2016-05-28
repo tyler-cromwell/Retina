@@ -29,6 +29,7 @@ import tkinter
 import cv2
 
 """ Local modules """
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
 from modules import detector
 from modules import misc
@@ -93,7 +94,7 @@ def main():
         print_usage()
 
     """ Setup training set, objects, and window """
-    setDir = sys.path[0] +'/data/faces/'+ label +'/'
+    setDir = sys.path[1] +'/data/faces/'+ label +'/'
     os.makedirs(setDir, exist_ok=True)
 
     displayWidth, displayHeight = misc.get_display_resolution()
