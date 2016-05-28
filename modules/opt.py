@@ -60,6 +60,6 @@ def map_settings():
 
     for ent in ents:
         key = ent[0:-4]
-        settings[key] = os.path.abspath('settings/'+ ent)
+        settings[key] = os.path.abspath(root_dir +'/settings/'+ ent)
 
     return settings
