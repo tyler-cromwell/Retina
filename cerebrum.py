@@ -109,7 +109,7 @@ def main():
 
     faceRecognizer = recognizer.Recognizer(faceClassifier, label, settings[key])
     stream = camera.Camera(CAMERA_DEFAULT, settings[key])
-    print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
+    print('Capture resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
@@ -126,11 +126,21 @@ def main():
 
         """ Check flags """
         if flags & 1:
+            """ Blur """
+            frame = cv2.GaussianBlur(frame, (5, 5), 0)
+        if flags & 2:
+            """ Histogram Equalization """
+            frame = cv2.equalizeHist(frame)
+        if flags & 4:
+            """ Face Recognition """
             labels, objects = faceRecognizer.recognize(frame)
 
             for i, (x, y, w, h) in enumerate(objects):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
                 cv2.putText(frame, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        if flags & 8:
+            """ Grayscale """
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         end = time.time()
         fps = 1 // (end - start)
@@ -147,8 +157,14 @@ def main():
             cv2.waitKey(1); cv2.waitKey(1);
             stream.release()
             break
-        elif key == ord('f'):
+        elif key == ord('b'):
             flags = flags ^ 1
+        elif key == ord('e'):
+            flags = flags ^ 2
+        elif key == ord('f'):
+            flags = flags ^ 4
+        elif key == ord('g'):
+            flags = flags ^ 8
 
 
 """
