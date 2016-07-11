@@ -11,4 +11,4 @@ minSize: 40, 40
 maxSize: 400, 400
 
 [Recognizer]
-threshold: 70
+threshold: 65
