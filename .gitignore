@@ -1,7 +1,8 @@
 *.swp
 *.txt
 
-data/
+data/faces/
+data/recognizers/
 __pycache__/
 
 !settings/*.txt
