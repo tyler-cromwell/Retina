@@ -125,12 +125,6 @@ def main():
         retval, frame = stream.read()
 
         """ Check flags """
-        if flags & 1:
-            """ Blur """
-            frame = cv2.GaussianBlur(frame, (5, 5), 0)
-        if flags & 2:
-            """ Histogram Equalization """
-            frame = cv2.equalizeHist(frame)
         if flags & 4:
             """ Face Recognition """
             labels, objects = faceRecognizer.recognize(frame)
@@ -138,6 +132,12 @@ def main():
             for i, (x, y, w, h) in enumerate(objects):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
                 cv2.putText(frame, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        if flags & 1:
+            """ Blur """
+            frame = cv2.GaussianBlur(frame, (5, 5), 0)
+        if flags & 2:
+            """ Histogram Equalization """
+            frame = cv2.equalizeHist(frame)
         if flags & 8:
             """ Grayscale """
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
