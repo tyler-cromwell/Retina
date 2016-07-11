@@ -138,9 +138,10 @@ def main():
         if flags & 8:
             """ Grayscale """
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        if flags & 2:
-            """ Histogram Equalization """
-            frame = cv2.equalizeHist(frame)
+
+            if flags & 2:
+                """ Histogram Equalization """
+                frame = cv2.equalizeHist(frame)
 
         end = time.time()
         fps = 1 // (end - start)
