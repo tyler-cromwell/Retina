@@ -48,8 +48,8 @@ class Recognizer(detector.Detector):
         faces = self.detect(frame, False)
 
         for (x, y, w, h) in faces:
-            image = preprocess(frame, x, y, w, h)
-            predicted_label, confidence = self._recognizer.predict(image)
+            face = preprocess(frame, x, y, w, h)
+            predicted_label, confidence = self._recognizer.predict(face)
 
             if predicted_label == self._hash:
                 labels.append(self._label +' ('+ str(round(confidence)) +')')
