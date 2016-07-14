@@ -131,6 +131,7 @@ def main():
             for i, (x, y, w, h) in enumerate(objects):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
                 cv2.putText(frame, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+                cv2.putText(frame, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
         if flags & 1:
             frame = cv2.GaussianBlur(frame, (5, 5), 0)
@@ -144,7 +145,7 @@ def main():
         end = time.time()
         fps = 1 // (end - start)
 
-        print('FPS: [%d]\r' % (fps), end='')
+        cv2.putText(frame, 'FPS: [%d]' % (fps), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.imshow(windowName, frame)
 
         key = cv2.waitKey(1)
