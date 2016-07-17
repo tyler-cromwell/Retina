@@ -50,7 +50,7 @@ def print_usage():
     print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
     print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
     print('        Required if not running on a Raspberry Pi 2')
-    print('        [beagleboneblack, mydesktop, raspberrypi2, thinkpad-t420]')
+    print('        See \'settings/\', without \'.txt\' extension')
     exit(0)
 
 
