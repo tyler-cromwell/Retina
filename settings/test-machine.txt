@@ -7,8 +7,8 @@ classifier: haarcascade_frontalface_default.xml
 flags: 0
 scaleFactor: 1.08
 minNeighbors: 10
-minSize: 60, 60
-maxSize: 360, 360
+minSize: 70, 70
+maxSize: 300, 300
 
 [Recognizer]
 threshold: 65
