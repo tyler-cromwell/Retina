@@ -134,7 +134,7 @@ def main():
                 cv2.putText(frame, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
         if flags & 1:
-            frame = cv2.GaussianBlur(frame, (5, 5), 0)
+            frame = cv2.bilateralFilter(frame, 5, 60, 60)
 
         if flags & 8:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

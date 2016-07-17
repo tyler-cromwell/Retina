@@ -61,8 +61,7 @@ class Recognizer(detector.Detector):
 
 def preprocess(frame, x, y, w, h):
     cropped = frame[y: y+h, x: x+w]
-    resized = cv2.resize(cropped, (200, 200))
-    blurred = cv2.GaussianBlur(resized, (5, 5), 0)
-    grayed = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+    grayed = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
     equalized = cv2.equalizeHist(grayed)
-    return equalized
+    filtered = cv2.bilateralFilter(equalized, 5, 60, 60)
+    return filtered
