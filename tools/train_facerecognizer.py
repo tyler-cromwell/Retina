@@ -32,8 +32,6 @@ import cv2
 
 """ Local modules """
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from modules import detector
-from modules import opt
 
 
 """
@@ -50,13 +48,9 @@ def opt_label(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./train_facerecognizer.py [--classifier=PATH] --label=NAME [--settings=MACHINE]')
+    print('Usage:\t./train_facerecognizer.py --label=NAME')
     print('  --help\t\tPrints this text')
-    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
-    print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
-    print('      Required if not running on a Raspberry Pi 2')
-    print('      See \'settings/\', without \'.txt\' extension')
     exit(0)
 
 
@@ -64,15 +58,12 @@ def print_usage():
 Main function.
 """
 def main():
-    faceClassifier = None
     label = None
-    settings = opt.map_settings()
-    key = opt.default_settings()
 
     """ Parse command-line arguments """
     try:
         short_opts = ['']
-        long_opts = ['help', 'classifier=', 'label=', 'settings=']
+        long_opts = ['help', 'label=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
@@ -84,25 +75,17 @@ def main():
     for o, a in opts:
         if o == '--help':
             print_usage()
-        elif o == '--classifier':
-            faceClassifier = opt.classifier(a)
         elif o == '--label':
             label = opt_label(a)
-        elif o == '--settings':
-            key = a
 
     if not label:
         print('\n  Label not specified!\n')
-        print_usage()
-    elif not key in settings.keys():
-        print('\n  Settings not specified\n')
         print_usage()
 
     """ Initialize variables """
     filename = label +'.xml'
     training_path = sys.path[1] +'/data/faces/'+ label +'/'
     recognizer_path = sys.path[1] +'/data/recognizers/'+ label +'.xml'
-    faceDetector = detector.Detector(faceClassifier, settings[key])
     faceRecognizer = cv2.face.createLBPHFaceRecognizer()
     image_paths = []
     images = []
@@ -119,11 +102,9 @@ def main():
     for path in image_paths:
         gray_image = Image.open(path).convert('L')
         image = numpy.array(gray_image, 'uint8')
-        faces = faceDetector.detect(image, False)
-
-        for (x, y, w, h) in faces:
-            images.append(image[y: y+h, x: x+w])
-            labels.append(int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8))
+        w, h = gray_image.size
+        images.append(image[0: 0+h, 0: 0+w])
+        labels.append(int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8))
     print('DONE')
 
     """ Train """

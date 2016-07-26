@@ -13,6 +13,4 @@ Various tools for working with Cerebrum.
 - `prepare.sh` - Configures the OpenCV repository before building.<br/><br/>
 - `train_facerecognizer.py` - Creates a Face Recognizer for a specific person.<br/>
   This script takes in a Label which is used to both name the face to be recognized and read the training set from the directory `Cerebrum/data/faces/LABEL`.
-  It may take in the (absolute) path to a Face Detection classifier to detect faces during training and/or the settings for the machine the script is running on.
-  See `train_facerecognizer.py --help` for details.
   The resulting Face Recognizer is saved under `Cerebrum/data/recognizers/` as `LABEL.xml` where `LABEL` is the given label.<br/><br/>
