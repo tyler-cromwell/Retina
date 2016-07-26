@@ -94,8 +94,8 @@ def main():
         print_usage()
 
     """ Setup training set, objects, and window """
-    setDir = sys.path[1] +'/data/faces/'+ label +'/'
-    os.makedirs(setDir, exist_ok=True)
+    training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
+    os.makedirs(training_path, exist_ok=True)
 
     displayWidth, displayHeight = misc.get_display_resolution()
     print('Display resolution: %dx%d' % (displayWidth, displayHeight))
@@ -152,7 +152,11 @@ def main():
             (x, y, w, h) = faces[0]
 
             image = recognizer.preprocess(frame, x, y, w, h)
-            cv2.imwrite(setDir + label +'.'+ str(p) +'.png', image)
+
+            if p < 10:
+                cv2.imwrite(training_path + label +'.0'+ str(p) +'.png', image)
+            else:
+                cv2.imwrite(training_path + label +'.'+ str(p) +'.png', image)
 
             if p < (2 * len(poses)) - 1:
                 p = p + 1

@@ -20,10 +20,10 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import hashlib
 import getopt
 import os
 import sys
+import tkinter
 
 """ External libraries """
 import numpy
@@ -32,14 +32,17 @@ import cv2
 
 """ Local modules """
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules import detector
+from modules import opt
+from modules import recognizer
 
 
 """
-Returns the path of the training set.
+Ensures the given label has a raw dataset to process.
 """
-def opt_label(arg):
-    if os.path.isdir(sys.path[1] +'/data/faces/'+ arg):
-        return arg
+def opt_label(label):
+    if os.path.isdir(sys.path[1] +'/data/faces/'+ label +'/raw'):
+        return label
     else:
         return None
 
@@ -48,9 +51,13 @@ def opt_label(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./train_facerecognizer.py --label=NAME')
+    print('Usage:\t./process_raw_images.py [--classifier=PATH] --label=NAME [--settings=MACHINE]')
     print('  --help\t\tPrints this text')
-    print('  --label=NAME\t\tThe name of the person\'s face to recognize')
+    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
+    print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
+    print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
+    print('        Required if not running on a Raspberry Pi 2')
+    print('        See \'settings/\', without \'.txt\' extension')
     exit(0)
 
 
@@ -58,12 +65,15 @@ def print_usage():
 Main function.
 """
 def main():
+    faceClassifier = None
     label = None
+    settings = opt.map_settings()
+    key = opt.default_settings()
 
     """ Parse command-line arguments """
     try:
         short_opts = ['']
-        long_opts = ['help', 'label=']
+        long_opts = ['help', 'classifier=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
@@ -75,47 +85,45 @@ def main():
     for o, a in opts:
         if o == '--help':
             print_usage()
+        elif o == '--classifier':
+            faceClassifier = opt.classifier(a)
         elif o == '--label':
             label = opt_label(a)
+        elif o == '--settings':
+            key = a
 
     if not label:
         print('\n  Label not specified!\n')
         print_usage()
+    elif not key in settings.keys():
+        print('\n  Settings not specified!\n')
 
     """ Initialize variables """
-    filename = label +'.xml'
+    faceDetector = detector.Detector(faceClassifier, settings[key])
+    raw_path = sys.path[1] +'/data/faces/'+ label +'/raw/'
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
-    recognizer_path = sys.path[1] +'/data/recognizers/'+ label +'.xml'
-    faceRecognizer = cv2.face.createLBPHFaceRecognizer()
     image_paths = []
-    images = []
-    labels = []
+
+    os.makedirs(training_path, exist_ok=True)
 
     """ Get the absolute path of each image """
-    print('Collecting training images... ', end='')
-    for entry in os.listdir(training_path):
-        image_paths.append(os.path.join(training_path, entry))
+    print('Collecting raw images... ', end='')
+    for entry in os.listdir(raw_path):
+        image_paths.append(os.path.join(raw_path, entry))
     print('DONE')
 
-    """ Add each of the persons images to the training set """
-    print('Assigning labels... ', end='')
-    for path in image_paths:
-        image_pil = Image.open(path)
+    """ Preprocess each image """
+    print('Preprocessing raw images...', end='')
+    for i, path in enumerate(image_paths):
+        image_pil = Image.open(path).convert('RGB')
         image = numpy.array(image_pil)
-        (w, h) = image_pil.size
-        images.append(image[0: 0+h, 0: 0+w])
-        labels.append(int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8))
-    print('DONE')
+        (x, y, w, h) = faceDetector.detect(image, False)[0]
+        face = recognizer.preprocess(image, x, y, w, h)
 
-    """ Train """
-    print('Training recognizer... ', end='')
-    faceRecognizer.train(images, numpy.array(labels))
-    print('DONE')
-
-    """ Save the newly trained recognizer """
-    print('Saving recognizer: '+ filename +'... ', end='')
-    os.makedirs(sys.path[1] +'/data/recognizers/', exist_ok=True)
-    faceRecognizer.save(recognizer_path)
+        if i < 10:
+            cv2.imwrite(training_path + label +'.0'+ str(i) +'.png', face);
+        else:
+            cv2.imwrite(training_path + label +'.'+ str(i) +'.png', face);
     print('DONE')
 
 
