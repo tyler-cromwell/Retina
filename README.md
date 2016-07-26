@@ -7,8 +7,14 @@ The name comes from the part of the Human brain responsible for vision and learn
 
 ## Project Hierarchy
 - `data` - Permanent and temporary data used for detection and recognition.
+  - `classifiers` - Haar and LBP face detection classifiers.
+  - `faces` - Face image sets for specific individuals.
+    - `LABEL` - Sets for a specific individual.
+      - `raw` - Raw, non-preprocessed, RGB images from an external source.
+      - `training` - Preprocessed images ready for recognizer training.
+  - `recognizers` - Face recognizer models.
 - `modules` - Internal data models and helper functions.
-- `settings` - Hardware specific settings for each of my machines.
+- `settings` - Machine specific settings for video capture, detection, and recognition.
 - `tools` - Various tools for working with Cerebrum.
 
 ## Dependencies
