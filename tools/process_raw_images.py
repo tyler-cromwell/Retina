@@ -32,6 +32,7 @@ import cv2
 
 """ Local modules """
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules import camera
 from modules import detector
 from modules import opt
 from modules import recognizer
@@ -51,13 +52,14 @@ def opt_label(label):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./process_raw_images.py [--classifier=PATH] --label=NAME [--settings=MACHINE]')
+    print('Usage:\t./process_raw_images.py [--classifier=PATH] --label=NAME [--settings=MACHINE] [--show]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
     print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
     print('        Required if not running on a Raspberry Pi 2')
     print('        See \'settings/\', without \'.txt\' extension')
+    print('  --show\t\tShow images being processed')
     exit(0)
 
 
@@ -67,13 +69,14 @@ Main function.
 def main():
     faceClassifier = None
     label = None
+    show = False
     settings = opt.map_settings()
     key = opt.default_settings()
 
     """ Parse command-line arguments """
     try:
         short_opts = ['']
-        long_opts = ['help', 'classifier=', 'label=', 'settings=']
+        long_opts = ['help', 'classifier=', 'label=', 'settings=', 'show']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
@@ -91,6 +94,8 @@ def main():
             label = opt_label(a)
         elif o == '--settings':
             key = a
+        elif o == '--show':
+            show = True
 
     if not label:
         print('\n  Label not specified!\n')
@@ -99,6 +104,7 @@ def main():
         print('\n  Settings not specified!\n')
 
     """ Initialize variables """
+    stream = camera.Camera(0, settings[key])
     faceDetector = detector.Detector(faceClassifier, settings[key])
     raw_path = sys.path[1] +'/data/faces/'+ label +'/raw/'
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
@@ -113,18 +119,28 @@ def main():
     print('DONE')
 
     """ Preprocess each image """
-    print('Preprocessing raw images...', end='')
+    l = len(image_paths)
     for i, path in enumerate(image_paths):
-        image_pil = Image.open(path).convert('RGB')
-        image = numpy.array(image_pil)
+        print('\rPreprocessing raw images... ('+ str(i+1) +'/'+ str(l) +')', end='')
+        image_pil = Image.open(path)
+        image_org = numpy.array(image_pil)
+        image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image_rgb, (stream.getWidth(), stream.getHeight()))
         (x, y, w, h) = faceDetector.detect(image, False)[0]
+
+        if show:
+            cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
+            cv2.imshow('process_raw_images.py', image)
+            cv2.waitKey(1)
+
         face = recognizer.preprocess(image, x, y, w, h)
 
         if i < 10:
             cv2.imwrite(training_path + label +'.0'+ str(i) +'.png', face);
         else:
             cv2.imwrite(training_path + label +'.'+ str(i) +'.png', face);
-    print('DONE')
+
+    print('\rPreprocessing raw images... DONE    ')
 
 
 """
