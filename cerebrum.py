@@ -27,6 +27,8 @@ import time
 import tkinter
 
 """ External libraries """
+import numpy
+from PIL import Image
 import cv2
 
 """ Local modules """
@@ -53,9 +55,10 @@ def opt_label(label):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py [--classifier=PATH] --label=NAME [--settings=MACHINE]')
+    print('Usage:\t./cerebrum.py [--classifier=PATH] [--image=PATH] --label=NAME [--settings=MACHINE]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
+    print('  --image=PATH\t\tPath to a still image (alternative to camera stream)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=MACHINE\tThe aboslute path of a file located under \'settings/\'')
     print('      Required if not running on a Raspberry Pi 2')
@@ -70,6 +73,7 @@ def main():
     flags = 0
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
     faceClassifier = None
+    img = None
     label = None
     settings = opt.map_settings()
     key = opt.default_settings()
@@ -77,7 +81,7 @@ def main():
     """ Parse command-line arguments """
     try:
         short_opts = ['']
-        long_opts = ['help', 'classifier=', 'label=', 'settings=']
+        long_opts = ['help', 'classifier=', 'image=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
@@ -91,6 +95,8 @@ def main():
             print_usage()
         elif o == '--classifier':
             faceClassifier = opt.classifier(a)
+        elif o == '--image':
+            img = a
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
@@ -110,6 +116,23 @@ def main():
     faceRecognizer = recognizer.Recognizer(faceClassifier, label, settings[key])
     stream = camera.Camera(CAMERA_DEFAULT, settings[key])
     print('Capture resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
+
+    """ Recognize in a still image """
+    if img:
+        image_pil = Image.open(img)
+        image_org = numpy.array(image_pil)
+        image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image_rgb, (stream.getWidth(), stream.getHeight()))
+        labels, objects = faceRecognizer.recognize(image)
+
+        for i, (x, y, w, h) in enumerate(objects):
+            cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
+            cv2.putText(image, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+            cv2.putText(image, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+
+        cv2.imshow(img, image)
+        cv2.waitKey(0)
+        return
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
