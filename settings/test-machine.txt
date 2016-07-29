@@ -1,14 +1,14 @@
 [General]
-width: 768
-height: 480
+width: 800
+height: 600
 
 [Detector]
 classifier: haarcascade_frontalface_default.xml
 flags: 0
 scaleFactor: 1.08
 minNeighbors: 10
-minSize: 70, 70
-maxSize: 300, 300
+minSize: 80, 80
+maxSize: 280, 280
 
 [Recognizer]
 threshold: 65
