@@ -126,7 +126,13 @@ def main():
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image_rgb, (stream.getWidth(), stream.getHeight()))
-        (x, y, w, h) = faceDetector.detect(image, False)[0]
+        (x, y, w, h) = (0, 0, 0, 0)
+
+        try:
+            (x, y, w, h) = faceDetector.detect(image, False)[0]
+        except IndexError:
+            print('\nNo faces detected in:', path)
+            continue
 
         if show:
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
