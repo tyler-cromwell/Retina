@@ -20,6 +20,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
+import configparser
 import getopt
 import os
 import sys
@@ -93,7 +94,14 @@ def main():
         print('\n  Settings not specified!\n')
         print_usage()
 
+    print(settings[key])
+    return
+
     """ Setup training set, objects, and window """
+    config = configparser.ConfigParser()
+    config.read(settings[key])
+    width = int(config.get('Recognizer', 'width'))
+    height = int(config.get('Recognizer', 'height'))
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
     os.makedirs(training_path, exist_ok=True)
 
@@ -151,7 +159,7 @@ def main():
             retval, frame = stream.read()   # Get frame without drawings
             (x, y, w, h) = faces[0]
 
-            image = recognizer.preprocess(frame, x, y, w, h)
+            image = recognizer.preprocess(frame, width, height, x, y, w, h)
 
             if p < 10:
                 cv2.imwrite(training_path + label +'.0'+ str(p) +'.png', image)

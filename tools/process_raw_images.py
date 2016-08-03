@@ -20,6 +20,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
+import configparser
 import getopt
 import os
 import sys
@@ -104,6 +105,10 @@ def main():
         print('\n  Settings not specified!\n')
 
     """ Initialize variables """
+    config = configparser.ConfigParser()
+    config.read(settings[key])
+    width = int(config.get('Recognizer', 'width'))
+    height = int(config.get('Recognizer', 'height'))
     stream = camera.Camera(0, settings[key])
     faceDetector = detector.Detector(faceClassifier, settings[key])
     raw_path = sys.path[1] +'/data/faces/'+ label +'/raw/'
@@ -139,7 +144,7 @@ def main():
             cv2.imshow('process_raw_images.py', image)
             cv2.waitKey(1)
 
-        face = recognizer.preprocess(image, x, y, w, h)
+        face = recognizer.preprocess(image, width, height, x, y, w, h)
 
         if i < 10:
             cv2.imwrite(training_path + label +'.0'+ str(i) +'.png', face);

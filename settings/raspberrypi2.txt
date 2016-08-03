@@ -12,3 +12,5 @@ maxSize: 200, 200
 
 [Recognizer]
 threshold: 85
+width: 400
+height: 300

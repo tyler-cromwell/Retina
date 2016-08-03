@@ -37,6 +37,8 @@ class Recognizer(detector.Detector):
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         self._threshold = int(config.get('Recognizer', 'threshold'))
+        self._width = int(config.get('Recognizer', 'width'))
+        self._height = int(config.get('Recognizer', 'height'))
         self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
         self._recognizer.load(root_dir +'/data/recognizers/'+ label +'.xml')
         self._label = label
@@ -48,7 +50,7 @@ class Recognizer(detector.Detector):
         faces = self.detect(frame, False)
 
         for (x, y, w, h) in faces:
-            face = preprocess(frame, x, y, w, h)
+            face = preprocess(frame, self._width, self._height, x, y, w, h)
             predicted_label, confidence = self._recognizer.predict(face)
 
             if predicted_label == self._hash:
@@ -59,9 +61,10 @@ class Recognizer(detector.Detector):
         return (labels, faces)
 
 
-def preprocess(frame, x, y, w, h):
+def preprocess(frame, width, height, x, y, w, h):
     cropped = frame[y: y+h, x: x+w]
     grayed = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
-    equalized = cv2.equalizeHist(grayed)
+    resized = cv2.resize(grayed, (width, height))
+    equalized = cv2.equalizeHist(resized)
     filtered = cv2.bilateralFilter(equalized, 5, 60, 60)
     return filtered
