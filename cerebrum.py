@@ -55,12 +55,12 @@ def opt_label(label):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./cerebrum.py [--classifier=PATH] [--image=PATH] --label=NAME [--settings=MACHINE]')
+    print('Usage:\t./cerebrum.py [--classifier=PATH] [--image=PATH] --label=NAME [--settings=NAME]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --image=PATH\t\tPath to a still image (alternative to camera stream)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
-    print('  --settings=MACHINE\tThe aboslute path of a file located under \'settings/\'')
+    print('  --settings=NAME\tThe name of a file located under \'settings/\'')
     print('      Required if not running on a Raspberry Pi 2')
     print('      See \'settings/\', without \'.txt\' extension')
     exit(0)

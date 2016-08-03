@@ -53,14 +53,14 @@ def opt_label(label):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./process_raw_images.py [--classifier=PATH] --label=NAME [--settings=MACHINE] [--show]')
+    print('Usage:\t./process_raw_images.py [--classifier=PATH] --label=NAME [--settings=NAME] [--show]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
-    print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
+    print('  --settings=NAME\tThe name of a file located under \'settings/\'')
     print('        Required if not running on a Raspberry Pi 2')
     print('        See \'settings/\', without \'.txt\' extension')
-    print('  --show\t\tShow images being processed')
+    print('  --show\t\tOpens a window to show images being processed')
     exit(0)
 
 
@@ -68,9 +68,9 @@ def print_usage():
 Main function.
 """
 def main():
-    faceClassifier = None
     label = None
     show = False
+    faceClassifier = None
     settings = opt.map_settings()
     key = opt.default_settings()
 
@@ -103,6 +103,7 @@ def main():
         print_usage()
     elif not key in settings.keys():
         print('\n  Settings not specified!\n')
+        print_usage()
 
     """ Initialize variables """
     config = configparser.ConfigParser()

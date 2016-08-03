@@ -45,11 +45,11 @@ CAMERA_DEFAULT = 0
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./create_face_dataset.py [--classifier=PATH] --label=NAME [--settings=MACHINE]')
+    print('Usage:\t./create_face_dataset.py [--classifier=PATH] --label=NAME [--settings=NAME]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
-    print('  --settings=MACHINE\tThe absolute path of a file located under \'settings/\'')
+    print('  --settings=NAME\tThe name of a file located under \'settings/\'')
     print('        Required if not running on a Raspberry Pi 2')
     print('        See \'settings/\', without \'.txt\' extension')
     exit(0)
@@ -93,9 +93,6 @@ def main():
     elif not key in settings.keys():
         print('\n  Settings not specified!\n')
         print_usage()
-
-    print(settings[key])
-    return
 
     """ Setup training set, objects, and window """
     config = configparser.ConfigParser()
