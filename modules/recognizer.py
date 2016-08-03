@@ -26,11 +26,12 @@ import os
 import cv2
 
 """ Local modules """
+from modules import algorithms
 from modules import detector
 
 
 class Recognizer(detector.Detector):
-    def __init__(self, classifier, label, settings):
+    def __init__(self, classifier, label, settings, algorithm=algorithms.Algorithms.LBPH.value):
         super().__init__(classifier, settings)
         config = configparser.ConfigParser()
         config.read(settings)
@@ -39,7 +40,14 @@ class Recognizer(detector.Detector):
         self._threshold = int(config.get('Recognizer', 'threshold'))
         self._width = int(config.get('Recognizer', 'width'))
         self._height = int(config.get('Recognizer', 'height'))
-        self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
+
+        if algorithm == algorithms.Algorithms.Eigen.value:
+            self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold);
+        elif algorithm == algorithms.Algorithms.Fisher.value:
+            self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold);
+        else:
+            self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
+
         self._recognizer.load(root_dir +'/data/recognizers/'+ label +'.xml')
         self._label = label
         self._hash = int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8)

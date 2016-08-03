@@ -48,8 +48,10 @@ def opt_label(arg):
 Displays program usage information.
 """
 def print_usage():
-    print('Usage:\t./train_facerecognizer.py --label=NAME')
+    print('Usage:\t./train_facerecognizer.py [--algorithm=NAME] --label=NAME')
     print('  --help\t\tPrints this text')
+    print('  --algorithm=NAME\tThe name of the Face Recognition algorithm to train with')
+    print('                  \tValues: Eigen, Fisher, or LBPH (default)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     exit(0)
 
@@ -58,12 +60,13 @@ def print_usage():
 Main function.
 """
 def main():
+    algorithm = ''
     label = None
 
     """ Parse command-line arguments """
     try:
         short_opts = ['']
-        long_opts = ['help', 'label=']
+        long_opts = ['help', 'algorithm=', 'label=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \''+ str(error) +'\'\n')
@@ -75,6 +78,8 @@ def main():
     for o, a in opts:
         if o == '--help':
             print_usage()
+        elif o == '--algorithm':
+            algorithm = a
         elif o == '--label':
             label = opt_label(a)
 
@@ -86,10 +91,20 @@ def main():
     filename = label +'.xml'
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
     recognizer_path = sys.path[1] +'/data/recognizers/'+ label +'.xml'
-    faceRecognizer = cv2.face.createLBPHFaceRecognizer()
+    faceRecognizer = None
     image_paths = []
     images = []
     labels = []
+
+    """ Determine algorithm """
+    if algorithm == 'Eigen':
+        faceRecognizer = cv2.face.createEigenFaceRecognizer()
+    elif algorithm == 'Fisher':
+        faceRecognizer = cv2.face.createFisherFaceRecognizer()
+    else:
+        if not algorithm == 'LBPH':
+            print('Defaulting to LBPH')
+        faceRecognizer = cv2.face.createLBPHFaceRecognizer()
 
     """ Get the absolute path of each image """
     print('Collecting training images... ', end='')

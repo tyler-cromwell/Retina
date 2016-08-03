@@ -17,4 +17,11 @@
   If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-__all__ = ['algorithms', 'camera', 'detector', 'misc', 'opt', 'recognizer']
+""" Python libraries """
+import enum
+
+
+class Algorithms(enum.Enum):
+    LBPH = 1
+    Fisher = 2
+    Eigen = 3
