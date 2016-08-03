@@ -11,6 +11,6 @@ minSize: 90, 90
 maxSize: 280, 280
 
 [Recognizer]
-threshold: 60
+threshold: 55
 width: 400
 height: 300
