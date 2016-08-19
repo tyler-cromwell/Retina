@@ -50,7 +50,6 @@ def print_usage():
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
     print('  --settings=NAME\tThe name of a file located under \'settings/\'')
-    print('        Required if not running on a Raspberry Pi 2')
     print('        See \'settings/\', without \'.txt\' extension')
     exit(0)
 

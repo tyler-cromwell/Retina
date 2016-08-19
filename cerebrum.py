@@ -61,7 +61,6 @@ def print_usage():
     print('  --image=PATH\t\tPath to a still image (alternative to camera stream)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=NAME\tThe name of a file located under \'settings/\'')
-    print('      Required if not running on a Raspberry Pi 2')
     print('      See \'settings/\', without \'.txt\' extension')
     exit(0)
 
