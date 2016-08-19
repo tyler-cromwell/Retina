@@ -42,12 +42,12 @@ def default_settings():
     try:
         mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
     except OSError as ose:
-        return None
+        return 'test-machine'
 
     if mac[0:3] == ['b8', '27', 'eb']:
         return 'raspberrypi2'
     else:
-        return None
+        return 'test-machine'
 
 
 """
