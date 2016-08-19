@@ -45,7 +45,7 @@ CAMERA_DEFAULT = 0
 Ensures the recognizer given by 'path' exists
 """
 def opt_label(label):
-    if os.path.isfile(sys.path[0] +'/data/recognizers/'+ label +'.xml'):
+    if os.path.isfile(sys.path[0] +'/data/recognizers/'+ label +'.lbph.xml'):
         return label
     else:
         return None

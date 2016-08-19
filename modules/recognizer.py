@@ -36,6 +36,7 @@ class Recognizer(detector.Detector):
         config = configparser.ConfigParser()
         config.read(settings)
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        path = None
 
         self._threshold = int(config.get('Recognizer', 'threshold'))
         self._width = int(config.get('Recognizer', 'width'))
@@ -43,12 +44,15 @@ class Recognizer(detector.Detector):
 
         if algorithm == algorithms.Algorithms.Eigen.value:
             self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold);
+            path = root_dir +'/data/recognizers/'+ label +'.eigen.xml'
         elif algorithm == algorithms.Algorithms.Fisher.value:
             self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold);
+            path = root_dir +'/data/recognizers/'+ label +'.fisher.xml'
         else:
             self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
+            path = root_dir +'/data/recognizers/'+ label +'.lbph.xml'
 
-        self._recognizer.load(root_dir +'/data/recognizers/'+ label +'.xml')
+        self._recognizer.load(path)
         self._label = label
         self._hash = int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8)
 
