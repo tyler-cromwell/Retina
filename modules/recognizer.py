@@ -28,6 +28,7 @@ import cv2
 """ Local modules """
 from modules import algorithms
 from modules import detector
+from modules import imgproc
 
 
 class Recognizer(detector.Detector):
@@ -63,7 +64,7 @@ class Recognizer(detector.Detector):
         faces = self.detect(frame, False)
 
         for (x, y, w, h) in faces:
-            face = preprocess(frame, self._width, self._height, x, y, w, h)
+            face = imgproc.preprocess(frame, self._width, self._height, x, y, w, h)
             predicted_label, confidence = self._recognizer.predict(face)
 
             if predicted_label == self._hash:
@@ -74,12 +75,3 @@ class Recognizer(detector.Detector):
             confidences.append(str(round(confidence)))
 
         return (labels, faces, confidences)
-
-
-def preprocess(frame, width, height, x, y, w, h):
-    cropped = frame[y: y+h, x: x+w]
-    grayed = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
-    resized = cv2.resize(grayed, (width, height))
-    equalized = cv2.equalizeHist(resized)
-    filtered = cv2.bilateralFilter(equalized, 5, 60, 60)
-    return filtered

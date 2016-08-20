@@ -35,6 +35,7 @@ import cv2
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
 from modules import detector
+from modules import imgproc
 from modules import opt
 from modules import recognizer
 
@@ -144,7 +145,7 @@ def main():
             cv2.imshow('process_raw_images.py', image)
             cv2.waitKey(1)
 
-        face = recognizer.preprocess(image, width, height, x, y, w, h)
+        face = imgproc.preprocess(image, width, height, x, y, w, h)
 
         if i < 10:
             cv2.imwrite(training_path + label +'.0'+ str(i) +'.png', face);

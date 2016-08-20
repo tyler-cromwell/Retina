@@ -33,6 +33,7 @@ import cv2
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
 from modules import detector
+from modules import imgproc
 from modules import misc
 from modules import opt
 from modules import recognizer
@@ -155,7 +156,7 @@ def main():
             retval, frame = stream.read()   # Get frame without drawings
             (x, y, w, h) = faces[0]
 
-            image = recognizer.preprocess(frame, width, height, x, y, w, h)
+            image = imgproc.preprocess(frame, width, height, x, y, w, h)
 
             if p < 10:
                 cv2.imwrite(training_path + label +'.0'+ str(p) +'.png', image)
