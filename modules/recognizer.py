@@ -71,10 +71,11 @@ class Recognizer(detector.Detector):
 
             if predicted_label == self._hash:
                 labels.append(self._label)
+                confidences.append(str(round(confidence)))
             else:
                 labels.append('Unknown')
+                confidences.append(str(-1))
 
-            confidences.append(str(round(confidence)))
 
         return (labels, faces, confidences)
 
