@@ -52,6 +52,16 @@ def opt_label(label):
 
 
 """
+Draws the rectangle, label, and confidence around a face
+"""
+def drawFaceInfo(image, labels, objects, confidences):
+    for i, (x, y, w, h) in enumerate(objects):
+        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
+        cv2.putText(image, labels[i].title() +' ('+ confidences[i] +')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        cv2.putText(image, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+
+
+"""
 Displays program usage information.
 """
 def print_usage():
@@ -119,12 +129,7 @@ def main():
     """ Recognize in a still image """
     if img:
         image, labels, objects, confidences = faceRecognizer.recognizeFromFile(img)
-
-        for i, (x, y, w, h) in enumerate(objects):
-            cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
-            cv2.putText(image, labels[i].title() +' ('+ confidences[i] +')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-            cv2.putText(image, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-
+        drawFaceInfo(image, labels, objects, confidences)
         cv2.imshow(img, image)
         cv2.waitKey(0)
         return
@@ -145,11 +150,7 @@ def main():
         """ Check flags """
         if flags & 4:
             labels, objects, confidences = faceRecognizer.recognize(frame)
-
-            for i, (x, y, w, h) in enumerate(objects):
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-                cv2.putText(frame, labels[i].title() +' ('+ confidences[i] +')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-                cv2.putText(frame, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+            drawFaceInfo(frame, labels, objects, confidences)
 
         if flags & 1:
             frame = cv2.bilateralFilter(frame, 5, 60, 60)
