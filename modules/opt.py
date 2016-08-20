@@ -34,7 +34,7 @@ def classifier(path):
 
 """
 Use the Mac Address OUI to determine what machine we're running on.
-Defaults to the Raspberry Pi 2 (b8:27:eb:__:__:__).
+Defaults to the my testing machine.
 """
 def default_settings():
     mac = None
