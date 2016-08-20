@@ -119,10 +119,9 @@ def main():
     ]
 
     """ Begin using the camera """
-    if not stream.isOpened():
-        if not stream.open(CAMERA_DEFAULT):
-            print('Failed to open Camera', CAMERA_DEFAULT)
-            exit(1)
+    if not stream.open():
+        print('Failed to open Camera', CAMERA_DEFAULT)
+        exit(1)
 
     while True:
         retval, frame = stream.read()

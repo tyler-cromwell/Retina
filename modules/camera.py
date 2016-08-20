@@ -44,12 +44,14 @@ class Camera():
         return self._height
 
 
-    def isOpened(self):
-        return self._camera.isOpened()
-
-
     def open(self):
-        return self._camera.open(self._source)
+        if not self._camera.isOpened():
+            if not self._camera.open(self._source):
+                return False
+            else:
+                return True
+        else:
+            return True
 
 
     def read(self):
