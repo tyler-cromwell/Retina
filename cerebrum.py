@@ -118,11 +118,7 @@ def main():
 
     """ Recognize in a still image """
     if img:
-        image_pil = Image.open(img)
-        image_org = numpy.array(image_pil)
-        image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image_rgb, (stream.getWidth(), stream.getHeight()))
-        labels, objects, confidences = faceRecognizer.recognize(image)
+        image, labels, objects, confidences = faceRecognizer.recognizeFromFile(img)
 
         for i, (x, y, w, h) in enumerate(objects):
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)

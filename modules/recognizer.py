@@ -23,6 +23,8 @@ import hashlib
 import os
 
 """ External libraries """
+import numpy
+from PIL import Image
 import cv2
 
 """ Local modules """
@@ -75,3 +77,12 @@ class Recognizer(detector.Detector):
             confidences.append(str(round(confidence)))
 
         return (labels, faces, confidences)
+
+
+    def recognizeFromFile(self, path):
+        image_pil = Image.open(path)
+        image_org = numpy.array(image_pil)
+        image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image_rgb, (800, 600))
+        labels, objects, confidences = self.recognize(image)
+        return image, labels, objects, confidences
