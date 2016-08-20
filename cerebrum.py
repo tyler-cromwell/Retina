@@ -122,11 +122,11 @@ def main():
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image_rgb, (stream.getWidth(), stream.getHeight()))
-        labels, objects = faceRecognizer.recognize(image)
+        labels, objects, confidences = faceRecognizer.recognize(image)
 
         for i, (x, y, w, h) in enumerate(objects):
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
-            cv2.putText(image, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+            cv2.putText(image, labels[i].title() +' ('+ confidences[i] +')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
             cv2.putText(image, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
         cv2.imshow(img, image)
@@ -148,11 +148,11 @@ def main():
 
         """ Check flags """
         if flags & 4:
-            labels, objects = faceRecognizer.recognize(frame)
+            labels, objects, confidences = faceRecognizer.recognize(frame)
 
             for i, (x, y, w, h) in enumerate(objects):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
-                cv2.putText(frame, labels[i].title(), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+                cv2.putText(frame, labels[i].title() +' ('+ confidences[i] +')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
                 cv2.putText(frame, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
         if flags & 1:

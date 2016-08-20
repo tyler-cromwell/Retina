@@ -58,6 +58,7 @@ class Recognizer(detector.Detector):
 
 
     def recognize(self, frame):
+        confidences = []
         labels = []
         faces = self.detect(frame, False)
 
@@ -66,11 +67,13 @@ class Recognizer(detector.Detector):
             predicted_label, confidence = self._recognizer.predict(face)
 
             if predicted_label == self._hash:
-                labels.append(self._label +' ('+ str(round(confidence)) +')')
+                labels.append(self._label)
             else:
                 labels.append('Unknown')
 
-        return (labels, faces)
+            confidences.append(str(round(confidence)))
+
+        return (labels, faces, confidences)
 
 
 def preprocess(frame, width, height, x, y, w, h):
