@@ -34,7 +34,7 @@ def classifier(path):
 
 """
 Use the Mac Address OUI to determine what machine we're running on.
-Defaults to the my testing machine.
+Defaults to my test machine.
 """
 def default_settings():
     mac = None
@@ -42,12 +42,12 @@ def default_settings():
     try:
         mac = open('/sys/class/net/eth0/address').read().rstrip().split(':')
     except OSError as ose:
-        return 'test-machine'
+        return 'default'
 
     if mac[0:3] == ['b8', '27', 'eb']:
         return 'raspberrypi2'
     else:
-        return 'test-machine'
+        return 'default'
 
 
 """
