@@ -17,21 +17,17 @@
   If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-""" Python libraries """
-import configparser
-
 """ External libraries """
 import cv2
 
 
 class Camera():
-    def __init__(self, source, settings):
-        config = configparser.ConfigParser()
-        config.read(settings)
+    def __init__(self, source, config):
+        general = config.general()
         self._source = source
         self._camera = cv2.VideoCapture(source)
-        self._width = int(config.get('General', 'width'))
-        self._height = int(config.get('General', 'height'))
+        self._width = int(general['width'])
+        self._height = int(general['height'])
         self._camera.set(cv2.CAP_PROP_FRAME_WIDTH, self._width)
         self._camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self._height)
 

@@ -17,13 +17,33 @@
   If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-__all__ = [
-    'algorithms',
-    'camera',
-    'config',
-    'detector',
-    'imgproc',
-    'misc',
-    'opt',
-    'recognizer'
-]
+""" Python libraries """
+import configparser
+import os
+
+
+class Config:
+    def __init__(self, file_):
+        config = configparser.ConfigParser()
+        config.optionxform = str
+        config.read(file_)
+
+        self._config = []
+
+        for s in config.sections():
+            entries = [(o, config.get(s, o)) for o in config.options(s)]
+            self._config.append((s, dict(entries)))
+
+        self._config = dict(self._config)
+
+
+    def general(self):
+        return self._config['General']
+
+
+    def detector(self):
+        return self._config['Detector']
+
+
+    def recognizer(self):
+        return self._config['Recognizer']

@@ -18,7 +18,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import configparser
 import hashlib
 import os
 
@@ -34,26 +33,28 @@ from modules import imgproc
 
 
 class Recognizer(detector.Detector):
-    def __init__(self, classifier, label, settings, algorithm=algorithms.Algorithms.LBPH.value):
-        super().__init__(classifier, settings)
-        config = configparser.ConfigParser()
-        config.read(settings)
+    def __init__(self, classifier, label, config, algorithm=algorithms.Algorithms.LBPH.value):
+        super().__init__(classifier, config)
+        general = config.general()
+        recognizer = config.recognizer()
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = None
+        path = root_dir +'/data/recognizers/'+ label
 
-        self._threshold = int(config.get('Recognizer', 'threshold'))
-        self._width = int(config.get('Recognizer', 'width'))
-        self._height = int(config.get('Recognizer', 'height'))
+        self._width = int(general['width'])
+        self._height = int(general['height'])
+        self._threshold = int(recognizer['threshold'])
+        self._rwidth = int(recognizer['width'])
+        self._rheight = int(recognizer['height'])
 
         if algorithm == algorithms.Algorithms.Eigen.value:
             self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold);
-            path = root_dir +'/data/recognizers/'+ label +'.eigen.xml'
+            path += '.eigen.xml'
         elif algorithm == algorithms.Algorithms.Fisher.value:
             self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold);
-            path = root_dir +'/data/recognizers/'+ label +'.fisher.xml'
+            path += '.fisher.xml'
         else:
             self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
-            path = root_dir +'/data/recognizers/'+ label +'.lbph.xml'
+            path += '.lbph.xml'
 
         self._recognizer.load(path)
         self._label = label
@@ -66,7 +67,7 @@ class Recognizer(detector.Detector):
         faces = self.detect(frame, False)
 
         for (x, y, w, h) in faces:
-            face = imgproc.preprocess(frame, self._width, self._height, x, y, w, h)
+            face = imgproc.preprocess(frame, self._rwidth, self._rheight, x, y, w, h)
             predicted_label, confidence = self._recognizer.predict(face)
 
             if predicted_label == self._hash:
@@ -84,6 +85,6 @@ class Recognizer(detector.Detector):
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image_rgb, (800, 600))
+        image = cv2.resize(image_rgb, (self._width, self._height))
         labels, objects, confidences = self.recognize(image)
         return image, labels, objects, confidences

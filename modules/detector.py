@@ -18,7 +18,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import configparser
 import re
 import os
 
@@ -27,21 +26,20 @@ import cv2
 
 
 class Detector:
-    def __init__(self, classifier, settings):
-        config = configparser.ConfigParser()
-        config.read(settings)
+    def __init__(self, classifier, config):
+        detector = config.detector()
 
         if classifier:
             self._classifier = cv2.CascadeClassifier(classifier)
         else:
             root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            self._classifier = cv2.CascadeClassifier(root_dir +'/data/classifiers/'+ config.get('Detector', 'classifier'))
+            self._classifier = cv2.CascadeClassifier(root_dir +'/data/classifiers/'+ detector['classifier'])
 
-        self._flags = int(config.get('Detector', 'flags'))
-        self._scaleFactor = float(config.get('Detector', 'scaleFactor'))
-        self._minNeighbors = int(config.get('Detector', 'minNeighbors'))
-        self._minSize = tuple(map(int, re.split('\s*,\s*', config.get('Detector', 'minSize'))))
-        self._maxSize = tuple(map(int, re.split('\s*,\s*', config.get('Detector', 'maxSize'))))
+        self._flags = int(detector['flags'])
+        self._scaleFactor = float(detector['scaleFactor'])
+        self._minNeighbors = int(detector['minNeighbors'])
+        self._minSize = tuple(map(int, re.split('\s*,\s*', detector['minSize'])))
+        self._maxSize = tuple(map(int, re.split('\s*,\s*', detector['maxSize'])))
 
 
     def detect(self, frame, grayscale=True):
