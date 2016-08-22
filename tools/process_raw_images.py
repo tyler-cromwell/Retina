@@ -24,7 +24,6 @@ import configparser
 import getopt
 import os
 import sys
-import tkinter
 
 """ External libraries """
 import numpy
