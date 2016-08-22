@@ -24,7 +24,6 @@ import getopt
 import os
 import sys
 import time
-import tkinter
 
 """ External libraries """
 import numpy

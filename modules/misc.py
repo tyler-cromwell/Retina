@@ -18,11 +18,15 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import tkinter
+try:
+    import tkinter
 
+    def get_display_resolution():
+        tk = tkinter.Tk()
+        width = tk.winfo_screenwidth()
+        height = tk.winfo_screenheight()
+        return (width, height)
 
-def get_display_resolution():
-    tk = tkinter.Tk()
-    width = tk.winfo_screenwidth()
-    height = tk.winfo_screenheight()
-    return (width, height)
+except ImportError as ie:
+    def get_display_resolution():
+        return (0, 0)
