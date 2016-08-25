@@ -88,9 +88,9 @@ def main():
         print_usage()
 
     """ Initialize variables """
-    filename = label +'.xml'
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
     recognizer_path = sys.path[1] +'/data/recognizers/'+ label
+    filename = None
     faceRecognizer = None
     image_paths = []
     images = []
@@ -100,14 +100,17 @@ def main():
     if algorithm == 'Eigen':
         faceRecognizer = cv2.face.createEigenFaceRecognizer()
         recognizer_path = sys.path[1] +'/data/recognizers/'+ label +'.eigen.xml'
+        filename = label +'.eigen.xml'
     elif algorithm == 'Fisher':
         faceRecognizer = cv2.face.createFisherFaceRecognizer()
         recognizer_path = sys.path[1] +'/data/recognizers/'+ label +'.fisher.xml'
+        filename = label +'.fisher.xml'
     else:
         if not algorithm == 'LBPH':
             print('Defaulting to LBPH')
         faceRecognizer = cv2.face.createLBPHFaceRecognizer()
         recognizer_path = sys.path[1] +'/data/recognizers/'+ label +'.lbph.xml'
+        filename = label +'.lbph.xml'
 
     """ Get the absolute path of each image """
     print('Collecting training images... ', end='')
