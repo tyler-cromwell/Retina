@@ -20,7 +20,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import configparser
 import getopt
 import os
 import sys
@@ -33,10 +32,10 @@ import cv2
 """ Local modules """
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
+from modules import config
 from modules import detector
 from modules import imgproc
 from modules import opt
-from modules import recognizer
 
 
 """
@@ -105,12 +104,12 @@ def main():
         print_usage()
 
     """ Initialize variables """
-    config = configparser.ConfigParser()
-    config.read(settings[key])
-    width = int(config.get('Recognizer', 'width'))
-    height = int(config.get('Recognizer', 'height'))
-    stream = camera.Camera(0, settings[key])
-    faceDetector = detector.Detector(faceClassifier, settings[key])
+    configuration = config.Config(settings[key])
+    recognizer = configuration.recognizer()
+    width = int(recognizer['width'])
+    height = int(recognizer['height'])
+    stream = camera.Camera(0, configuration)
+    faceDetector = detector.Detector(faceClassifier, configuration)
     raw_path = sys.path[1] +'/data/faces/'+ label +'/raw/'
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
     image_paths = []
@@ -127,6 +126,7 @@ def main():
     l = len(image_paths)
     for i, path in enumerate(image_paths):
         print('\rPreprocessing raw images... ('+ str(i+1) +'/'+ str(l) +')', end='')
+        cont = False
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
@@ -137,12 +137,15 @@ def main():
             (x, y, w, h) = faceDetector.detect(image, False)[0]
         except IndexError:
             print('\nNo faces detected in:', path)
-            continue
+            cont = True
 
         if show:
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
             cv2.imshow('process_raw_images.py', image)
             cv2.waitKey(1)
+
+        if cont:
+            continue
 
         face = imgproc.preprocess(image, width, height, x, y, w, h)
 

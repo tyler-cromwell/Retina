@@ -20,7 +20,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """ Python libraries """
-import configparser
 import getopt
 import os
 import sys
@@ -31,6 +30,7 @@ import cv2
 """ Local modules """
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
+from modules import config
 from modules import detector
 from modules import imgproc
 from modules import misc
@@ -94,18 +94,18 @@ def main():
         print_usage()
 
     """ Setup training set, objects, and window """
-    config = configparser.ConfigParser()
-    config.read(settings[key])
-    width = int(config.get('Recognizer', 'width'))
-    height = int(config.get('Recognizer', 'height'))
+    configuration = config.Config(settings[key])
+    recognizer = config.recognizer()
+    width = int(recognizer['width'])
+    height = int(recognizer['height'])
     training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
     os.makedirs(training_path, exist_ok=True)
 
     displayWidth, displayHeight = misc.get_display_resolution()
     print('Display resolution: %dx%d' % (displayWidth, displayHeight))
 
-    faceDetector = detector.Detector(faceClassifier, settings[key])
-    stream = camera.Camera(CAMERA_DEFAULT, settings[key])
+    faceDetector = detector.Detector(faceClassifier, configuration)
+    stream = camera.Camera(CAMERA_DEFAULT, configuration)
     print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
 
     cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
