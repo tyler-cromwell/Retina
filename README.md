@@ -18,18 +18,17 @@ The name comes from the part of the Human brain responsible for vision and learn
 - `tools` - Various tools for working with Cerebrum.
 
 ## Dependencies
-- CMake (for building OpenCV)
-- GNU Make (also for building OpenCV)
-- OpenCV (preferably 3.1 or higher)
-- Python 3
+- Python 3.x
+- Numpy
+- Pillow
+- Tkinter (optional)
+- OpenCV > 3.1.0 (3.1.0 does not have the bug fix for exposing confidence values in Python bindings)
 
-## Installation
-1) First things first, clone or download OpenCV and OpenCV's extra modules from [here][opencv] and [here][opencv_contrib] (unzip if compressed).<br/>
-2) Set the `OPENCV` and `OPENCV_CONTRIB_MODULES` variables in `tools/prepare.sh` to the path of each of the OpenCV directories (if the values differ).<br/>
-3) Run `prepare.sh` to configure OpenCV for installation.<br/>
-4) Run `make` and `make install` inside of `$OPENCV/build`.<br/>
-5) Create a symlink named `cv2.so` pointing to `cv2.cpython-34m.so`. `cv2.so` should be located in the system-wide Python 3 `site-packages` directory. `cv2.cpython-34m.so` is built when OpenCV is installed and will be located somewhere under `/usr/local` in another `site-packages` directory.<br/>
-6) Cerebrum is now ready to run, see `./cerebrum.py --help` for details.<br/>
+## Installing OpenCV
+To install OpenCV 3+ for Python 3.x, I've been following the install instructions located [here][install].
+If you are working on a Fedora-based machine like I am, simply installing the RPM equivalents of the Step 1 packages and following the rest of the guide should be fine.
+You can find OpenCV and OpenCV_Contrib [here][opencv] and [here][opencv_contrib].
 
-[opencv]: https://github.com/Itseez/opencv
-[opencv_contrib]: https://github.com/Itseez/opencv_contrib
+[install]: http://www.pyimagesearch.com/2015/07/20/install-opencv-3-0-and-python-3-4-on-ubuntu/
+[opencv]: https://github.com/opencv/opencv
+[opencv_contrib]: https://github.com/opencv/opencv_contrib
