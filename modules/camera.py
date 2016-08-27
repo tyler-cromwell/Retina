@@ -44,10 +44,7 @@ class Camera():
         if not self._camera.isOpened():
             if not self._camera.open(self._source):
                 return False
-            else:
-                return True
-        else:
-            return True
+        return True
 
 
     def read(self):

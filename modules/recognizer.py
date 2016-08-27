@@ -33,12 +33,12 @@ from modules import imgproc
 
 
 class Recognizer(detector.Detector):
-    def __init__(self, classifier, label, config, algorithm=algorithms.Algorithms.LBPH.value):
+    def __init__(self, classifier, label, config, algorithm=algorithms.Algorithms.LBPH):
         super().__init__(classifier, config)
         general = config.general()
         recognizer = config.recognizer()
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = root_dir +'/data/recognizers/'+ label
+        path = root_dir +'/data/recognizers/'+ label +'.'+ algorithm.name.lower() +'.xml'
 
         self._width = int(general['width'])
         self._height = int(general['height'])
@@ -46,15 +46,12 @@ class Recognizer(detector.Detector):
         self._rwidth = int(recognizer['width'])
         self._rheight = int(recognizer['height'])
 
-        if algorithm == algorithms.Algorithms.Eigen.value:
+        if algorithm.value == algorithms.Algorithms.Eigen.value:
             self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold);
-            path += '.eigen.xml'
-        elif algorithm == algorithms.Algorithms.Fisher.value:
+        elif algorithm.value == algorithms.Algorithms.Fisher.value:
             self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold);
-            path += '.fisher.xml'
         else:
             self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
-            path += '.lbph.xml'
 
         self._recognizer.load(path)
         self._label = label
