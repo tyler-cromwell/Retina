@@ -92,10 +92,7 @@ def main():
         elif o == '--settings':
             key = a
 
-    if not label1:
-        print('\n  Label not specified!\n')
-        print_usage()
-    elif not label2:
+    if not label1 or not label2:
         print('\n  Label not specified!\n')
         print_usage()
     elif not key in settings.keys():
