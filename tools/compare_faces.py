@@ -104,7 +104,9 @@ def main():
     faceRecognizer = recognizer.Recognizer(faceClassifier, label1, configuration)
     raw_path = sys.path[1] +'/data/faces/'+ label2 +'/raw/'
     image_paths = []
-    sum_ = 0
+    sum_confidence = 0
+    sum_width = 0
+    sum_height = 0
     percent = 0
 
     """ Get the absolute path of each image """
@@ -124,23 +126,31 @@ def main():
 
         try:
             if len(confidences) > 1:
-                sum_ += int(confidences[1])
+                sum_confidence += int(confidences[1])
+                sum_width += int(objects[1][2])
+                sum_height += int(objects[1][3])
             else:
-                sum_ += int(confidences[0])
+                sum_confidence += int(confidences[0])
+                sum_width += int(objects[0][2])
+                sum_height += int(objects[0][3])
         except IndexError:
             skip = True
 
         if skip:
             continue
 
-    average = sum_ / len(image_paths)
+    average_confidence = sum_confidence / len(image_paths)
+    average_width = sum_width / len(image_paths)
+    average_height = sum_height / len(image_paths)
     
     print('\rCalculating average confidence... DONE  ')
 
-    if average == 0:
-        print('Average confidence:', average, 'perfect match!')
+    if average_confidence == 0:
+        print('Average confidence:', average_confidence, 'perfect match!')
     else:
-        print('Average confidence:', average)
+        print('Average confidence:', average_confidence)
+
+    print('Average detection size: %dx%d' % (average_width, average_height))
 
 
 """
