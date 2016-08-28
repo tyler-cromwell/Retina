@@ -121,8 +121,6 @@ def main():
     """ Setup objects and window """
     configuration = config.Config(settings[key])
     displayWidth, displayHeight = misc.get_display_resolution()
-    print('Display resolution: %dx%d' % (displayWidth, displayHeight))
-
     faceRecognizer = recognizer.Recognizer(faceClassifier, label, configuration)
     stream = camera.Camera(CAMERA_DEFAULT, configuration)
     print('Capture resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
