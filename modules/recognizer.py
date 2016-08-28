@@ -61,7 +61,7 @@ class Recognizer(detector.Detector):
     def recognize(self, frame):
         confidences = []
         labels = []
-        faces = self.detect(frame, False)
+        faces = self.detect(frame)
 
         for (x, y, w, h) in faces:
             face = imgproc.preprocess(frame, self._rwidth, self._rheight, x, y, w, h)

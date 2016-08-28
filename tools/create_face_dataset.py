@@ -124,7 +124,8 @@ def main():
 
     while True:
         retval, frame = stream.read()
-        faces = faceDetector.detect(frame)
+        grayed = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = faceDetector.detect(grayed)
 
         for (x, y, w, h) in faces:
              cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)

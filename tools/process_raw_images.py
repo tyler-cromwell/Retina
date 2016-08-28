@@ -134,7 +134,7 @@ def main():
         (x, y, w, h) = (0, 0, 0, 0)
 
         try:
-            (x, y, w, h) = faceDetector.detect(image, False)[0]
+            (x, y, w, h) = faceDetector.detect(image)[0]
         except IndexError:
             print('\nNo faces detected in:', path)
             cont = True
