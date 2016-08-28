@@ -74,7 +74,6 @@ class Recognizer(detector.Detector):
                 labels.append('Unknown')
                 confidences.append(str(-1))
 
-
         return (labels, faces, confidences)
 
 

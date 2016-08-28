@@ -42,14 +42,8 @@ class Detector:
         self._maxSize = tuple(map(int, re.split('\s*,\s*', detector['maxSize'])))
 
 
-    def detect(self, frame, grayscale=True):
-        temp_frame = frame
-
-        if grayscale:
-            temp_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        objects = self._classifier.detectMultiScale(
-            temp_frame,
+    def detect(self, frame):
+        objects = self._classifier.detectMultiScale(frame,
             flags = self._flags,
             scaleFactor = self._scaleFactor,
             minNeighbors = self._minNeighbors,
