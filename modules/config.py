@@ -37,8 +37,8 @@ class Config:
         self._config = dict(self._config)
 
 
-    def general(self):
-        return self._config['General']
+    def camera(self):
+        return self._config['Camera']
 
 
     def detector(self):

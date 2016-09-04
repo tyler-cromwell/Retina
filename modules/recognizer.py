@@ -35,13 +35,13 @@ from modules import imgproc
 class Recognizer(detector.Detector):
     def __init__(self, classifier, label, config, algorithm=algorithms.Algorithms.LBPH):
         super().__init__(classifier, config)
-        general = config.general()
+        camera = config.camera()
         recognizer = config.recognizer()
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         path = root_dir +'/data/recognizers/'+ label +'.'+ algorithm.name.lower() +'.xml'
 
-        self._width = int(general['width'])
-        self._height = int(general['height'])
+        self._width = int(camera['width'])
+        self._height = int(camera['height'])
         self._threshold = int(recognizer['threshold'])
         self._rwidth = int(recognizer['width'])
         self._rheight = int(recognizer['height'])

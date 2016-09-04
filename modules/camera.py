@@ -23,11 +23,11 @@ import cv2
 
 class Camera():
     def __init__(self, source, config):
-        general = config.general()
+        camera = config.camera()
         self._source = source
         self._camera = cv2.VideoCapture(source)
-        self._width = int(general['width'])
-        self._height = int(general['height'])
+        self._width = int(camera['width'])
+        self._height = int(camera['height'])
         self._camera.set(cv2.CAP_PROP_FRAME_WIDTH, self._width)
         self._camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self._height)
 
