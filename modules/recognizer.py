@@ -81,6 +81,10 @@ class Recognizer(detector.Detector):
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image_rgb, (self._width, self._height))
+
+        (iwidth, iheight) = image_pil.size
+        aspect_ratio = iwidth / iheight
+
+        image = cv2.resize(image_rgb, (self._width, int(self._width / aspect_ratio)))
         labels, objects, confidences = self.recognize(image)
         return image, labels, objects, confidences
