@@ -167,6 +167,9 @@ def main():
 
         key = cv2.waitKey(1)
 
+        if key >= (1024 * 1024):
+            key = key - (1024 * 1024)
+
         """ Determine action """
         if key == 27:
             cv2.destroyWindow(windowName)
