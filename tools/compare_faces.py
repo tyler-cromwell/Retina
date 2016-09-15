@@ -26,6 +26,7 @@ import sys
 
 """ External libraries """
 import cv2
+import numpy
 
 """ Local modules """
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -104,9 +105,9 @@ def main():
     faceRecognizer = recognizer.Recognizer(faceClassifier, label1, configuration)
     raw_path = sys.path[1] +'/data/faces/'+ label2 +'/raw/'
     image_paths = []
-    sum_confidence = 0
-    sum_width = 0
-    sum_height = 0
+    all_confidences = []
+    all_widths = []
+    all_heights = []
     percent = 0
 
     """ Get the absolute path of each image """
@@ -118,7 +119,7 @@ def main():
     """ Preprocess each image """
     for i, path in enumerate(image_paths):
         percent = ((i+1) / len(image_paths)) * 100
-        print("\rCalculating average confidence... {:3.1f}%".format(percent), end='')
+        print("\rCalculating confidence statistics... {:.1f}%".format(percent), end='')
         sys.stdout.flush()
         skip = False
 
@@ -126,31 +127,27 @@ def main():
 
         try:
             if len(confidences) > 1:
-                sum_confidence += int(confidences[1])
-                sum_width += int(objects[1][2])
-                sum_height += int(objects[1][3])
+                all_confidences.append(int(confidences[1]))
+                all_widths.append(int(objects[1][2]))
+                all_heights.append(int(objects[1][3]))
             else:
-                sum_confidence += int(confidences[0])
-                sum_width += int(objects[0][2])
-                sum_height += int(objects[0][3])
+                all_confidences.append(int(confidences[0]))
+                all_widths.append(int(objects[0][2]))
+                all_heights.append(int(objects[0][3]))
         except IndexError:
             skip = True
 
         if skip:
             continue
-
-    average_confidence = sum_confidence / len(image_paths)
-    average_width = sum_width / len(image_paths)
-    average_height = sum_height / len(image_paths)
     
-    print('\rCalculating average confidence... DONE  ')
-
-    if average_confidence == 0:
-        print('Average confidence:', average_confidence, 'perfect match!')
-    else:
-        print('Average confidence:', average_confidence)
-
-    print('Average detection size: %dx%d' % (average_width, average_height))
+    print('\rCalculating confidence statistics... DONE  ')
+    print('Five Number Summary:')
+    print('  Max:\t   %d' % numpy.max(all_confidences))
+    print('  Min:\t   %d' % numpy.min(all_confidences))
+    print('  Mean:\t   %d' % int(round(numpy.mean(all_confidences))))
+    print('  Median:  %d' % numpy.median(all_confidences))
+    print('  StdDev:  %d' % numpy.std(all_confidences))
+    print('Mean face size: %dx%d' % (numpy.mean(all_widths), numpy.mean(all_heights)))
 
 
 """
