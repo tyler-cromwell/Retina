@@ -142,11 +142,11 @@ def main():
     
     print('\rCalculating confidence statistics... DONE  ')
     print('Five Number Summary:')
-    print('  Max:\t   %d' % numpy.max(all_confidences))
-    print('  Min:\t   %d' % numpy.min(all_confidences))
-    print('  Mean:\t   %d' % int(round(numpy.mean(all_confidences))))
-    print('  Median:  %d' % numpy.median(all_confidences))
-    print('  StdDev:  %d' % numpy.std(all_confidences))
+    print('  Max:\t   {}'.format(numpy.max(all_confidences)))
+    print('  Min:\t   {}'.format(numpy.min(all_confidences)))
+    print('  Median:  {}'.format(numpy.median(all_confidences)))
+    print('  Mean:\t   {}'.format(numpy.mean(all_confidences)))
+    print('  StdDev:  {}'.format(numpy.std(all_confidences)))
     print('Mean face size: %dx%d' % (numpy.mean(all_widths), numpy.mean(all_heights)))
 
 
