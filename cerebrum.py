@@ -146,18 +146,9 @@ def main():
         retval, frame = stream.read()
 
         # Check flags
-        if flags & 4:
+        if flags & 1:
             labels, objects, confidences = faceRecognizer.recognize(frame)
             drawFaceInfo(frame, labels, objects, confidences)
-
-        if flags & 1:
-            frame = cv2.bilateralFilter(frame, 5, 60, 60)
-
-        if flags & 8:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-            if flags & 2:
-                frame = cv2.equalizeHist(frame)
 
         end = time.time()
         fps = 1 // (end - start)
@@ -179,14 +170,8 @@ def main():
             cv2.waitKey(1)
             stream.release()
             break
-        elif key == ord('b'):
-            flags = flags ^ 1
-        elif key == ord('e'):
-            flags = flags ^ 2
         elif key == ord('f'):
-            flags = flags ^ 4
-        elif key == ord('g'):
-            flags = flags ^ 8
+            flags = flags ^ 1
 
 
 if __name__ == '__main__':
