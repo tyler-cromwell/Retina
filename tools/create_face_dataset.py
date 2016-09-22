@@ -1,33 +1,33 @@
 #!/usr/bin/env python3
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  Copyright (C) 2016 Tyler Cromwell <tyler@csh.rit.edu>
+#######################################################################
+# Copyright (C) 2016 Tyler Cromwell <tyler@csh.rit.edu>
+#
+# This file is part of Cerebrum.
+#
+# Cerebrum is free software: you can redistribute it and/or modify
+# it under Version 2 of the terms of the GNU General Public License
+# as published by the Free Software Foundation.
+#
+# Cerebrum is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Cerebrum.
+# If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+#######################################################################
 
-  This file is part of Cerebrum.
-
-  Cerebrum is free software: you can redistribute it and/or modify
-  it under Version 2 of the terms of the GNU General Public License
-  as published by the Free Software Foundation.
-
-  Cerebrum is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Cerebrum.
-  If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-""" Python libraries """
+# Python libraries
 import getopt
 import os
 import sys
 
-""" External libraries """
+# External libraries
 import cv2
 
-""" Local modules """
+# Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
 from modules import config
@@ -37,14 +37,14 @@ from modules import misc
 from modules import opt
 from modules import recognizer
 
-""" Global constants """
+# Global constants
 CAMERA_DEFAULT = 0
 
 
-"""
-Displays program usage information.
-"""
 def print_usage():
+    """
+    Displays program usage information.
+    """
     print('Usage:\t./create_face_dataset.py [--classifier=PATH] --label=NAME [--settings=NAME]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
@@ -54,23 +54,23 @@ def print_usage():
     exit(0)
 
 
-"""
-Main function.
-"""
 def main():
+    """
+    Main function.
+    """
     windowName = 'Camera %d' % (CAMERA_DEFAULT)
     faceClassifier = None
     label = None
     settings = opt.map_settings()
     key = opt.default_settings()
 
-    """ Parse command-line arguments """
+    # Parse command-line arguments
     try:
         short_opts = ['']
         long_opts = ['help', 'classifier=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \''+ str(error) +'\'\n')
+        print('Invalid argument: \'' + str(error) + '\'\n')
         print_usage()
 
     if len(opts) == 0:
@@ -89,16 +89,16 @@ def main():
     if not label:
         print('\n  Label not specified!\n')
         print_usage()
-    elif not key in settings.keys():
+    elif key not in settings.keys():
         print('\n  Settings not specified!\n')
         print_usage()
 
-    """ Setup training set, objects, and window """
+    # Setup training set, objects, and window
     configuration = config.Config(settings[key])
     recognizer = config.recognizer()
     width = int(recognizer['width'])
     height = int(recognizer['height'])
-    training_path = sys.path[1] +'/data/faces/'+ label +'/training/'
+    training_path = sys.path[1] + '/data/faces/' + label + '/training/'
     os.makedirs(training_path, exist_ok=True)
 
     displayWidth, displayHeight = misc.get_display_resolution()
@@ -117,7 +117,7 @@ def main():
         'Right eye closed', 'Left eye closed', 'Both eyes closed'
     ]
 
-    """ Begin using the camera """
+    # Begin using the camera
     if not stream.open():
         print('Failed to open Camera', CAMERA_DEFAULT)
         exit(1)
@@ -128,14 +128,14 @@ def main():
         faces = faceDetector.detect(grayed)
 
         for (x, y, w, h) in faces:
-             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
         if p < len(poses):
             msg_glasses = 'Glasses?: On'
         else:
             msg_glasses = 'Glasses?: Off'
 
-        msg_pose = 'Expected Pose: '+ poses[p % len(poses)]
+        msg_pose = 'Expected Pose: ' + poses[p % len(poses)]
 
         cv2.putText(frame, 'Photos remaining: [%d/%d]' % (p, 2 * len(poses)), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.putText(frame, msg_pose, (0, 25), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
@@ -147,8 +147,10 @@ def main():
 
         if key == 27:
             cv2.destroyWindow(windowName)
-            cv2.waitKey(1); cv2.waitKey(1);
-            cv2.waitKey(1); cv2.waitKey(1);
+            cv2.waitKey(1)
+            cv2.waitKey(1)
+            cv2.waitKey(1)
+            cv2.waitKey(1)
             stream.release()
             break
         elif key == ord('w') and len(faces) >= 1:
@@ -158,9 +160,9 @@ def main():
             image = imgproc.preprocess(frame, width, height, x, y, w, h)
 
             if p < 10:
-                cv2.imwrite(training_path + label +'.0'+ str(p) +'.png', image)
+                cv2.imwrite(training_path + label + '.0' + str(p) + '.png', image)
             else:
-                cv2.imwrite(training_path + label +'.'+ str(p) +'.png', image)
+                cv2.imwrite(training_path + label + '.' + str(p) + '.png', image)
 
             if p < (2 * len(poses)) - 1:
                 p = p + 1
@@ -170,10 +172,10 @@ def main():
     stream.release()
 
 
-"""
-Program entry.
-"""
 if __name__ == '__main__':
+    """
+    Program entry.
+    """
     try:
         main()
     except KeyboardInterrupt:

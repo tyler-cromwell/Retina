@@ -1,32 +1,32 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  Copyright (C) 2016 Tyler Cromwell <tyler@csh.rit.edu>
+#######################################################################
+# Copyright (C) 2016 Tyler Cromwell <tyler@csh.rit.edu>
+#
+# This file is part of Cerebrum.
+#
+# Cerebrum is free software: you can redistribute it and/or modify
+# it under Version 2 of the terms of the GNU General Public License
+# as published by the Free Software Foundation.
+#
+# Cerebrum is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Cerebrum.
+# If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+#######################################################################
 
-  This file is part of Cerebrum.
-
-  Cerebrum is free software: you can redistribute it and/or modify
-  it under Version 2 of the terms of the GNU General Public License
-  as published by the Free Software Foundation.
-
-  Cerebrum is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Cerebrum.
-  If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-""" Python libraries """
+# Python libraries
 import hashlib
 import os
 
-""" External libraries """
+# External libraries
 import numpy
 from PIL import Image
 import cv2
 
-""" Local modules """
+# Local modules
 from modules import algorithms
 from modules import detector
 from modules import imgproc
@@ -38,8 +38,12 @@ class Recognizer(detector.Detector):
         camera = config.camera()
         recognizer = config.recognizer()
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = root_dir +'/data/recognizers/'+ label +'.'+ algorithm.name.lower() +'.xml'
+        path = root_dir + '/data/recognizers/'
+        file_ = path + label + '.' + algorithm.name.lower() + '.xml'
+        sha1 = hashlib.sha1(label.encode())
 
+        self._label = label
+        self._hash = int(sha1.hexdigest(), 16) % (10 ** 8)
         self._width = int(camera['width'])
         self._height = int(camera['height'])
         self._threshold = int(recognizer['threshold'])
@@ -47,16 +51,13 @@ class Recognizer(detector.Detector):
         self._rheight = int(recognizer['height'])
 
         if algorithm.value == algorithms.Algorithms.Eigen.value:
-            self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold);
+            self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold)
         elif algorithm.value == algorithms.Algorithms.Fisher.value:
-            self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold);
+            self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold)
         else:
             self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
 
-        self._recognizer.load(path)
-        self._label = label
-        self._hash = int(hashlib.sha1(label.encode()).hexdigest(), 16) % (10 ** 8)
-
+        self._recognizer.load(file_)
 
     def recognize(self, frame):
         confidences = []
@@ -64,7 +65,13 @@ class Recognizer(detector.Detector):
         faces = self.detect(frame)
 
         for (x, y, w, h) in faces:
-            face = imgproc.preprocess(frame, self._rwidth, self._rheight, x, y, w, h)
+            face = imgproc.preprocess(
+                frame,
+                self._rwidth,
+                self._rheight,
+                x, y, w, h
+            )
+
             predicted_label, confidence = self._recognizer.predict(face)
 
             if predicted_label == self._hash:
@@ -76,15 +83,14 @@ class Recognizer(detector.Detector):
 
         return (labels, faces, confidences)
 
-
     def recognizeFromFile(self, path):
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
 
         (iwidth, iheight) = image_pil.size
-        aspect_ratio = iwidth / iheight
+        ar_height = int(self_.width / (iwidth / iheight))
 
-        image = cv2.resize(image_rgb, (self._width, int(self._width / aspect_ratio)))
+        image = cv2.resize(image_rgb, (self._width, ar_height))
         labels, objects, confidences = self.recognize(image)
-        return image, labels, objects, confidences
+        return (image, labels, objects, confidences)
