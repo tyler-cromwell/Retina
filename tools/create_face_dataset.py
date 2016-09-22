@@ -58,11 +58,11 @@ def main():
     """
     Main function.
     """
-    windowName = 'Camera %d' % (CAMERA_DEFAULT)
-    faceClassifier = None
+    classifier = None
     label = None
     settings = opt.map_settings()
     key = opt.default_settings()
+    window_name = 'Camera %d' % (CAMERA_DEFAULT)
 
     # Parse command-line arguments
     try:
@@ -80,7 +80,7 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt.classifier(a)
+            classifier = opt.classifier(a)
         elif o == '--label':
             label = a
         elif o == '--settings':
@@ -101,15 +101,15 @@ def main():
     training_path = sys.path[1] + '/data/faces/' + label + '/training/'
     os.makedirs(training_path, exist_ok=True)
 
-    displayWidth, displayHeight = misc.get_display_resolution()
-    print('Display resolution: %dx%d' % (displayWidth, displayHeight))
+    dwidth, dheight = misc.get_display_resolution()
+    print('Display resolution: %dx%d' % (dwidth, dheight))
 
-    faceDetector = detector.Detector(faceClassifier, configuration)
+    detector_obj = detector.Detector(classifier, configuration)
     stream = camera.Camera(CAMERA_DEFAULT, configuration)
     print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
 
-    cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
+    cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
+    cv2.moveWindow(window_name, (dwidth - stream.getWidth()) // 2, 0)
 
     p = 0
     poses = [
@@ -125,7 +125,7 @@ def main():
     while True:
         retval, frame = stream.read()
         grayed = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = faceDetector.detect(grayed)
+        faces = detector_obj.detect(grayed)
 
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
@@ -142,11 +142,11 @@ def main():
         cv2.putText(frame, msg_glasses, (0, 40), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.putText(frame, 'Press \'w\' to take photo', (0, 55), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
 
-        cv2.imshow(windowName, frame)
+        cv2.imshow(window_name, frame)
         key = cv2.waitKey(1)
 
         if key == 27:
-            cv2.destroyWindow(windowName)
+            cv2.destroyWindow(window_name)
             cv2.waitKey(1)
             cv2.waitKey(1)
             cv2.waitKey(1)

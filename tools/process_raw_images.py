@@ -68,7 +68,7 @@ def main():
     """
     label = None
     show = False
-    faceClassifier = None
+    classifier = None
     settings = opt.map_settings()
     key = opt.default_settings()
 
@@ -88,7 +88,7 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt.classifier(a)
+            classifier = opt.classifier(a)
         elif o == '--label':
             label = opt_label(a)
         elif o == '--settings':
@@ -109,7 +109,7 @@ def main():
     width = int(recognizer['width'])
     height = int(recognizer['height'])
     stream = camera.Camera(0, configuration)
-    faceDetector = detector.Detector(faceClassifier, configuration)
+    detector_obj = detector.Detector(classifier, configuration)
     raw_path = sys.path[1] + '/data/faces/' + label + '/raw/'
     training_path = sys.path[1] + '/data/faces/' + label + '/training/'
     image_paths = []
@@ -138,7 +138,7 @@ def main():
         (x, y, w, h) = (0, 0, 0, 0)
 
         try:
-            (x, y, w, h) = faceDetector.detect(image)[0]
+            (x, y, w, h) = detector_obj.detect(image)[0]
         except IndexError:
             print('\nNo faces detected in:', path)
             cont = True

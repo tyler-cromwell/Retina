@@ -65,7 +65,7 @@ def main():
     """
     label1 = None
     label2 = None
-    faceClassifier = None
+    classifier = None
     settings = opt.map_settings()
     key = opt.default_settings()
 
@@ -92,7 +92,7 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt.classifier(a)
+            classifier = opt.classifier(a)
         elif o == '--label1':
             label1 = opt_label(a)
         elif o == '--label2':
@@ -109,7 +109,7 @@ def main():
 
     # Initialize variables
     configuration = config.Config(settings[key])
-    faceRecognizer = recognizer.Recognizer(faceClassifier, label1, configuration)
+    recognizer_obj = recognizer.Recognizer(classifier, label1, configuration)
     raw_path = sys.path[1] + '/data/faces/' + label2 + '/raw/'
     image_paths = []
     all_confidences = []
@@ -130,7 +130,7 @@ def main():
         sys.stdout.flush()
         skip = False
 
-        image, labels, objects, confidences = faceRecognizer.recognizeFromFile(path)
+        image, labels, objects, confidences = recognizer_obj.recognizeFromFile(path)
 
         try:
             if len(confidences) > 1:

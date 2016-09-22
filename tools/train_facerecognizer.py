@@ -91,24 +91,24 @@ def main():
     training_path = sys.path[1] + '/data/faces/' + label + '/training/'
     recognizer_path = sys.path[1] + '/data/recognizers/' + label
     filename = None
-    faceRecognizer = None
+    recognizer = None
     image_paths = []
     images = []
     labels = []
 
     # Determine algorithm
     if algorithm == 'Eigen':
-        faceRecognizer = cv2.face.createEigenFaceRecognizer()
+        recognizer = cv2.face.createEigenFaceRecognizer()
         recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.eigen.xml'
         filename = label + '.eigen.xml'
     elif algorithm == 'Fisher':
-        faceRecognizer = cv2.face.createFisherFaceRecognizer()
+        recognizer = cv2.face.createFisherFaceRecognizer()
         recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.fisher.xml'
         filename = label + '.fisher.xml'
     else:
         if not algorithm == 'LBPH':
             print('Defaulting to LBPH')
-        faceRecognizer = cv2.face.createLBPHFaceRecognizer()
+        recognizer = cv2.face.createLBPHFaceRecognizer()
         recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.lbph.xml'
         filename = label + '.lbph.xml'
 
@@ -131,13 +131,13 @@ def main():
 
     # Train
     print('Training recognizer... ', end='')
-    faceRecognizer.train(images, numpy.array(labels))
+    recognizer.train(images, numpy.array(labels))
     print('DONE')
 
     # Save the newly trained recognizer
     print('Saving recognizer: ' + filename + '... ', end='')
     os.makedirs(sys.path[1] + '/data/recognizers/', exist_ok=True)
-    faceRecognizer.save(recognizer_path)
+    recognizer.save(recognizer_path)
     print('DONE')
 
 

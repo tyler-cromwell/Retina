@@ -79,13 +79,13 @@ def main():
     """
     Main function.
     """
+    classifier = None
     flags = 0
-    windowName = 'Camera %d' % (CAMERA_DEFAULT)
-    faceClassifier = None
     img = None
     label = None
     settings = opt.map_settings()
     key = opt.default_settings()
+    window_name = 'Camera %d' % (CAMERA_DEFAULT)
 
     # Parse command-line arguments
     try:
@@ -103,7 +103,7 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            faceClassifier = opt.classifier(a)
+            classifier = opt.classifier(a)
         elif o == '--image':
             img = a
         elif o == '--label':
@@ -120,21 +120,21 @@ def main():
 
     # Setup objects and window
     configuration = config.Config(settings[key])
-    displayWidth, displayHeight = misc.get_display_resolution()
-    faceRecognizer = recognizer.Recognizer(faceClassifier, label, configuration)
+    dwidth, dheight = misc.get_display_resolution()
+    recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
     stream = camera.Camera(CAMERA_DEFAULT, configuration)
     print('Capture resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
 
     # Recognize in a still image
     if img:
-        image, labels, objects, confidences = faceRecognizer.recognizeFromFile(img)
+        image, labels, objects, confidences = recognizer_obj.recognizeFromFile(img)
         drawFaceInfo(image, labels, objects, confidences)
         cv2.imshow(img, image)
         cv2.waitKey(0)
         return
 
-    cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(windowName, (displayWidth - stream.getWidth()) // 2, 0)
+    cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
+    cv2.moveWindow(window_name, (dwidth - stream.getWidth()) // 2, 0)
 
     # Begin using the camera
     if not stream.open():
@@ -147,14 +147,14 @@ def main():
 
         # Check flags
         if flags & 1:
-            labels, objects, confidences = faceRecognizer.recognize(frame)
+            labels, objects, confidences = recognizer_obj.recognize(frame)
             drawFaceInfo(frame, labels, objects, confidences)
 
         end = time.time()
         fps = 1 // (end - start)
 
         cv2.putText(frame, 'FPS: [%d]' % (fps), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
-        cv2.imshow(windowName, frame)
+        cv2.imshow(window_name, frame)
 
         key = cv2.waitKey(1)
 
@@ -163,7 +163,7 @@ def main():
 
         # Determine action
         if key == 27:
-            cv2.destroyWindow(windowName)
+            cv2.destroyWindow(window_name)
             cv2.waitKey(1)
             cv2.waitKey(1)
             cv2.waitKey(1)
