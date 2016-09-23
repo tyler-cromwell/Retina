@@ -95,7 +95,7 @@ def main():
 
     # Setup training set, objects, and window
     configuration = config.Config(settings[key])
-    recognizer = config.recognizer()
+    recognizer = configuration.recognizer()
     width = int(recognizer['width'])
     height = int(recognizer['height'])
     training_path = sys.path[1] + '/data/faces/' + label + '/training/'
@@ -112,10 +112,6 @@ def main():
     cv2.moveWindow(window_name, (dwidth - stream.getWidth()) // 2, 0)
 
     p = 0
-    poses = [
-        'Happy', 'Sad', 'Angry', 'Surprised', 'Silly', 'Normal',
-        'Right eye closed', 'Left eye closed', 'Both eyes closed'
-    ]
 
     # Begin using the camera
     if not stream.open():
@@ -130,17 +126,8 @@ def main():
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
-        if p < len(poses):
-            msg_glasses = 'Glasses?: On'
-        else:
-            msg_glasses = 'Glasses?: Off'
-
-        msg_pose = 'Expected Pose: ' + poses[p % len(poses)]
-
-        cv2.putText(frame, 'Photos remaining: [%d/%d]' % (p, 2 * len(poses)), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
-        cv2.putText(frame, msg_pose, (0, 25), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
-        cv2.putText(frame, msg_glasses, (0, 40), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
-        cv2.putText(frame, 'Press \'w\' to take photo', (0, 55), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, 'Photos taken: {}'.format(p), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, 'Press \'w\' to take photo', (0, 22), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
 
         cv2.imshow(window_name, frame)
         key = cv2.waitKey(1)
@@ -164,10 +151,7 @@ def main():
             else:
                 cv2.imwrite(training_path + label + '.' + str(p) + '.png', image)
 
-            if p < (2 * len(poses)) - 1:
-                p = p + 1
-            else:
-                break
+            p = p + 1
 
     stream.release()
 
