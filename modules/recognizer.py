@@ -83,7 +83,7 @@ class Recognizer(detector.Detector):
 
         return (labels, faces, confidences)
 
-    def recognizeFromFile(self, path):
+    def recognize_from_file(self, path):
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)

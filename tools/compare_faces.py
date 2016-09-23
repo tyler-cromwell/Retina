@@ -130,7 +130,7 @@ def main():
         sys.stdout.flush()
         skip = False
 
-        image, labels, objects, confidences = recognizer_obj.recognizeFromFile(path)
+        image, labels, objects, confidences = recognizer_obj.recognize_from_file(path)
 
         try:
             if len(confidences) > 1:

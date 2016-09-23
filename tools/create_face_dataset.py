@@ -106,10 +106,10 @@ def main():
 
     detector_obj = detector.Detector(classifier, configuration)
     stream = camera.Camera(CAMERA_DEFAULT, configuration)
-    print('Capture Resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
+    print('Capture Resolution: %dx%d' % (stream.get_width(), stream.get_height()))
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(window_name, (dwidth - stream.getWidth()) // 2, 0)
+    cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
     p = 0
 

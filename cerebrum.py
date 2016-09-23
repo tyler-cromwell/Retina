@@ -123,18 +123,18 @@ def main():
     dwidth, dheight = misc.get_display_resolution()
     recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
     stream = camera.Camera(CAMERA_DEFAULT, configuration)
-    print('Capture resolution: %dx%d' % (stream.getWidth(), stream.getHeight()))
+    print('Capture resolution: %dx%d' % (stream.get_width(), stream.get_height()))
 
     # Recognize in a still image
     if img:
-        image, labels, objects, confidences = recognizer_obj.recognizeFromFile(img)
+        image, labels, objects, confidences = recognizer_obj.recognize_from_file(img)
         drawFaceInfo(image, labels, objects, confidences)
         cv2.imshow(img, image)
         cv2.waitKey(0)
         return
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(window_name, (dwidth - stream.getWidth()) // 2, 0)
+    cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
     # Begin using the camera
     if not stream.open():

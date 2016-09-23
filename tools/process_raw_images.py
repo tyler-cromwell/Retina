@@ -134,7 +134,7 @@ def main():
         (iwidth, iheight) = image_pil.size
         aspect_ratio = iwidth / iheight
 
-        image = cv2.resize(image_rgb, (stream.getWidth(), int(stream.getWidth() / aspect_ratio)))
+        image = cv2.resize(image_rgb, (stream.get_width(), int(stream.get_width() / aspect_ratio)))
         (x, y, w, h) = (0, 0, 0, 0)
 
         try:

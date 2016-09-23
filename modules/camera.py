@@ -31,10 +31,10 @@ class Camera():
         self._camera.set(cv2.CAP_PROP_FRAME_WIDTH, self._width)
         self._camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self._height)
 
-    def getWidth(self):
+    def get_width(self):
         return self._width
 
-    def getHeight(self):
+    def get_height(self):
         return self._height
 
     def open(self):
