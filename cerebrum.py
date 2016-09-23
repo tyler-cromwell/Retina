@@ -51,7 +51,7 @@ def opt_label(label):
         return None
 
 
-def drawFaceInfo(image, labels, objects, confidences):
+def draw_face_info(image, labels, objects, confidences):
     """
     Draws the rectangle, label, and confidence around a face
     """
@@ -128,7 +128,7 @@ def main():
     # Recognize in a still image
     if img:
         image, labels, objects, confidences = recognizer_obj.recognize_from_file(img)
-        drawFaceInfo(image, labels, objects, confidences)
+        draw_face_info(image, labels, objects, confidences)
         cv2.imshow(img, image)
         cv2.waitKey(0)
         return
@@ -148,7 +148,7 @@ def main():
         # Check flags
         if flags & 1:
             labels, objects, confidences = recognizer_obj.recognize(frame)
-            drawFaceInfo(frame, labels, objects, confidences)
+            draw_face_info(frame, labels, objects, confidences)
 
         end = time.time()
         fps = 1 // (end - start)
