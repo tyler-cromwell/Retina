@@ -41,16 +41,6 @@ from modules import recognizer
 CAMERA_DEFAULT = 0
 
 
-def opt_label(label):
-    """
-    Ensures the recognizer given by 'path' exists
-    """
-    if os.path.isfile(sys.path[0] + '/data/recognizers/' + label + '.lbph.xml'):
-        return label
-    else:
-        return None
-
-
 def draw_face_info(image, objects, labels, confidences):
     """
     Draws the rectangle, label, and confidence around a face
@@ -103,11 +93,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            classifier = opt.classifier(a)
+            classifier = opt.validate_file(a)
         elif o == '--image':
-            img = a
+            img = opt.validate_file(a)
         elif o == '--label':
-            label = opt_label(a)
+            label = opt.validate_recognizer(sys.path[0], a)
         elif o == '--settings':
             key = a
 

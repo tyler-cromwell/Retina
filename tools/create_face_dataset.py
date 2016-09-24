@@ -79,7 +79,7 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            classifier = opt.classifier(a)
+            classifier = opt.validate_file(a)
         elif o == '--label':
             label = a
         elif o == '--settings':

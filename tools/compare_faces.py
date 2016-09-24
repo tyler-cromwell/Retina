@@ -35,16 +35,6 @@ from modules import opt
 from modules import recognizer
 
 
-def opt_label(label):
-    """
-    Ensures the given label has a raw dataset to process.
-    """
-    if os.path.isdir(sys.path[1] + '/data/faces/' + label):
-        return label
-    else:
-        return None
-
-
 def print_usage():
     """
     Displays program usage information.
@@ -92,11 +82,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            classifier = opt.classifier(a)
+            classifier = opt.validate_file(a)
         elif o == '--label1':
-            label1 = opt_label(a)
+            label1 = opt.validate_raw_dataset(sys.path[1], a)
         elif o == '--label2':
-            label2 = opt_label(a)
+            label2 = opt.validate_raw_dataset(sys.path[1], a)
         elif o == '--settings':
             key = a
 

@@ -22,16 +22,6 @@ import getopt
 import os
 
 
-def classifier(path):
-    """
-    Ensures the classifier given by 'path' exists
-    """
-    if os.path.isfile(path):
-        return path
-    else:
-        return None
-
-
 def default_settings():
     """
     Use the Mac Address OUI to determine what machine we're running on.
@@ -63,3 +53,43 @@ def map_settings():
         settings[key] = os.path.abspath(root_dir + '/settings/' + ent)
 
     return settings
+
+
+def validate_file(path):
+    """
+    Ensures the given file exists.
+    """
+    if os.path.isfile(path):
+        return path
+    else:
+        return None
+
+
+def validate_raw_dataset(root, label):
+    """
+    Ensures the given label has a raw dataset.
+    """
+    if os.path.isdir(root + '/data/faces/' + label + '/raw'):
+        return label
+    else:
+        return None
+
+
+def validate_training_dataset(root, label):
+    """
+    Ensures the given label has a training dataset.
+    """
+    if os.path.isdir(root + '/data/faces/' + label + '/training'):
+        return label
+    else:
+        return None
+
+
+def validate_recognizer(root, label):
+    """
+    Ensures the given label has a recognizer.
+    """
+    if os.path.isfile(root + '/data/recognizers/' + label + '.lbph.xml'):
+        return label
+    else:
+        return None

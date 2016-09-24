@@ -34,16 +34,6 @@ import cv2
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-def opt_label(arg):
-    """
-    Returns the path of the training set.
-    """
-    if os.path.isdir(sys.path[1] + '/data/faces/' + arg):
-        return arg
-    else:
-        return None
-
-
 def print_usage():
     """
     Displays program usage information.
@@ -81,7 +71,7 @@ def main():
         elif o == '--algorithm':
             algorithm = a
         elif o == '--label':
-            label = opt_label(a)
+            label = opt.validate_training_dataset(sys.path[1], a)
 
     if not label:
         print('\n  Label not specified!\n')

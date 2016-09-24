@@ -38,16 +38,6 @@ from modules import imgproc
 from modules import opt
 
 
-def opt_label(label):
-    """
-    Ensures the given label has a raw dataset to process.
-    """
-    if os.path.isdir(sys.path[1] + '/data/faces/' + label + '/raw'):
-        return label
-    else:
-        return None
-
-
 def print_usage():
     """
     Displays program usage information.
@@ -88,9 +78,9 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--classifier':
-            classifier = opt.classifier(a)
+            classifier = opt.validate_file(a)
         elif o == '--label':
-            label = opt_label(a)
+            label = opt.validate_raw_dataset(sys.path[1], a)
         elif o == '--settings':
             key = a
         elif o == '--show':
