@@ -135,12 +135,12 @@ def main():
         try:
             if len(confidences) > 1:
                 all_confidences.append(confidences[1])
-                all_widths.append(int(objects[1][2]))
-                all_heights.append(int(objects[1][3]))
+                all_widths.append(objects[1][2])
+                all_heights.append(objects[1][3])
             else:
                 all_confidences.append(confidences[0])
-                all_widths.append(int(objects[0][2]))
-                all_heights.append(int(objects[0][3]))
+                all_widths.append(objects[0][2])
+                all_heights.append(objects[0][3])
         except IndexError:
             skip = True
 
