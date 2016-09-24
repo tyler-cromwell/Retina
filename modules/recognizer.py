@@ -89,7 +89,7 @@ class Recognizer(detector.Detector):
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
 
         (iwidth, iheight) = image_pil.size
-        ar_height = int(self_.width / (iwidth / iheight))
+        ar_height = int(self._width / (iwidth / iheight))
 
         image = cv2.resize(image_rgb, (self._width, ar_height))
         objects, labels, confidences = self.recognize(image)
