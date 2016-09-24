@@ -62,9 +62,9 @@ class Recognizer(detector.Detector):
     def recognize(self, frame):
         confidences = []
         labels = []
-        faces = self.detect(frame)
+        objects = self.detect(frame)
 
-        for (x, y, w, h) in faces:
+        for (x, y, w, h) in objects:
             face = imgproc.preprocess(
                 frame,
                 self._rwidth,
@@ -76,12 +76,12 @@ class Recognizer(detector.Detector):
 
             if predicted_label == self._hash:
                 labels.append(self._label)
-                confidences.append(str(round(confidence)))
+                confidences.append(round(confidence))
             else:
                 labels.append('Unknown')
-                confidences.append(str(-1))
+                confidences.append(-1)
 
-        return (labels, faces, confidences)
+        return (objects, labels, confidences)
 
     def recognize_from_file(self, path):
         image_pil = Image.open(path)
@@ -92,5 +92,5 @@ class Recognizer(detector.Detector):
         ar_height = int(self_.width / (iwidth / iheight))
 
         image = cv2.resize(image_rgb, (self._width, ar_height))
-        labels, objects, confidences = self.recognize(image)
-        return (image, labels, objects, confidences)
+        objects, labels, confidences = self.recognize(image)
+        return (image, objects, labels, confidences)

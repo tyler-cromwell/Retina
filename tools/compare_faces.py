@@ -130,15 +130,15 @@ def main():
         sys.stdout.flush()
         skip = False
 
-        image, labels, objects, confidences = recognizer_obj.recognize_from_file(path)
+        image, objects, labels, confidences = recognizer_obj.recognize_from_file(path)
 
         try:
             if len(confidences) > 1:
-                all_confidences.append(int(confidences[1]))
+                all_confidences.append(confidences[1])
                 all_widths.append(int(objects[1][2]))
                 all_heights.append(int(objects[1][3]))
             else:
-                all_confidences.append(int(confidences[0]))
+                all_confidences.append(confidences[0])
                 all_widths.append(int(objects[0][2]))
                 all_heights.append(int(objects[0][3]))
         except IndexError:

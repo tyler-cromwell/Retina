@@ -35,7 +35,6 @@ from modules import detector
 from modules import imgproc
 from modules import misc
 from modules import opt
-from modules import recognizer
 
 # Global constants
 CAMERA_DEFAULT = 0
