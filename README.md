@@ -22,7 +22,7 @@ The name comes from the part of the Human brain responsible for vision and learn
 - Numpy
 - Pillow
 - Tkinter (optional)
-- OpenCV > 3.1.0 (3.1.0 does not have the bug fix for exposing confidence values in Python bindings)
+- OpenCV > 3.2.0
 
 ## Recommended OpenCV dependencies
 - [Eigen3][eigen3]
