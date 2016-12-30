@@ -33,22 +33,13 @@ import cv2
 # Local modules
 from modules import camera
 from modules import config
+from modules import imgproc
 from modules import misc
 from modules import opt
 from modules import recognizer
 
 # Global constants
 CAMERA_DEFAULT = 0
-
-
-def draw_face_info(image, objects, labels, confidences):
-    """
-    Draws the rectangle, label, and confidence around a face
-    """
-    for i, (x, y, w, h) in enumerate(objects):
-        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
-        cv2.putText(image, labels[i].title() + ' (' + str(confidences[i]) + ')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
-        cv2.putText(image, '%dx%d' % (w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
 
 def print_usage():
@@ -118,7 +109,7 @@ def main():
     # Recognize in a still image
     if img:
         image, objects, labels, confidences = recognizer_obj.recognize_from_file(img)
-        draw_face_info(image, objects, labels, confidences)
+        imgproc.draw_face_info(image, objects, labels, confidences)
         cv2.imshow(img, image)
         cv2.waitKey(0)
         return
@@ -138,7 +129,7 @@ def main():
         # Check flags
         if flags & 1:
             objects, labels, confidences = recognizer_obj.recognize(frame)
-            draw_face_info(frame, objects, labels, confidences)
+            imgproc.draw_face_info(frame, objects, labels, confidences)
 
         end = time.time()
         fps = 1 // (end - start)

@@ -27,19 +27,18 @@ from PIL import Image
 import cv2
 
 # Local modules
-from modules import algorithms
 from modules import detector
 from modules import imgproc
 
 
 class Recognizer(detector.Detector):
-    def __init__(self, classifier, label, config, algorithm=algorithms.Algorithms.LBPH):
+    def __init__(self, classifier, label, config):
         super().__init__(classifier, config)
         camera = config.camera()
         recognizer = config.recognizer()
         root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         path = root_dir + '/data/recognizers/'
-        file_ = path + label + '.' + algorithm.name.lower() + '.xml'
+        file_ = path + label + '.lbph.xml'
         sha1 = hashlib.sha1(label.encode())
 
         self._label = label
@@ -49,14 +48,7 @@ class Recognizer(detector.Detector):
         self._threshold = int(recognizer['threshold'])
         self._rwidth = int(recognizer['width'])
         self._rheight = int(recognizer['height'])
-
-        if algorithm.value == algorithms.Algorithms.Eigen.value:
-            self._recognizer = cv2.face.createEigenFaceRecognizer(threshold=self._threshold)
-        elif algorithm.value == algorithms.Algorithms.Fisher.value:
-            self._recognizer = cv2.face.createFisherFaceRecognizer(threshold=self._threshold)
-        else:
-            self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
-
+        self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
         self._recognizer.load(file_)
 
     def recognize(self, frame):

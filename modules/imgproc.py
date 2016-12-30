@@ -21,6 +21,16 @@
 import cv2
 
 
+def draw_face_info(image, objects, labels, confidences):
+    """
+    Draws the rectangle, label, and confidence around a face
+    """
+    for i, (x, y, w, h) in enumerate(objects):
+        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 255), 2)
+        cv2.putText(image, labels[i].title() + ' (' + str(confidences[i]) + ')', (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+        cv2.putText(image, '{:d}x{:d}'.format(w, h), (x, y+h+13), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+
+
 def preprocess(frame, width, height, x, y, w, h):
     """
     Preprocesses an image for Face Recognition

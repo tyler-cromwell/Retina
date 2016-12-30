@@ -32,16 +32,15 @@ import cv2
 
 # Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules import opt
 
 
 def print_usage():
     """
     Displays program usage information.
     """
-    print('Usage:\t./train_facerecognizer.py [--algorithm=NAME] --label=NAME')
+    print('Usage:\t./train_facerecognizer.py --label=NAME')
     print('  --help\t\tPrints this text')
-    print('  --algorithm=NAME\tThe name of the Face Recognition algorithm to train with')
-    print('                  \tValues: Eigen, Fisher, or LBPH (default)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     exit(0)
 
@@ -50,13 +49,12 @@ def main():
     """
     Main function.
     """
-    algorithm = ''
     label = None
 
     # Parse command-line arguments
     try:
         short_opts = ['']
-        long_opts = ['help', 'algorithm=', 'label=']
+        long_opts = ['help', 'label=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \'' + str(error) + '\'\n')
@@ -68,8 +66,6 @@ def main():
     for o, a in opts:
         if o == '--help':
             print_usage()
-        elif o == '--algorithm':
-            algorithm = a
         elif o == '--label':
             label = opt.validate_training_dataset(sys.path[1], a)
 
@@ -79,28 +75,12 @@ def main():
 
     # Initialize variables
     training_path = sys.path[1] + '/data/faces/' + label + '/training/'
-    recognizer_path = sys.path[1] + '/data/recognizers/' + label
-    filename = None
-    recognizer = None
+    recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.lbph.xml'
+    recognizer = cv2.face.createLBPHFaceRecognizer()
+    filename = label + '.lbph.xml'
     image_paths = []
     images = []
     labels = []
-
-    # Determine algorithm
-    if algorithm == 'Eigen':
-        recognizer = cv2.face.createEigenFaceRecognizer()
-        recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.eigen.xml'
-        filename = label + '.eigen.xml'
-    elif algorithm == 'Fisher':
-        recognizer = cv2.face.createFisherFaceRecognizer()
-        recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.fisher.xml'
-        filename = label + '.fisher.xml'
-    else:
-        if not algorithm == 'LBPH':
-            print('Defaulting to LBPH')
-        recognizer = cv2.face.createLBPHFaceRecognizer()
-        recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.lbph.xml'
-        filename = label + '.lbph.xml'
 
     # Get the absolute path of each image
     print('Collecting training images... ', end='')
