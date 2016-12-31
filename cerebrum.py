@@ -104,7 +104,7 @@ def main():
     dwidth, dheight = misc.get_display_resolution()
     recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
     stream = camera.Camera(cam, configuration)
-    print('Capture resolution: %dx%d' % (stream.get_width(), stream.get_height()))
+    print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
 
     # Recognize in a still image
     if img:
@@ -114,7 +114,7 @@ def main():
         cv2.waitKey(0)
         return
 
-    window_name = 'Camera %d' % (cam)
+    window_name = 'Camera {:d}'.format(cam)
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
@@ -135,7 +135,7 @@ def main():
         end = time.time()
         fps = 1 // (end - start)
 
-        cv2.putText(frame, 'FPS: [%d]' % (fps), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, 'FPS: [{:d}]'.format(fps), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.imshow(window_name, frame)
 
         key = cv2.waitKey(1)
