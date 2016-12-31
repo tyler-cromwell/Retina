@@ -38,21 +38,19 @@ from modules import misc
 from modules import opt
 from modules import recognizer
 
-# Global constants
-CAMERA_DEFAULT = 0
-
 
 def print_usage():
     """
     Displays program usage information.
     """
-    print('Usage:\t./cerebrum.py [--classifier=PATH] [--image=PATH] --label=NAME [--settings=NAME]')
+    print('Usage:\t./cerebrum.py [--camera=INDEX] [--classifier=PATH] [--image=PATH] --label=NAME [--settings=NAME]')
     print('  --help\t\tPrints this text')
+    print('  --camera=INDEX\tIndex of an attached camera (Optional)')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --image=PATH\t\tPath to a still image (alternative to camera stream)')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=NAME\tThe name of a file located under \'settings/\'')
-    print('      See \'settings/\', without \'.txt\' extension')
+    print('                 \tSee \'settings/\', without \'.txt\' extension')
     exit(0)
 
 
@@ -60,18 +58,18 @@ def main():
     """
     Main function.
     """
+    cam = 0
     classifier = None
     flags = 0
     img = None
     label = None
     settings = opt.map_settings()
     key = opt.default_settings()
-    window_name = 'Camera %d' % (CAMERA_DEFAULT)
 
     # Parse command-line arguments
     try:
         short_opts = ['']
-        long_opts = ['help', 'classifier=', 'image=', 'label=', 'settings=']
+        long_opts = ['help', 'camera=', 'classifier=', 'image=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \'' + str(error) + '\'\n')
@@ -83,6 +81,8 @@ def main():
     for o, a, in opts:
         if o == '--help':
             print_usage()
+        elif o == '--camera':
+            cam = int(a)
         elif o == '--classifier':
             classifier = opt.validate_file(a)
         elif o == '--image':
@@ -103,7 +103,7 @@ def main():
     configuration = config.Config(settings[key])
     dwidth, dheight = misc.get_display_resolution()
     recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
-    stream = camera.Camera(CAMERA_DEFAULT, configuration)
+    stream = camera.Camera(cam, configuration)
     print('Capture resolution: %dx%d' % (stream.get_width(), stream.get_height()))
 
     # Recognize in a still image
@@ -114,12 +114,13 @@ def main():
         cv2.waitKey(0)
         return
 
+    window_name = 'Camera %d' % (cam)
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
     # Begin using the camera
     if not stream.open():
-        print('Failed to open Camera', CAMERA_DEFAULT)
+        print('Failed to open Camera', cam)
         exit(1)
 
     while True:
