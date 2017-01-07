@@ -139,13 +139,20 @@ def main():
             continue
 
     print('\rCalculating confidence statistics... DONE  ')
-    print('Five Number Summary:')
+    print('')
+    print('Confidence Summary:')
     print('  Max:\t   {}'.format(numpy.max(all_confidences)))
     print('  Min:\t   {}'.format(numpy.min(all_confidences)))
     print('  Median:  {}'.format(numpy.median(all_confidences)))
     print('  Mean:\t   {}'.format(numpy.mean(all_confidences)))
     print('  StdDev:  {}'.format(numpy.std(all_confidences)))
-    print('Mean face size: %dx%d' % (numpy.mean(all_widths), numpy.mean(all_heights)))
+    print('')
+    print('Face Size Summary:')
+    print('  Max:\t   {}x{}'.format(numpy.max(all_widths), numpy.max(all_heights)))
+    print('  Min:\t   {}x{}'.format(numpy.min(all_widths), numpy.min(all_heights)))
+    print('  Median:  {}x{}'.format(numpy.median(all_widths), numpy.median(all_heights)))
+    print('  Mean:\t   {}x{}'.format(numpy.mean(all_widths), numpy.mean(all_heights)))
+    print('  StdDev:  {}x{}'.format(numpy.std(all_widths), numpy.std(all_heights)))
 
 
 if __name__ == '__main__':
