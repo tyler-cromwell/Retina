@@ -88,7 +88,7 @@ def main():
         elif o == '--image':
             img = opt.validate_file(a)
         elif o == '--label':
-            label = opt.validate_recognizer(sys.path[0], a)
+            label = opt.validate_recognizer(a)
         elif o == '--settings':
             key = a
 
@@ -135,7 +135,7 @@ def main():
         end = time.time()
         fps = 1 // (end - start)
 
-        cv2.putText(frame, 'FPS: [{:d}]'.format(fps), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
+        cv2.putText(frame, 'FPS: [{:d}]'.format(int(fps)), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.imshow(window_name, frame)
 
         key = cv2.waitKey(1)

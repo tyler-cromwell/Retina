@@ -36,6 +36,7 @@ from modules import config
 from modules import detector
 from modules import imgproc
 from modules import opt
+from modules import var
 
 
 def print_usage():
@@ -80,7 +81,7 @@ def main():
         elif o == '--classifier':
             classifier = opt.validate_file(a)
         elif o == '--label':
-            label = opt.validate_raw_dataset(sys.path[1], a)
+            label = opt.validate_raw_dataset(a)
         elif o == '--settings':
             key = a
         elif o == '--show':
@@ -100,8 +101,8 @@ def main():
     height = int(recognizer['height'])
     stream = camera.Camera(0, configuration)
     detector_obj = detector.Detector(classifier, configuration)
-    raw_path = sys.path[1] + '/data/faces/' + label + '/raw/'
-    training_path = sys.path[1] + '/data/faces/' + label + '/training/'
+    raw_path = var.get_raw_root(label)
+    training_path = var.get_training_root(label)
     image_paths = []
 
     os.makedirs(training_path, exist_ok=True)

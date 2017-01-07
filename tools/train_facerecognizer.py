@@ -33,6 +33,7 @@ import cv2
 # Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import opt
+from modules import var
 
 
 def print_usage():
@@ -67,15 +68,15 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--label':
-            label = opt.validate_training_dataset(sys.path[1], a)
+            label = opt.validate_training_dataset(a)
 
     if not label:
         print('\n  Label not specified!\n')
         print_usage()
 
     # Initialize variables
-    training_path = sys.path[1] + '/data/faces/' + label + '/training/'
-    recognizer_path = sys.path[1] + '/data/recognizers/' + label + '.lbph.xml'
+    training_path = var.get_training_root(label)
+    recognizer_path = var.get_recognizer_file(label)
     recognizer = cv2.face.createLBPHFaceRecognizer()
     filename = label + '.lbph.xml'
     image_paths = []
@@ -94,7 +95,7 @@ def main():
         image_pil = Image.open(path)
         image = numpy.array(image_pil)
         (w, h) = image_pil.size
-        images.append(image[0: 0+h, 0: 0+w])
+        images.append(image[0: h, 0: w])
         sha1 = hashlib.sha1(label.encode())
         labels.append(int(sha1.hexdigest(), 16) % (10 ** 8))
     print('DONE')
@@ -106,7 +107,7 @@ def main():
 
     # Save the newly trained recognizer
     print('Saving recognizer: ' + filename + '... ', end='')
-    os.makedirs(sys.path[1] + '/data/recognizers/', exist_ok=True)
+    os.makedirs(var.get_recognizer_root(), exist_ok=True)
     recognizer.save(recognizer_path)
     print('DONE')
 

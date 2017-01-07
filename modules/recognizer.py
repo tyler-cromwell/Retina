@@ -29,6 +29,7 @@ import cv2
 # Local modules
 from modules import detector
 from modules import imgproc
+from modules import var
 
 
 class Recognizer(detector.Detector):
@@ -36,9 +37,7 @@ class Recognizer(detector.Detector):
         super().__init__(classifier, config)
         camera = config.camera()
         recognizer = config.recognizer()
-        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = root_dir + '/data/recognizers/'
-        file_ = path + label + '.lbph.xml'
+        file_ = var.get_recognizer_file(label)
         sha1 = hashlib.sha1(label.encode())
 
         self._label = label

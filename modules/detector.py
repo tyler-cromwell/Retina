@@ -20,9 +20,14 @@
 # Python libraries
 import re
 import os
+import sys
 
 # External libraries
 import cv2
+
+# Local modules
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules import var
 
 
 class Detector:
@@ -32,8 +37,7 @@ class Detector:
         if classifier:
             self._classifier = cv2.CascadeClassifier(classifier)
         else:
-            root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            self._classifier = cv2.CascadeClassifier(root_dir + '/data/classifiers/' + detector['classifier'])
+            self._classifier = cv2.CascadeClassifier(var.get_classifier_root() + detector['classifier'])
 
         self._flags = int(detector['flags'])
         self._scaleFactor = float(detector['scaleFactor'])

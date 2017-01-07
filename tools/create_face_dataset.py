@@ -35,6 +35,7 @@ from modules import detector
 from modules import imgproc
 from modules import misc
 from modules import opt
+from modules import var
 
 # Global constants
 CAMERA_DEFAULT = 0
@@ -97,7 +98,7 @@ def main():
     recognizer = configuration.recognizer()
     width = int(recognizer['width'])
     height = int(recognizer['height'])
-    training_path = sys.path[1] + '/data/faces/' + label + '/training/'
+    training_path = var.get_training_root(label)
     os.makedirs(training_path, exist_ok=True)
 
     dwidth, dheight = misc.get_display_resolution()

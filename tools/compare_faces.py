@@ -33,6 +33,7 @@ sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import config
 from modules import opt
 from modules import recognizer
+from modules import var
 
 
 def print_usage():
@@ -84,9 +85,9 @@ def main():
         elif o == '--classifier':
             classifier = opt.validate_file(a)
         elif o == '--label1':
-            label1 = opt.validate_raw_dataset(sys.path[1], a)
+            label1 = opt.validate_raw_dataset(a)
         elif o == '--label2':
-            label2 = opt.validate_raw_dataset(sys.path[1], a)
+            label2 = opt.validate_raw_dataset(a)
         elif o == '--settings':
             key = a
 
@@ -100,7 +101,7 @@ def main():
     # Initialize variables
     configuration = config.Config(settings[key])
     recognizer_obj = recognizer.Recognizer(classifier, label1, configuration)
-    raw_path = sys.path[1] + '/data/faces/' + label2 + '/raw/'
+    raw_path = var.get_raw_root(label2)
     image_paths = []
     all_confidences = []
     all_widths = []
