@@ -48,6 +48,7 @@ def print_usage():
     print('  --camera=INDEX\tIndex of an attached camera (Optional)')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
     print('  --image=PATH\t\tPath to a still image (alternative to camera stream)')
+    print('              \t\tIf specified without \'label\' option, will attempt to identify the face')
     print('  --label=NAME\t\tThe name of the person\'s face to recognize')
     print('  --settings=NAME\tThe name of a file located under \'settings/\'')
     print('                 \tSee \'settings/\', without \'.txt\' extension')
@@ -61,6 +62,7 @@ def main():
     cam = 0
     classifier = None
     flags = 0
+    id_ = None
     img = None
     label = None
     settings = opt.map_settings()
@@ -92,15 +94,26 @@ def main():
         elif o == '--settings':
             key = a
 
-    if not label:
+    if img and (not label) and (key in settings.keys()):
+        id_ = True
+    elif not label:
         print('\n  Label not specified!\n')
         print_usage()
     elif key not in settings.keys():
         print('\n  Settings not specified!\n')
         print_usage()
 
-    # Setup objects and window
+    # Setup objects (pt 1)
     configuration = config.Config(settings[key])
+
+    # Identify face in image
+    if id_:
+        identities = recognizer.identify(img, classifier, configuration)
+        for i in identities:
+            print(i)
+        return
+
+    # Setup objects and window (pt 2)
     dwidth, dheight = misc.get_display_resolution()
     recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
     stream = camera.Camera(cam, configuration)

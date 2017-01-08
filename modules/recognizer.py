@@ -85,3 +85,16 @@ class Recognizer(detector.Detector):
         image = cv2.resize(image_rgb, (self._width, ar_height))
         objects, labels, confidences = self.recognize(image)
         return (image, objects, labels, confidences)
+
+
+def identify(frame, classifier, config):
+    identities = []
+
+    for f in os.listdir(var.get_recognizer_root()):
+        if f.endswith('.xml'):
+            label = f.split('.')[0]
+            recognizer = Recognizer(classifier, label, config)
+            image, objects, labels, confidences = recognizer.recognize_from_file(frame)
+            identities.append((labels[0], confidences[0]))
+
+    return sorted(identities, key=lambda x: x[1])
