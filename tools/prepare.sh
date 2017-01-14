@@ -19,12 +19,13 @@
 #  If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 ########################################################################
 
-OPENCV=~/opencv
-OPENCV_CONTRIB_MODULES=~/opencv_contrib/modules
+OPENCV=/srv/opencv
+OPENCV_CONTRIB_MODULES=/srv/opencv_contrib/modules
 
 if [[ -z $OPENCV || -z $OPENCV_CONTRIB_MODULES ]]; then
     echo "Repository path missing!"
     echo $OPENCV
+    echo $OPENCV_CONTRIB
     exit 1
 fi
 
@@ -38,5 +39,8 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D WITH_TBB=ON \
       -D INSTALL_C_EXAMPLES=OFF \
       -D INSTALL_PYTHON_EXAMPLES=OFF \
+      -D PYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+      -D PYTHON_EXECUTABLE=$(which python3) \
+      -D PYTHON_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
       -D OPENCV_EXTRA_MODULES_PATH=$OPENCV_CONTRIB_MODULES \
       -D BUILD_EXAMPLES=OFF $OPENCV
