@@ -75,17 +75,14 @@ def main():
         print_usage()
 
     # Initialize variables
-    training_path = var.get_training_root(label)
     recognizer_path = var.get_recognizer_file(label)
     recognizer_obj = cv2.face.createLBPHFaceRecognizer()
     filename = label + '.lbph.xml'
-    image_paths = []
     images = []
 
     # Get the absolute path of each image
     print('Collecting training images... ', end='')
-    for entry in os.listdir(training_path):
-        image_paths.append(os.path.join(training_path, entry))
+    image_paths = var.get_training_images(label)
     print('DONE')
 
     # Add each of the persons images to the training set

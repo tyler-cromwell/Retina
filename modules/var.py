@@ -44,3 +44,11 @@ def get_settings_root():
 
 def get_training_root(label):
     return sys.path[1] + '/data/faces/' + label + '/training/'
+
+
+def get_training_images(label):
+    image_paths = []
+    training_path = get_training_root(label)
+    for path in os.listdir(training_path):
+        image_paths.append(os.path.join(training_path, path))
+    return image_paths
