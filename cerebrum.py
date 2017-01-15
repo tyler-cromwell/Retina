@@ -62,7 +62,6 @@ def main():
     cam = 0
     classifier = None
     flags = 0
-    id_ = None
     img = None
     label = None
     settings = opt.map_settings()
@@ -94,30 +93,23 @@ def main():
         elif o == '--settings':
             key = a
 
-    if img and (not label) and (key in settings.keys()):
-        id_ = True
-    elif not label:
-        print('\n  Label not specified!\n')
-        print_usage()
-    elif key not in settings.keys():
-        print('\n  Settings not specified!\n')
+    if key not in settings.keys():
+        print('\n  Settings file \"{}\" not found!\n'.format(key))
         print_usage()
 
-    # Setup objects (pt 1)
     configuration = config.Config(settings[key])
 
     # Identify face in image
-    if id_:
+    if img and not label:
         identities = recognizer.identify(img, classifier, configuration)
         for i in identities:
             print(i)
         return
+    elif not label:
+        print('\n  Label not specified!\n')
+        print_usage()
 
-    # Setup objects and window (pt 2)
-    dwidth, dheight = misc.get_display_resolution()
     recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
-    stream = camera.Camera(cam, configuration)
-    print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
 
     # Recognize in a still image
     if img:
@@ -127,6 +119,9 @@ def main():
         cv2.waitKey(0)
         return
 
+    dwidth, dheight = misc.get_display_resolution()
+    stream = camera.Camera(cam, configuration)
+    print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
     window_name = 'Camera {:d}'.format(cam)
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
