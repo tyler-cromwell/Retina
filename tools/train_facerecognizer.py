@@ -20,7 +20,6 @@
 #######################################################################
 
 # Python libraries
-import hashlib
 import getopt
 import os
 import sys
@@ -33,6 +32,7 @@ import cv2
 # Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import opt
+from modules import recognizer
 from modules import var
 
 
@@ -77,11 +77,10 @@ def main():
     # Initialize variables
     training_path = var.get_training_root(label)
     recognizer_path = var.get_recognizer_file(label)
-    recognizer = cv2.face.createLBPHFaceRecognizer()
+    recognizer_obj = cv2.face.createLBPHFaceRecognizer()
     filename = label + '.lbph.xml'
     image_paths = []
     images = []
-    labels = []
 
     # Get the absolute path of each image
     print('Collecting training images... ', end='')
@@ -96,19 +95,18 @@ def main():
         image = numpy.array(image_pil)
         (w, h) = image_pil.size
         images.append(image[0: h, 0: w])
-        sha1 = hashlib.sha1(label.encode())
-        labels.append(int(sha1.hexdigest(), 16) % (10 ** 8))
     print('DONE')
 
     # Train
+    labels = [recognizer.hash_label(label)] * len(image_paths)
     print('Training recognizer... ', end='')
-    recognizer.train(images, numpy.array(labels))
+    recognizer_obj.train(images, numpy.array(labels))
     print('DONE')
 
     # Save the newly trained recognizer
     print('Saving recognizer: {}...'.format(filename), end='')
     os.makedirs(var.get_recognizer_root(), exist_ok=True)
-    recognizer.save(recognizer_path)
+    recognizer_obj.save(recognizer_path)
     print('DONE')
 
 

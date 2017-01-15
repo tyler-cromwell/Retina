@@ -38,10 +38,9 @@ class Recognizer(detector.Detector):
         camera = config.camera()
         recognizer = config.recognizer()
         file_ = var.get_recognizer_file(label)
-        sha1 = hashlib.sha1(label.encode())
 
         self._label = label
-        self._hash = int(sha1.hexdigest(), 16) % (10 ** 8)
+        self._hash = hash_label(label)
         self._width = int(camera['width'])
         self._height = int(camera['height'])
         self._threshold = int(recognizer['threshold'])
@@ -98,3 +97,7 @@ def identify(frame, classifier, config):
             identities.append((labels[0], confidences[0]))
 
     return sorted(identities, key=lambda x: x[1])
+
+def hash_label(label):
+    sha1 = hashlib.sha1(label.encode())
+    return int(sha1.hexdigest(), 16) % (10 ** 8)
