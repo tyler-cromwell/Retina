@@ -86,7 +86,8 @@ def main():
     print('DONE')
 
     # Add each of the persons images to the training set
-    print('Assigning labels... ', end='')
+    print('Preparing images and labels... ', end='')
+    labels = [recognizer.hash_label(label)] * len(image_paths)
     for path in image_paths:
         image_pil = Image.open(path)
         image = numpy.array(image_pil)
@@ -95,7 +96,6 @@ def main():
     print('DONE')
 
     # Train
-    labels = [recognizer.hash_label(label)] * len(image_paths)
     print('Training recognizer... ', end='')
     recognizer_obj.train(images, numpy.array(labels))
     print('DONE')
