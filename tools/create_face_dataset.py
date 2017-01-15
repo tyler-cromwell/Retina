@@ -62,7 +62,7 @@ def main():
     label = None
     settings = opt.map_settings()
     key = opt.default_settings()
-    window_name = 'Camera %d' % (CAMERA_DEFAULT)
+    window_name = 'Camera {}'.format(CAMERA_DEFAULT)
 
     # Parse command-line arguments
     try:
@@ -102,11 +102,11 @@ def main():
     os.makedirs(training_path, exist_ok=True)
 
     dwidth, dheight = misc.get_display_resolution()
-    print('Display resolution: %dx%d' % (dwidth, dheight))
+    print('Display resolution: {:d}x{:d}'.format(dwidth, dheight))
 
     detector_obj = detector.Detector(classifier, configuration)
     stream = camera.Camera(CAMERA_DEFAULT, configuration)
-    print('Capture Resolution: %dx%d' % (stream.get_width(), stream.get_height()))
+    print('Capture Resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
@@ -146,9 +146,9 @@ def main():
             image = imgproc.preprocess(frame, width, height, x, y, w, h)
 
             if p < 10:
-                cv2.imwrite(training_path + label + '.0' + str(p) + '.png', image)
+                cv2.imwrite(training_path + label + '.0{}.png'.format(str(p)), image)
             else:
-                cv2.imwrite(training_path + label + '.' + str(p) + '.png', image)
+                cv2.imwrite(training_path + label + '.{}.png'.format(str(p)), image)
 
             p = p + 1
 

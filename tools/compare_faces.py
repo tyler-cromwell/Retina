@@ -95,7 +95,6 @@ def main():
     configuration = config.Config(settings[key])
     recognizer_obj = recognizer.Recognizer(classifier, label1, configuration)
     raw_path = var.get_raw_root(label2)
-    image_paths = []
     all_confidences = []
     all_widths = []
     all_heights = []
@@ -103,8 +102,7 @@ def main():
 
     # Get the absolute path of each image
     print('Collecting images of {}... '.format(label2), end='')
-    for entry in os.listdir(raw_path):
-        image_paths.append(os.path.join(raw_path, entry))
+    images_paths = var.get_raw_images(label2)
     print('DONE')
 
     # Preprocess each image
