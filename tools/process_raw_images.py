@@ -103,14 +103,12 @@ def main():
     detector_obj = detector.Detector(classifier, configuration)
     raw_path = var.get_raw_root(label)
     training_path = var.get_training_root(label)
-    image_paths = []
 
     os.makedirs(training_path, exist_ok=True)
 
     # Get the absolute path of each image
     print('Collecting raw images... ', end='')
-    for entry in os.listdir(raw_path):
-        image_paths.append(os.path.join(raw_path, entry))
+    image_paths = var.get_raw_images(label)
     print('DONE')
 
     # Preprocess each image

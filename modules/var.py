@@ -30,6 +30,14 @@ def get_raw_root(label):
     return sys.path[1] + '/data/faces/' + label + '/raw/'
 
 
+def get_raw_images(label):
+    image_paths = []
+    raw_path = get_raw_root(label)
+    for path in os.listdir(raw_path):
+        image_paths.append(os.path.join(raw_path, path))
+    return image_paths
+
+
 def get_recognizer_root():
     return sys.path[1] + '/data/recognizers/'
 
