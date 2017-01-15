@@ -69,7 +69,7 @@ def main():
         long_opts = ['help', 'classifier=', 'label=', 'settings=', 'show']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \'' + str(error) + '\'\n')
+        print('Invalid argument: \"{}\"\n'.format(str(error)))
         print_usage()
 
     if len(opts) == 0:
@@ -116,7 +116,7 @@ def main():
     # Preprocess each image
     l = len(image_paths)
     for i, path in enumerate(image_paths):
-        print('\rPreprocessing raw images... (' + str(i+1) + '/' + str(l) + ')', end='')
+        print('\rPreprocessing raw images... ({}/{})'.format(str(i+1), str(l)), end='')
         cont = False
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
@@ -145,9 +145,9 @@ def main():
         face = imgproc.preprocess(image, width, height, x, y, w, h)
 
         if i < 10:
-            cv2.imwrite(training_path + label + '.0' + str(i) + '.png', face)
+            cv2.imwrite(training_path + label + '.0{}.png'.format(str(i)), face)
         else:
-            cv2.imwrite(training_path + label + '.' + str(i) + '.png', face)
+            cv2.imwrite(training_path + label + '.{}.png'.format(str(i)), face)
 
     print('\rPreprocessing raw images... DONE    ')
 

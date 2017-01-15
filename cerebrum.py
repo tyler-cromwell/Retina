@@ -73,7 +73,7 @@ def main():
         long_opts = ['help', 'camera=', 'classifier=', 'image=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \'' + str(error) + '\'\n')
+        print('Invalid argument: \"{}\"\n'.format(str(error)))
         print_usage()
 
     if len(opts) == 0:

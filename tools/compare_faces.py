@@ -63,17 +63,10 @@ def main():
     # Parse command-line arguments
     try:
         short_opts = ['']
-        long_opts = [
-            'help',
-            'classifier=',
-            'label1=',
-            'label2=',
-            'settings=',
-            'show'
-        ]
+        long_opts = ['help', 'classifier=', 'label1=', 'label2=', 'settings=', 'show']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \'' + str(error) + '\'\n')
+        print('Invalid argument: \"{}\"\n'.format(str(error)))
         print_usage()
 
     if len(opts) == 0:
@@ -109,7 +102,7 @@ def main():
     percent = 0
 
     # Get the absolute path of each image
-    print('Collecting images of ' + label2 + '... ', end='')
+    print('Collecting images of {}... '.format(label2), end='')
     for entry in os.listdir(raw_path):
         image_paths.append(os.path.join(raw_path, entry))
     print('DONE')

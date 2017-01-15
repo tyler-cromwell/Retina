@@ -58,7 +58,7 @@ def main():
         long_opts = ['help', 'label=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \'' + str(error) + '\'\n')
+        print('Invalid argument: \"{}\"\n'.format(str(error)))
         print_usage()
 
     if len(opts) == 0:
@@ -106,7 +106,7 @@ def main():
     print('DONE')
 
     # Save the newly trained recognizer
-    print('Saving recognizer: ' + filename + '... ', end='')
+    print('Saving recognizer: {}...'.format(filename), end='')
     os.makedirs(var.get_recognizer_root(), exist_ok=True)
     recognizer.save(recognizer_path)
     print('DONE')
