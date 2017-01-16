@@ -26,8 +26,6 @@ import sys
 import time
 
 # External libraries
-import numpy
-from PIL import Image
 import cv2
 
 # Local modules
