@@ -32,8 +32,8 @@ import cv2
 # Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
-from modules import config
-from modules import detector
+from modules import configuration
+from modules import detection
 from modules import imgproc
 from modules import opt
 from modules import var
@@ -95,12 +95,12 @@ def main():
         print_usage()
 
     # Initialize variables
-    configuration = config.Config(settings[key])
-    recognizer = configuration.recognizer()
+    config = configuration.Config(settings[key])
+    recognizer = config.recognizer()
     width = int(recognizer['width'])
     height = int(recognizer['height'])
-    stream = camera.Camera(0, configuration)
-    detector_obj = detector.Detector(classifier, configuration)
+    stream = camera.Camera(0, config)
+    detector = detection.Detector(classifier, config)
     raw_path = var.get_raw_root(label)
     training_path = var.get_training_root(label)
 
@@ -127,7 +127,7 @@ def main():
         (x, y, w, h) = (0, 0, 0, 0)
 
         try:
-            (x, y, w, h) = detector_obj.detect(image)[0]
+            (x, y, w, h) = detector.detect(image)[0]
         except IndexError:
             print('\nNo faces detected in:', path)
             cont = True

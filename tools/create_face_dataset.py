@@ -30,8 +30,8 @@ import cv2
 # Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
-from modules import config
-from modules import detector
+from modules import configuration
+from modules import detection
 from modules import imgproc
 from modules import misc
 from modules import opt
@@ -94,8 +94,8 @@ def main():
         print_usage()
 
     # Setup training set, objects, and window
-    configuration = config.Config(settings[key])
-    recognizer = configuration.recognizer()
+    config = configuration.Config(settings[key])
+    recognizer = config.recognizer()
     width = int(recognizer['width'])
     height = int(recognizer['height'])
     training_path = var.get_training_root(label)
@@ -104,8 +104,8 @@ def main():
     dwidth, dheight = misc.get_display_resolution()
     print('Display resolution: {:d}x{:d}'.format(dwidth, dheight))
 
-    detector_obj = detector.Detector(classifier, configuration)
-    stream = camera.Camera(CAMERA_DEFAULT, configuration)
+    detector = detection.Detector(classifier, config)
+    stream = camera.Camera(CAMERA_DEFAULT, config)
     print('Capture Resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
@@ -120,7 +120,7 @@ def main():
 
     while True:
         retval, frame = stream.read()
-        faces = detector_obj.detect(frame)
+        faces = detector.detect(frame)
 
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)

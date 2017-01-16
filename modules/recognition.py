@@ -27,12 +27,12 @@ from PIL import Image
 import cv2
 
 # Local modules
-from modules import detector
+from modules import detection
 from modules import imgproc
 from modules import var
 
 
-class Recognizer(detector.Detector):
+class Recognizer(detection.Detector):
     def __init__(self, classifier, label, config):
         super().__init__(classifier, config)
         camera = config.camera()
@@ -97,6 +97,7 @@ def identify(frame, classifier, config):
             identities.append((labels[0], confidences[0]))
 
     return sorted(identities, key=lambda x: x[1])
+
 
 def hash_label(label):
     sha1 = hashlib.sha1(label.encode())

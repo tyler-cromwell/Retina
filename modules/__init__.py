@@ -19,11 +19,11 @@
 
 __all__ = [
     'camera',
-    'config',
-    'detector',
+    'configuration',
+    'detection',
     'imgproc',
     'misc',
     'opt',
-    'recognizer',
+    'recognition',
     'var'
 ]

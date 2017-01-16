@@ -30,9 +30,9 @@ import numpy
 
 # Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from modules import config
+from modules import configuration
 from modules import opt
-from modules import recognizer
+from modules import recognition
 from modules import var
 
 
@@ -92,8 +92,8 @@ def main():
         print_usage()
 
     # Initialize variables
-    configuration = config.Config(settings[key])
-    recognizer_obj = recognizer.Recognizer(classifier, label1, configuration)
+    config = configuration.Config(settings[key])
+    recognizer = recognition.Recognizer(classifier, label1, config)
     raw_path = var.get_raw_root(label2)
     all_confidences = []
     all_widths = []
@@ -112,7 +112,7 @@ def main():
         sys.stdout.flush()
         skip = False
 
-        image, objects, labels, confidences = recognizer_obj.recognize_from_file(path)
+        image, objects, labels, confidences = recognizer.recognize_from_file(path)
 
         try:
             if len(confidences) > 1:

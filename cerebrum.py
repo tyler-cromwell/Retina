@@ -30,11 +30,11 @@ import cv2
 
 # Local modules
 from modules import camera
-from modules import config
+from modules import configuration
 from modules import imgproc
 from modules import misc
 from modules import opt
-from modules import recognizer
+from modules import recognition
 
 
 def print_usage():
@@ -95,11 +95,11 @@ def main():
         print('\n  Settings file \"{}\" not found!\n'.format(key))
         print_usage()
 
-    configuration = config.Config(settings[key])
+    config = configuration.Config(settings[key])
 
     # Identify face in image
     if img and not label:
-        identities = recognizer.identify(img, classifier, configuration)
+        identities = recognition.identify(img, classifier, config)
         for i in identities:
             print(i)
         return
@@ -107,18 +107,18 @@ def main():
         print('\n  Label not specified!\n')
         print_usage()
 
-    recognizer_obj = recognizer.Recognizer(classifier, label, configuration)
+    recognizer = recognition.Recognizer(classifier, label, config)
 
     # Recognize in a still image
     if img:
-        image, objects, labels, confidences = recognizer_obj.recognize_from_file(img)
+        image, objects, labels, confidences = recognizer.recognize_from_file(img)
         imgproc.draw_face_info(image, objects, labels, confidences)
         cv2.imshow(img, image)
         cv2.waitKey(0)
         return
 
     dwidth, dheight = misc.get_display_resolution()
-    stream = camera.Camera(cam, configuration)
+    stream = camera.Camera(cam, config)
     print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
     window_name = 'Camera {:d}'.format(cam)
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
@@ -135,7 +135,7 @@ def main():
 
         # Check flags
         if flags & 1:
-            objects, labels, confidences = recognizer_obj.recognize(frame)
+            objects, labels, confidences = recognizer.recognize(frame)
             imgproc.draw_face_info(frame, objects, labels, confidences)
 
         end = time.time()
