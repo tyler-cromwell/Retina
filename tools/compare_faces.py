@@ -32,8 +32,8 @@ import numpy
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import configuration
 from modules import opt
+from modules import pathname
 from modules import recognition
-from modules import var
 
 
 def print_usage():
@@ -94,7 +94,7 @@ def main():
     # Initialize variables
     config = configuration.Config(settings[key])
     recognizer = recognition.Recognizer(classifier, label1, config)
-    raw_path = var.get_raw_root(label2)
+    raw_path = pathname.get_raw_root(label2)
     all_confidences = []
     all_widths = []
     all_heights = []
@@ -102,7 +102,7 @@ def main():
 
     # Get the absolute path of each image
     print('Collecting images of {}... '.format(label2), end='')
-    images_paths = var.get_raw_images(label2)
+    images_paths = pathname.get_raw_images(label2)
     print('DONE')
 
     # Preprocess each image

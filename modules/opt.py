@@ -21,7 +21,7 @@
 import os
 
 # Local modules
-from . import var
+from . import pathname
 
 
 def default_settings():
@@ -47,11 +47,11 @@ def map_settings():
     Maps simple settings filenames to their absolute paths.
     """
     settings = {}
-    ents = os.listdir(var.get_settings_root())
+    ents = os.listdir(pathname.get_settings_root())
 
     for ent in ents:
         key = ent[0:-4]
-        settings[key] = os.path.abspath(var.get_settings_root() + ent)
+        settings[key] = os.path.abspath(pathname.get_settings_root() + ent)
 
     return settings
 
@@ -70,7 +70,7 @@ def validate_raw_dataset(label):
     """
     Ensures the given label has a raw dataset.
     """
-    if os.path.isdir(var.get_raw_root(label)):
+    if os.path.isdir(pathname.get_raw_root(label)):
         return label
     else:
         return None
@@ -80,7 +80,7 @@ def validate_training_dataset(label):
     """
     Ensures the given label has a training dataset.
     """
-    if os.path.isdir(var.get_training_root(label)):
+    if os.path.isdir(pathname.get_training_root(label)):
         return label
     else:
         return None
@@ -90,7 +90,7 @@ def validate_recognizer(label):
     """
     Ensures the given label has a recognizer.
     """
-    if os.path.isfile(var.get_recognizer_file(label)):
+    if os.path.isfile(pathname.get_recognizer_file(label)):
         return label
     else:
         return None

@@ -24,7 +24,7 @@ import re
 import cv2
 
 # Local modules
-from . import var
+from . import pathname
 
 
 class Detector:
@@ -34,7 +34,7 @@ class Detector:
         if classifier:
             self._classifier = cv2.CascadeClassifier(classifier)
         else:
-            self._classifier = cv2.CascadeClassifier(var.get_classifier_root() + detector['classifier'])
+            self._classifier = cv2.CascadeClassifier(pathname.get_classifier_root() + detector['classifier'])
 
         self._flags = int(detector['flags'])
         self._scaleFactor = float(detector['scaleFactor'])

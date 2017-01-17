@@ -29,7 +29,7 @@ import cv2
 # Local modules
 from . import detection
 from . import imgproc
-from . import var
+from . import pathname
 
 
 class Recognizer(detection.Detector):
@@ -37,7 +37,7 @@ class Recognizer(detection.Detector):
         super().__init__(classifier, config)
         camera = config.camera()
         recognizer = config.recognizer()
-        file_ = var.get_recognizer_file(label)
+        file_ = pathname.get_recognizer_file(label)
 
         self._label = label
         self._hash = hash_label(label)
@@ -89,7 +89,7 @@ class Recognizer(detection.Detector):
 def identify(frame, classifier, config):
     identities = []
 
-    for f in os.listdir(var.get_recognizer_root()):
+    for f in os.listdir(pathname.get_recognizer_root()):
         if f.endswith('.xml'):
             label = f.split('.')[0]
             recognizer = Recognizer(classifier, label, config)

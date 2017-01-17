@@ -36,7 +36,7 @@ from modules import configuration
 from modules import detection
 from modules import imgproc
 from modules import opt
-from modules import var
+from modules import pathname
 
 
 def print_usage():
@@ -101,14 +101,14 @@ def main():
     height = int(recognizer['height'])
     stream = camera.Camera(0, config)
     detector = detection.Detector(classifier, config)
-    raw_path = var.get_raw_root(label)
-    training_path = var.get_training_root(label)
+    raw_path = pathname.get_raw_root(label)
+    training_path = pathname.get_training_root(label)
 
     os.makedirs(training_path, exist_ok=True)
 
     # Get the absolute path of each image
     print('Collecting raw images... ', end='')
-    image_paths = var.get_raw_images(label)
+    image_paths = pathname.get_raw_images(label)
     print('DONE')
 
     # Preprocess each image

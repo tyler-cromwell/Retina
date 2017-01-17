@@ -24,6 +24,6 @@ __all__ = [
     'imgproc',
     'misc',
     'opt',
-    'recognition',
-    'var'
+    'pathname',
+    'recognition'
 ]
