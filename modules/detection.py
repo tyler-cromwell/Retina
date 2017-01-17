@@ -19,15 +19,12 @@
 
 # Python libraries
 import re
-import os
-import sys
 
 # External libraries
 import cv2
 
 # Local modules
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from modules import var
+from . import var
 
 
 class Detector:

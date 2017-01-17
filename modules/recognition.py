@@ -27,9 +27,9 @@ from PIL import Image
 import cv2
 
 # Local modules
-from modules import detection
-from modules import imgproc
-from modules import var
+from . import detection
+from . import imgproc
+from . import var
 
 
 class Recognizer(detection.Detector):

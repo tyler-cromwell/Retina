@@ -19,7 +19,6 @@
 
 # Python libraries
 import configparser
-import os
 
 
 class Config:

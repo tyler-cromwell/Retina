@@ -18,13 +18,10 @@
 #######################################################################
 
 # Python libraries
-import getopt
 import os
-import sys
 
 # Local modules
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from modules import var
+from . import var
 
 
 def default_settings():
