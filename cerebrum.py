@@ -19,16 +19,13 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import getopt
 import os
 import sys
 import time
 
-# External libraries
 import cv2
 
-# Local modules
 from modules import camera
 from modules import configuration
 from modules import imgproc
@@ -65,7 +62,6 @@ def main():
     settings = opt.map_settings()
     key = opt.default_settings()
 
-    # Parse command-line arguments
     try:
         short_opts = ['']
         long_opts = ['help', 'camera=', 'classifier=', 'image=', 'label=', 'settings=']
@@ -124,7 +120,6 @@ def main():
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
-    # Begin using the camera
     if not stream.open():
         print('Failed to open Camera', cam)
         exit(1)
@@ -133,7 +128,6 @@ def main():
         start = time.time()
         retval, frame = stream.read()
 
-        # Check flags
         if flags & 1:
             objects, labels, confidences = recognizer.recognize(frame)
             imgproc.draw_face_info(frame, objects, labels, confidences)
@@ -146,13 +140,8 @@ def main():
 
         key = cv2.waitKey(1)
 
-        # Determine action
         if key == 27:
             cv2.destroyWindow(window_name)
-            cv2.waitKey(1)
-            cv2.waitKey(1)
-            cv2.waitKey(1)
-            cv2.waitKey(1)
             stream.release()
             break
         elif key == ord('f'):

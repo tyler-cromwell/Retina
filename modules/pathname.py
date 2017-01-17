@@ -17,7 +17,6 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import os
 
 __ROOT_DIR__ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -17,16 +17,13 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import hashlib
 import os
 
-# External libraries
 import numpy
 from PIL import Image
 import cv2
 
-# Local modules
 from . import detection
 from . import imgproc
 from . import pathname

@@ -19,16 +19,13 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import getopt
 import os
 import sys
 
-# External libraries
 import cv2
 import numpy
 
-# Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import configuration
 from modules import opt
@@ -60,7 +57,6 @@ def main():
     settings = opt.map_settings()
     key = opt.default_settings()
 
-    # Parse command-line arguments
     try:
         short_opts = ['']
         long_opts = ['help', 'classifier=', 'label1=', 'label2=', 'settings=', 'show']

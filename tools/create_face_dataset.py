@@ -19,15 +19,12 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import getopt
 import os
 import sys
 
-# External libraries
 import cv2
 
-# Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import camera
 from modules import configuration
@@ -37,7 +34,6 @@ from modules import misc
 from modules import opt
 from modules import pathname
 
-# Global constants
 CAMERA_DEFAULT = 0
 
 
@@ -64,7 +60,6 @@ def main():
     key = opt.default_settings()
     window_name = 'Camera {}'.format(CAMERA_DEFAULT)
 
-    # Parse command-line arguments
     try:
         short_opts = ['']
         long_opts = ['help', 'classifier=', 'label=', 'settings=']
@@ -113,7 +108,6 @@ def main():
 
     p = 0
 
-    # Begin using the camera
     if not stream.open():
         print('Failed to open Camera', CAMERA_DEFAULT)
         exit(1)

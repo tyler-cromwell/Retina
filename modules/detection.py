@@ -17,13 +17,10 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import re
 
-# External libraries
 import cv2
 
-# Local modules
 from . import pathname
 
 

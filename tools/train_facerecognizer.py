@@ -19,17 +19,14 @@
 # If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 #######################################################################
 
-# Python libraries
 import getopt
 import os
 import sys
 
-# External libraries
 import numpy
 from PIL import Image
 import cv2
 
-# Local modules
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules import opt
 from modules import pathname
@@ -52,7 +49,6 @@ def main():
     """
     label = None
 
-    # Parse command-line arguments
     try:
         short_opts = ['']
         long_opts = ['help', 'label=']
