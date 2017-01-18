@@ -98,7 +98,7 @@ def main():
 
     # Get the absolute path of each image
     print('Collecting images of {}... '.format(label2), end='')
-    images_paths = pathname.get_raw_images(label2)
+    image_paths = pathname.get_raw_images(label2)
     print('DONE')
 
     # Preprocess each image
