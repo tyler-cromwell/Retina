@@ -19,13 +19,12 @@
 #  If not, see <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
 ########################################################################
 
-OPENCV=/srv/opencv
-OPENCV_CONTRIB_MODULES=/srv/opencv_contrib/modules
+OPENCV=$1
+OPENCV_CONTRIB_MODULES="${1}_contrib/modules"
 
-if [[ -z $OPENCV || -z $OPENCV_CONTRIB_MODULES ]]; then
+if [[ -z $OPENCV ]]; then
     echo "Repository path missing!"
-    echo $OPENCV
-    echo $OPENCV_CONTRIB
+    echo "Usage: prepare.sh <opencv-root-dir>"
     exit 1
 fi
 
@@ -36,7 +35,11 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=/usr/local \
       -D WITH_OPENCL=ON \
       -D WITH_OPENGL=ON \
+      -D WITH_CUDA=ON \
       -D WITH_TBB=ON \
+      -D ENABLE_FAST_MATH=ON \
+      -D CUDA_FAST_MATH=ON \
+      -D WITH_CUBLAS=ON \
       -D INSTALL_C_EXAMPLES=OFF \
       -D INSTALL_PYTHON_EXAMPLES=OFF \
       -D PYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
