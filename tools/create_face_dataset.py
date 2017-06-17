@@ -81,11 +81,12 @@ def main():
         elif o == '--settings':
             key = a
 
+    if key not in settings.keys():
+        print('\n  Settings file \"{}\" not found!\n'.format(key))
+        print_usage()
+
     if not label:
         print('\n  Label not specified!\n')
-        print_usage()
-    elif key not in settings.keys():
-        print('\n  Settings not specified!\n')
         print_usage()
 
     # Setup training set, objects, and window

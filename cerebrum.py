@@ -54,11 +54,11 @@ def main():
     """
     Main function.
     """
-    cam = 0
     classifier = None
     flags = 0
-    img = None
+    index = 0
     label = None
+    path = None
     settings = opt.map_settings()
     key = opt.default_settings()
 
@@ -77,11 +77,11 @@ def main():
         if o == '--help':
             print_usage()
         elif o == '--camera':
-            cam = int(a)
+            index = int(a)
         elif o == '--classifier':
             classifier = opt.validate_file(a)
         elif o == '--image':
-            img = opt.validate_file(a)
+            path = opt.validate_file(a)
         elif o == '--label':
             label = opt.validate_recognizer(a)
         elif o == '--settings':
@@ -94,8 +94,8 @@ def main():
     config = configuration.Config(settings[key])
 
     # Identify face in image
-    if img and not label:
-        identities = recognition.identify(img, classifier, config)
+    if path and not label:
+        identities = recognition.identify(path, classifier, config)
         for i in identities:
             print(i)
         return
@@ -106,22 +106,22 @@ def main():
     recognizer = recognition.Recognizer(classifier, label, config)
 
     # Recognize in a still image
-    if img:
-        image, objects, labels, confidences = recognizer.recognize_from_file(img)
+    if path:
+        image, objects, labels, confidences = recognizer.recognize_from_file(path)
         imgproc.draw_face_info(image, objects, labels, confidences)
-        cv2.imshow(img, image)
+        cv2.imshow(path, image)
         cv2.waitKey(0)
         return
 
     dwidth, dheight = misc.get_display_resolution()
-    stream = camera.Camera(cam, config)
+    stream = camera.Camera(index, config)
     print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
-    window_name = 'Camera {:d}'.format(cam)
+    window_name = 'Camera {:d}'.format(index)
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
     if not stream.open():
-        print('Failed to open Camera', cam)
+        print('Failed to open Camera', index)
         exit(1)
 
     while True:
