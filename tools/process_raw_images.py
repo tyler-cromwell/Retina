@@ -54,9 +54,9 @@ def main():
     """
     Main function.
     """
+    classifier = None
     label = None
     show = False
-    classifier = None
     settings = opt.map_settings()
     key = opt.default_settings()
 
@@ -83,11 +83,12 @@ def main():
         elif o == '--show':
             show = True
 
+    if key not in settings.keys():
+        print('\n  Settings file \"{}\" not found!\n'.format(key))
+        print_usage()
+
     if not label:
         print('\n  Label not specified!\n')
-        print_usage()
-    elif key not in settings.keys():
-        print('\n  Settings not specified!\n')
         print_usage()
 
     # Initialize variables
