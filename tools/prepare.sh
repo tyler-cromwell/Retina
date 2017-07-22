@@ -33,17 +33,20 @@ cd $OPENCV/build
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=/usr/local \
+      -D ENABLE_FAST_MATH=ON \
+      -D CUDA_FAST_MATH=ON \
+      -D WITH_CUBLAS=ON \
       -D WITH_OPENCL=ON \
       -D WITH_OPENGL=ON \
       -D WITH_CUDA=ON \
       -D WITH_TBB=ON \
-      -D ENABLE_FAST_MATH=ON \
-      -D CUDA_FAST_MATH=ON \
-      -D WITH_CUBLAS=ON \
+      -D BUILD_DOCS=OFF \
+      -D BUILD_EXAMPLES=OFF \
+      -D BUILD_TESTS=OFF \
       -D INSTALL_C_EXAMPLES=OFF \
       -D INSTALL_PYTHON_EXAMPLES=OFF \
       -D PYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
       -D PYTHON_EXECUTABLE=$(which python3) \
       -D PYTHON_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
       -D OPENCV_EXTRA_MODULES_PATH=$OPENCV_CONTRIB_MODULES \
-      -D BUILD_EXAMPLES=OFF $OPENCV
+      $OPENCV
