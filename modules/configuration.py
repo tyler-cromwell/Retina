@@ -26,19 +26,19 @@ class Config:
         config.optionxform = str
         config.read(file_)
 
-        self._config = []
+        self.__config = []
 
         for s in config.sections():
             entries = [(o, config.get(s, o)) for o in config.options(s)]
-            self._config.append((s, dict(entries)))
+            self.__config.append((s, dict(entries)))
 
-        self._config = dict(self._config)
+        self.__config = dict(self.__config)
 
     def camera(self):
-        return self._config['Camera']
+        return self.__config['Camera']
 
     def detector(self):
-        return self._config['Detector']
+        return self.__config['Detector']
 
     def recognizer(self):
-        return self._config['Recognizer']
+        return self.__config['Recognizer']

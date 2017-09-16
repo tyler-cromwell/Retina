@@ -23,27 +23,27 @@ import cv2
 class Camera():
     def __init__(self, source, config):
         camera = config.camera()
-        self._source = source
-        self._camera = cv2.VideoCapture(source)
-        self._width = int(camera['width'])
-        self._height = int(camera['height'])
-        self._camera.set(cv2.CAP_PROP_FRAME_WIDTH, self._width)
-        self._camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self._height)
+        self.__source = source
+        self.__camera = cv2.VideoCapture(source)
+        self.__width = int(camera['width'])
+        self.__height = int(camera['height'])
+        self.__camera.set(cv2.CAP_PROP_FRAME_WIDTH, self.__width)
+        self.__camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self.__height)
 
     def get_width(self):
-        return self._width
+        return self.__width
 
     def get_height(self):
-        return self._height
+        return self.__height
 
     def open(self):
-        if not self._camera.isOpened():
-            if not self._camera.open(self._source):
+        if not self.__camera.isOpened():
+            if not self.__camera.open(self.__source):
                 return False
         return True
 
     def read(self):
-        return self._camera.read()
+        return self.__camera.read()
 
     def release(self):
-        return self._camera.release()
+        return self.__camera.release()

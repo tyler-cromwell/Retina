@@ -29,24 +29,24 @@ class Detector:
         detector = config.detector()
 
         if classifier:
-            self._classifier = cv2.CascadeClassifier(classifier)
+            self.__classifier = cv2.CascadeClassifier(classifier)
         else:
-            self._classifier = cv2.CascadeClassifier(pathname.get_classifier_root() + detector['classifier'])
+            self.__classifier = cv2.CascadeClassifier(pathname.get_classifier_root() + detector['classifier'])
 
-        self._flags = int(detector['flags'])
-        self._scaleFactor = float(detector['scaleFactor'])
-        self._minNeighbors = int(detector['minNeighbors'])
-        self._minSize = tuple(map(int, re.split('\s*,\s*', detector['minSize'])))
-        self._maxSize = tuple(map(int, re.split('\s*,\s*', detector['maxSize'])))
+        self.__flags = int(detector['flags'])
+        self.__scaleFactor = float(detector['scaleFactor'])
+        self.__minNeighbors = int(detector['minNeighbors'])
+        self.__minSize = tuple(map(int, re.split('\s*,\s*', detector['minSize'])))
+        self.__maxSize = tuple(map(int, re.split('\s*,\s*', detector['maxSize'])))
 
     def detect(self, frame):
-        objects = self._classifier.detectMultiScale(
+        objects = self.__classifier.detectMultiScale(
             frame,
-            flags=self._flags,
-            scaleFactor=self._scaleFactor,
-            minNeighbors=self._minNeighbors,
-            minSize=self._minSize,
-            maxSize=self._maxSize
+            flags=self.__flags,
+            scaleFactor=self.__scaleFactor,
+            minNeighbors=self.__minNeighbors,
+            minSize=self.__minSize,
+            maxSize=self.__maxSize
         )
 
         return objects

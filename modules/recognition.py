@@ -36,15 +36,15 @@ class Recognizer(detection.Detector):
         recognizer = config.recognizer()
         file_ = pathname.get_recognizer_file(label)
 
-        self._label = label
-        self._hash = hash_label(label)
-        self._width = int(camera['width'])
-        self._height = int(camera['height'])
-        self._threshold = int(recognizer['threshold'])
-        self._rwidth = int(recognizer['width'])
-        self._rheight = int(recognizer['height'])
-        self._recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self._threshold)
-        self._recognizer.load(file_)
+        self.__label = label
+        self.__hash = hash_label(label)
+        self.__width = int(camera['width'])
+        self.__height = int(camera['height'])
+        self.__threshold = int(recognizer['threshold'])
+        self.__rwidth = int(recognizer['width'])
+        self.__rheight = int(recognizer['height'])
+        self.__recognizer = cv2.face.createLBPHFaceRecognizer(threshold=self.__threshold)
+        self.__recognizer.load(file_)
 
     def recognize(self, frame):
         confidences = []
@@ -54,15 +54,15 @@ class Recognizer(detection.Detector):
         for (x, y, w, h) in objects:
             face = imgproc.preprocess(
                 frame,
-                self._rwidth,
-                self._rheight,
+                self.__rwidth,
+                self.__rheight,
                 x, y, w, h
             )
 
-            predicted_label, confidence = self._recognizer.predict(face)
+            predicted_label, confidence = self.__recognizer.predict(face)
 
-            if predicted_label == self._hash:
-                labels.append(self._label)
+            if predicted_label == self.__hash:
+                labels.append(self.__label)
                 confidences.append(round(confidence))
             else:
                 labels.append('Unknown')
@@ -76,9 +76,9 @@ class Recognizer(detection.Detector):
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
 
         (iwidth, iheight) = image_pil.size
-        ar_height = int(self._width / (iwidth / iheight))
+        ar_height = int(self.__width / (iwidth / iheight))
 
-        image = cv2.resize(image_rgb, (self._width, ar_height))
+        image = cv2.resize(image_rgb, (self.__width, ar_height))
         objects, labels, confidences = self.recognize(image)
         return (image, objects, labels, confidences)
 
