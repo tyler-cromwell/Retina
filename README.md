@@ -19,10 +19,10 @@ The name comes from the part of the Human brain responsible for vision and learn
 
 ## Dependencies
 - Python 3.x
+- OpenCV >= 3.2.0
 - Numpy
 - Pillow
 - Tkinter (optional)
-- OpenCV > 3.2.0
 
 ## Recommended OpenCV dependencies
 - [Eigen3][eigen3]
