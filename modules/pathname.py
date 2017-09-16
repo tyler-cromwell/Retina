@@ -1,5 +1,5 @@
 #######################################################################
-# Copyright (C) 2017 Tyler Cromwell <tyler@csh.rit.edu>
+# Copyright (C) 2017 Tyler Cromwell <tjc6185@gmail.com>
 #
 # This file is part of Cerebrum.
 #
