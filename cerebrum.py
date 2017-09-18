@@ -38,14 +38,14 @@ def print_usage():
     """
     Displays program usage information.
     """
-    print('Usage:\t./cerebrum.py [--camera=INDEX] [--classifier=PATH] [--image=PATH] --label=NAME [--settings=NAME]')
-    print('  --help\t\tPrints this text')
-    print('  --camera=INDEX\tIndex of an attached camera (Optional)')
-    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
-    print('  --image=PATH\t\tPath to a still image (alternative to camera stream)')
+    print('Usage:\t./cerebrum.py [-c PATH] [-f PATH] [-i INDEX] --label=NAME [-s NAME]')
+    print('  -h --help\t\tPrints this text')
+    print('  -c --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
+    print('  -f --file=PATH\tPath to a still image (alternative to camera stream)')
     print('              \t\tIf specified without \'label\' option, will attempt to identify the face')
-    print('  --label=NAME\t\tThe name of the person\'s face to recognize')
-    print('  --settings=NAME\tThe name of a file located under \'settings/\'')
+    print('  -i --input=INDEX\tIndex of an attached camera (Optional)')
+    print('  -l --label=NAME\tThe name of the person\'s face to recognize')
+    print('  -s --settings=NAME\tThe name of a file located under \'settings/\'')
     print('                 \tSee \'settings/\', without \'.txt\' extension')
     exit(0)
 
@@ -63,8 +63,8 @@ def main():
     key = opt.default_settings()
 
     try:
-        short_opts = ['']
-        long_opts = ['help', 'camera=', 'classifier=', 'image=', 'label=', 'settings=']
+        short_opts = 'hc:f:i:l:s:'
+        long_opts = ['help', 'classifier=', 'file=', 'input=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print('Invalid argument: \"{}\"\n'.format(str(error)))
@@ -74,17 +74,17 @@ def main():
         print_usage()
 
     for o, a, in opts:
-        if o == '--help':
+        if o == '-h' or o == '--help':
             print_usage()
-        elif o == '--camera':
-            index = int(a)
-        elif o == '--classifier':
+        elif o == '-c' or o == '--classifier':
             classifier = opt.validate_file(a)
-        elif o == '--image':
+        elif o == '-f' or o == '--file':
             path = opt.validate_file(a)
-        elif o == '--label':
+        elif o == '-i' or o == '--input':
+            index = int(a)
+        elif o == '-l' or o == '--label':
             label = opt.validate_recognizer(a)
-        elif o == '--settings':
+        elif o == '-s' or o == '--settings':
             key = a
 
     if key not in settings.keys():

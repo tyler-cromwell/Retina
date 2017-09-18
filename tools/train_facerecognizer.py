@@ -37,9 +37,9 @@ def print_usage():
     """
     Displays program usage information.
     """
-    print('Usage:\t./train_facerecognizer.py --label=NAME')
-    print('  --help\t\tPrints this text')
-    print('  --label=NAME\t\tThe name of the person\'s face to recognize')
+    print('Usage:\t./train_facerecognizer.py -l NAME')
+    print('  -h --help\t\tPrints this text')
+    print('  -l --label=NAME\tThe name of the person\'s face to recognize')
     exit(0)
 
 
@@ -50,7 +50,7 @@ def main():
     label = None
 
     try:
-        short_opts = ['']
+        short_opts = 'hl:'
         long_opts = ['help', 'label=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
@@ -61,9 +61,9 @@ def main():
         print_usage()
 
     for o, a in opts:
-        if o == '--help':
+        if o == '-h' or o == '--help':
             print_usage()
-        elif o == '--label':
+        elif o == '-l' or o == '--label':
             label = opt.validate_training_dataset(a)
 
     if not label:
