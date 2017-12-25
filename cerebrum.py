@@ -91,30 +91,32 @@ def main():
     if key not in settings.keys():
         print('\n  Settings file \"{}\" not found!\n'.format(key))
         print_usage()
-    if not label:
-        print('\n  Label not specified!\n')
-        print_usage()
 
     # Initialize variables
     config = configuration.Config(settings[key])
-    recognizer = recognition.Recognizer(classifier, label, config)
     stream = camera.Camera(index, config)
-    window_name = stream.get_window_name()
     dwidth, dheight = misc.get_display_resolution()
+    window_name = str(stream)
 
     if path and not label:
         # Identify face in image
         identities = recognition.identify(path, classifier, config)
-        for i in identities:
-            print(i)
+        if len(identities) > 0:
+            for i in identities: print(i)
+        else:
+            print('No faces detected in:', path)
         return
     elif path and label:
         # Recognize in a still image
+        recognizer = recognition.Recognizer(classifier, label, config)
         image, objects, labels, confidences = recognizer.recognize_from_file(path)
         imgproc.draw_face_info(image, objects, labels, confidences)
         cv2.imshow(path, image)
         cv2.waitKey(0)
         return
+    elif not path and not label:
+        print('\n  Label not specified!\n')
+        print_usage()
     else:
         print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
         cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
@@ -123,6 +125,8 @@ def main():
         if not stream.open():
             print('Failed to open Camera', index)
             exit(1)
+
+    recognizer = recognition.Recognizer(classifier, label, config)
 
     while True:
         start = time.time()
@@ -142,7 +146,6 @@ def main():
 
         if key == 27:
             cv2.destroyWindow(window_name)
-            stream.release()
             break
         elif key == ord('f'):
             flags = flags ^ 1

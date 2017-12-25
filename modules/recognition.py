@@ -91,9 +91,10 @@ def identify(frame, classifier, config):
             label = f.split('.')[0]
             recognizer = Recognizer(classifier, label, config)
             image, objects, labels, confidences = recognizer.recognize_from_file(frame)
-            identities.append((labels[0], confidences[0]))
+            if len(labels) > 0:
+                identities.append((labels[0], confidences[0]))
 
-    return sorted(identities, key=lambda x: x[1])
+    return sorted(identities, key=lambda face: face[1])
 
 
 def hash_label(label):
