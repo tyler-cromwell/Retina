@@ -26,7 +26,7 @@ from . import pathname
 
 class Detector:
     def __init__(self, classifier, config):
-        detector = config.detector()
+        detector = config['Detector']
 
         if classifier:
             self.__classifier = cv2.CascadeClassifier(classifier)

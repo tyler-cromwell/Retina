@@ -32,8 +32,8 @@ from . import pathname
 class Recognizer(detection.Detector):
     def __init__(self, classifier, label, config):
         super().__init__(classifier, config)
-        camera = config.camera()
-        recognizer = config.recognizer()
+        camera = config['Camera']
+        recognizer = config['Recognizer']
         file_ = pathname.get_recognizer_file(label)
 
         self.__label = label

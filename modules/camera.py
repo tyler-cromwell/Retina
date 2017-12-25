@@ -22,7 +22,7 @@ import cv2
 
 class Camera():
     def __init__(self, source, config):
-        camera = config.camera()
+        camera = config['Camera']
         self.__source = source
         self.__camera = cv2.VideoCapture(source)
         self.__width = int(camera['width'])

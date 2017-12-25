@@ -34,11 +34,8 @@ class Config:
 
         self.__config = dict(self.__config)
 
-    def camera(self):
-        return self.__config['Camera']
-
-    def detector(self):
-        return self.__config['Detector']
-
-    def recognizer(self):
-        return self.__config['Recognizer']
+    def __getitem__(self, key):
+        if key in self.__config:
+            return self.__config[key]
+        else:
+            raise KeyError(key)
