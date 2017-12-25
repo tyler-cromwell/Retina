@@ -73,6 +73,7 @@ def main():
     if len(opts) == 0:
         print_usage()
 
+    # Process command-line arguments
     for o, a, in opts:
         if o == '-h' or o == '--help':
             print_usage()
@@ -90,39 +91,38 @@ def main():
     if key not in settings.keys():
         print('\n  Settings file \"{}\" not found!\n'.format(key))
         print_usage()
+    if not label:
+        print('\n  Label not specified!\n')
+        print_usage()
 
+    # Initialize variables
     config = configuration.Config(settings[key])
+    recognizer = recognition.Recognizer(classifier, label, config)
+    stream = camera.Camera(index, config)
+    window_name = stream.get_window_name()
+    dwidth, dheight = misc.get_display_resolution()
 
-    # Identify face in image
     if path and not label:
+        # Identify face in image
         identities = recognition.identify(path, classifier, config)
         for i in identities:
             print(i)
         return
-    elif not label:
-        print('\n  Label not specified!\n')
-        print_usage()
-
-    recognizer = recognition.Recognizer(classifier, label, config)
-
-    # Recognize in a still image
-    if path:
+    elif path and label:
+        # Recognize in a still image
         image, objects, labels, confidences = recognizer.recognize_from_file(path)
         imgproc.draw_face_info(image, objects, labels, confidences)
         cv2.imshow(path, image)
         cv2.waitKey(0)
         return
+    else:
+        print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
+        cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
+        cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
 
-    dwidth, dheight = misc.get_display_resolution()
-    stream = camera.Camera(index, config)
-    print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
-    window_name = 'Camera {:d}'.format(index)
-    cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
-
-    if not stream.open():
-        print('Failed to open Camera', index)
-        exit(1)
+        if not stream.open():
+            print('Failed to open Camera', index)
+            exit(1)
 
     while True:
         start = time.time()

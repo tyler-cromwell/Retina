@@ -30,11 +30,14 @@ class Camera():
         self.__camera.set(cv2.CAP_PROP_FRAME_WIDTH, self.__width)
         self.__camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self.__height)
 
+    def get_height(self):
+        return self.__height
+
     def get_width(self):
         return self.__width
 
-    def get_height(self):
-        return self.__height
+    def get_window_name(self):
+        return 'Camera {:d}'.format(self.__source)
 
     def open(self):
         if not self.__camera.isOpened():
