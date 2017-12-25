@@ -34,10 +34,11 @@ from modules import opt
 from modules import recognition
 
 
-def print_usage():
+def print_usage(message=None):
     """
     Displays program usage information.
     """
+    if message: print('>>>', message, end=' <<<\n')
     print('Usage:\t./cerebrum.py [-c PATH] [-f PATH] [-i INDEX] --label=NAME [-s NAME]')
     print('  -h --help\t\tPrints this text')
     print('  -c --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
@@ -54,43 +55,32 @@ def main():
     """
     Main function.
     """
-    classifier = None
-    flags = 0
-    index = 0
-    label = None
-    path = None
+    classifier, label, path = None, None, None
+    flags, index = 0, 0
     settings = opt.map_settings()
     key = opt.default_settings()
 
+    # Parse command-line arguments
     try:
         short_opts = 'hc:f:i:l:s:'
         long_opts = ['help', 'classifier=', 'file=', 'input=', 'label=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \"{}\"\n'.format(str(error)))
-        print_usage()
-
-    if len(opts) == 0:
-        print_usage()
+        print_usage('Invalid argument: \"{}\"'.format(str(error)))
 
     # Process command-line arguments
     for o, a, in opts:
-        if o == '-h' or o == '--help':
-            print_usage()
-        elif o == '-c' or o == '--classifier':
-            classifier = opt.validate_file(a)
-        elif o == '-f' or o == '--file':
-            path = opt.validate_file(a)
-        elif o == '-i' or o == '--input':
-            index = int(a)
-        elif o == '-l' or o == '--label':
-            label = opt.validate_recognizer(a)
-        elif o == '-s' or o == '--settings':
-            key = a
+        if o == '-h' or o == '--help':          print_usage()
+        elif o == '-c' or o == '--classifier':  classifier = opt.validate_file(a)
+        elif o == '-f' or o == '--file':        path = opt.validate_file(a)
+        elif o == '-i' or o == '--input':       index = int(a)
+        elif o == '-l' or o == '--label':       label = opt.validate_recognizer(a)
+        elif o == '-s' or o == '--settings':    key = a
 
-    if key not in settings.keys():
-        print('\n  Settings file \"{}\" not found!\n'.format(key))
+    if len(opts) == 0:
         print_usage()
+    elif key not in settings.keys():
+        print_usage('Settings file \"{}\" not found'.format(key))
 
     # Initialize variables
     config = configuration.Config(settings[key])
@@ -115,8 +105,7 @@ def main():
         cv2.waitKey(0)
         return
     elif not path and not label:
-        print('\n  Label not specified!\n')
-        print_usage()
+        print_usage('Label not specified')
     else:
         print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
         cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
