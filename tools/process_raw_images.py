@@ -42,12 +42,12 @@ def print_usage(message=None):
     """
     if message: print('>>>', message, end=' <<<\n')
     print('Usage:\t./process_raw_images.py [--classifier=PATH] --label=NAME [--settings=NAME] [--show]')
-    print('  --help\t\tPrints this text')
-    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
-    print('  --label=NAME\t\tThe name of the person\'s face dataset to create')
-    print('  --settings=NAME\tThe name of a file located under \'settings/\'')
+    print('  -h --help\tPrints this text')
+    print('  -c --classifier=PATH\tThe absolute path of a Face Detection classifier (Optional)')
+    print('  -l --label=NAME\tThe name of the person\'s face dataset to create')
+    print('  -s --settings=NAME\tThe name of a file located under \'settings/\'')
     print('        See \'settings/\', without \'.txt\' extension')
-    print('  --show\t\tOpens a window to show images being processed')
+    print('  -w --show\t\tOpens a window to show images being processed')
     exit(0)
 
 

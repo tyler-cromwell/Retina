@@ -39,11 +39,11 @@ def print_usage(message=None):
     """
     if message: print('>>>', message, end=' <<<\n')
     print('Usage:\t./compare_faces.py [--classifier=PATH] --label1=NAME --label2=NAME [--settings=NAME]')
-    print('  --help\t\tPrints this text')
-    print('  --classifier=PATH\tThe absolute path of a Face Detection classifier')
-    print('  --label1=NAME\t\tThe name of the person to compare FROM')
-    print('  --label2=NAME\t\tThe name of the person to compare TO')
-    print('  --settings=NAME\tThe name of a file located under \'settings/\'')
+    print('  -h --help\t\tPrints this text')
+    print('  -c --classifier=PATH\tThe absolute path of a Face Detection classifier')
+    print('  -l --label1=NAME\tThe name of the person to compare FROM')
+    print('  -k --label2=NAME\tThe name of the person to compare TO')
+    print('  -s --settings=NAME\tThe name of a file located under \'settings/\'')
     print('        See \'settings/\', without \'.txt\' extension')
     exit(0)
 
@@ -57,8 +57,8 @@ def main():
     key = opt.default_settings()
 
     try:
-        short_opts = 'hc:l:k:s:w'
-        long_opts = ['help', 'classifier=', 'label1=', 'label2=', 'settings=', 'show']
+        short_opts = 'hc:l:k:s'
+        long_opts = ['help', 'classifier=', 'label1=', 'label2=', 'settings=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
         print_usage('Invalid argument: \"{}\"'.format(str(error)))
