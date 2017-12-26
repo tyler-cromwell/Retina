@@ -1,6 +1,6 @@
 [Camera]
 width: 1600
-height: 1000
+height: 900
 
 [Detector]
 classifier: haarcascade_frontalface_default.xml
