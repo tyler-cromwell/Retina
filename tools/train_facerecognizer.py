@@ -33,10 +33,11 @@ from modules import pathname
 from modules import recognition
 
 
-def print_usage():
+def print_usage(message=None):
     """
     Displays program usage information.
     """
+    if message: print('>>>', message, end=' <<<\n')
     print('Usage:\t./train_facerecognizer.py -l NAME')
     print('  -h --help\t\tPrints this text')
     print('  -l --label=NAME\tThe name of the person\'s face to recognize')
@@ -54,21 +55,17 @@ def main():
         long_opts = ['help', 'label=']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \"{}\"\n'.format(str(error)))
-        print_usage()
+        print_usage('Invalid argument: \"{}\"'.format(str(error)))
+
+    for o, a in opts:
+        if o == '-h' or o == '--help':      print_usage()
+        elif o == '-l' or o == '--label':   label = opt.validate_training_dataset(a)
 
     if len(opts) == 0:
         print_usage()
 
-    for o, a in opts:
-        if o == '-h' or o == '--help':
-            print_usage()
-        elif o == '-l' or o == '--label':
-            label = opt.validate_training_dataset(a)
-
     if not label:
-        print('\n  Label not specified!\n')
-        print_usage()
+        print_usage('Label not specified!')
 
     # Initialize variables
     recognizer_path = pathname.get_recognizer_file(label)

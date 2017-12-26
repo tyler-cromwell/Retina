@@ -33,10 +33,11 @@ from modules import pathname
 from modules import recognition
 
 
-def print_usage():
+def print_usage(message=None):
     """
     Displays program usage information.
     """
+    if message: print('>>>', message, end=' <<<\n')
     print('Usage:\t./compare_faces.py [--classifier=PATH] --label1=NAME --label2=NAME [--settings=NAME]')
     print('  --help\t\tPrints this text')
     print('  --classifier=PATH\tThe absolute path of a Face Detection classifier')
@@ -51,49 +52,36 @@ def main():
     """
     Main function.
     """
-    label1 = None
-    label2 = None
-    classifier = None
+    label1, label2, classifier = None, None, None
     settings = opt.map_settings()
     key = opt.default_settings()
 
     try:
-        short_opts = ['']
+        short_opts = 'hc:l:k:s:w'
         long_opts = ['help', 'classifier=', 'label1=', 'label2=', 'settings=', 'show']
         opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
     except getopt.GetoptError as error:
-        print('Invalid argument: \"{}\"\n'.format(str(error)))
-        print_usage()
+        print_usage('Invalid argument: \"{}\"'.format(str(error)))
+
+    for o, a in opts:
+        if o == '-h' or o == '--help':          print_usage()
+        elif o == '-c' or o == '--classifier':  classifier = opt.validate_file(a)
+        elif o == '-l' or o == '--label1':      label1 = opt.validate_raw_dataset(a)
+        elif o == '-k' or o == '--label2':      label2 = opt.validate_raw_dataset(a)
+        elif o == '-s' or o == '--settings':    key = a
 
     if len(opts) == 0:
         print_usage()
-
-    for o, a in opts:
-        if o == '--help':
-            print_usage()
-        elif o == '--classifier':
-            classifier = opt.validate_file(a)
-        elif o == '--label1':
-            label1 = opt.validate_raw_dataset(a)
-        elif o == '--label2':
-            label2 = opt.validate_raw_dataset(a)
-        elif o == '--settings':
-            key = a
-
-    if not label1 or not label2:
-        print('\n  Label not specified!\n')
-        print_usage()
+    elif not label1 or not label2:
+        print_usage('Label not specified')
     elif key not in settings.keys():
-        print('\n  Settings not specified!\n')
-        print_usage()
+        print_usage('Settings not specified')
 
     # Initialize variables
     config = configuration.Config(settings[key])
     recognizer = recognition.Recognizer(classifier, label1, config)
     raw_path = pathname.get_raw_root(label2)
-    all_confidences = []
-    all_widths = []
-    all_heights = []
+    all_confidences, all_widths, all_heights = [], [], []
     percent = 0
 
     # Get the absolute path of each image
@@ -137,7 +125,7 @@ def main():
     print('Face Size Summary:')
     print('  Max:\t   {}x{}'.format(numpy.max(all_widths), numpy.max(all_heights)))
     print('  Min:\t   {}x{}'.format(numpy.min(all_widths), numpy.min(all_heights)))
-    print('  Median:  {}x{}'.format(numpy.median(all_widths), numpy.median(all_heights)))
+    print('  Median:  {}x{}'.format(int(numpy.median(all_widths)), int(numpy.median(all_heights))))
     print('  Mean:\t   {}x{}'.format(numpy.mean(all_widths), numpy.mean(all_heights)))
     print('  StdDev:  {}x{}'.format(numpy.std(all_widths), numpy.std(all_heights)))
 
