@@ -93,12 +93,12 @@ def main():
 
     detector = detection.Detector(classifier, config)
     stream = camera.Camera(CAMERA_DEFAULT, config)
-    print('Capture Resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
+    print('Capture Resolution: {:d}x{:d}'.format(stream.width, stream.height))
 
     p = 0
     window_name = str(stream)
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-    cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
+    cv2.moveWindow(window_name, (dwidth - stream.width) // 2, 0)
 
     if not stream.open():
         print('Failed to open Camera', CAMERA_DEFAULT)

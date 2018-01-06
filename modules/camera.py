@@ -37,10 +37,12 @@ class Camera():
     def __str__(self):
         return 'Camera {:d}'.format(self.__source)
 
-    def get_height(self):
+    @property
+    def height(self):
         return self.__height
 
-    def get_width(self):
+    @property
+    def width(self):
         return self.__width
 
     def open(self):

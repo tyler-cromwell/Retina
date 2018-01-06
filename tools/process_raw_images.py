@@ -106,11 +106,7 @@ def main():
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
-
-        (iwidth, iheight) = image_pil.size
-        aspect_ratio = iwidth / iheight
-
-        image = cv2.resize(image_rgb, (stream.get_width(), int(stream.get_width() / aspect_ratio)))
+        image = cv2.resize(image_rgb, (stream.width, int(stream.width / (image_pil.size[0] / image_pil.size[1]))))
         (x, y, w, h) = (0, 0, 0, 0)
 
         try:

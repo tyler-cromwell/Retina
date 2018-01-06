@@ -107,9 +107,9 @@ def main():
     elif not path and not label:
         print_usage('Label not specified')
     else:
-        print('Capture resolution: {:d}x{:d}'.format(stream.get_width(), stream.get_height()))
+        print('Capture resolution: {:d}x{:d}'.format(stream.width, stream.height))
         cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
-        cv2.moveWindow(window_name, (dwidth - stream.get_width()) // 2, 0)
+        cv2.moveWindow(window_name, (dwidth - stream.width) // 2, 0)
 
         if not stream.open():
             print('Failed to open Camera', index)
@@ -118,19 +118,13 @@ def main():
     recognizer = recognition.Recognizer(classifier, label, config)
 
     while True:
-        start = time.time()
         retval, frame = stream.read()
 
         if flags & 1:
             objects, labels, confidences = recognizer.recognize(frame)
             imgproc.draw_face_info(frame, objects, labels, confidences)
 
-        end = time.time()
-        fps = 1 // (end - start)
-
-        cv2.putText(frame, 'FPS: [{:d}]'.format(int(fps)), (0, 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         cv2.imshow(window_name, frame)
-
         key = cv2.waitKey(1)
 
         if key == 27:
