@@ -47,8 +47,7 @@ class Recognizer(detection.Detector):
         self.__recognizer.load(file_)
 
     def recognize(self, frame):
-        confidences = []
-        labels = []
+        confidences, labels = [], []
         objects = self.detect(frame)
 
         for (x, y, w, h) in objects:
@@ -74,10 +73,7 @@ class Recognizer(detection.Detector):
         image_pil = Image.open(path)
         image_org = numpy.array(image_pil)
         image_rgb = cv2.cvtColor(image_org, cv2.COLOR_BGR2RGB)
-
-        (iwidth, iheight) = image_pil.size
-        ar_height = int(self.__width / (iwidth / iheight))
-
+        ar_height = int(self.__width / (image_pil.size[0] / image_pil.size[1]))
         image = cv2.resize(image_rgb, (self.__width, ar_height))
         objects, labels, confidences = self.recognize(image)
         return (image, objects, labels, confidences)
@@ -91,6 +87,7 @@ def identify(frame, classifier, config):
             label = f.split('.')[0]
             recognizer = Recognizer(classifier, label, config)
             image, objects, labels, confidences = recognizer.recognize_from_file(frame)
+
             if len(labels) > 0:
                 identities.append((labels[0], confidences[0]))
 
