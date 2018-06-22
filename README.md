@@ -1,9 +1,7 @@
 # Retina
 
 ## What is Retina?
-Retina is a Face Recognition application. It uses OpenCV and has "optimizied" settings for running on several of my machines.<br/>
-<br/>
-The name comes from the part of the Human brain responsible for vision and learning.
+Retina is a Face Recognition application. It uses OpenCV and has "optimizied" settings for running on several of my machines.
 
 ## Project Hierarchy
 - `data` - Permanent and temporary data used for detection and recognition.
