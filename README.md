@@ -1,7 +1,7 @@
-# Cerebrum
+# Retina
 
-## What is Cerebrum?
-Cerebrum is a Face Recognition application. It uses OpenCV and has "optimizied" settings for running on several of my machines.<br/>
+## What is Retina?
+Retina is a Face Recognition application. It uses OpenCV and has "optimizied" settings for running on several of my machines.<br/>
 <br/>
 The name comes from the part of the Human brain responsible for vision and learning.
 
@@ -15,7 +15,7 @@ The name comes from the part of the Human brain responsible for vision and learn
   - `recognizers` - Face recognizer models.
 - `modules` - Internal data models and helper functions.
 - `settings` - Machine specific settings for video capture, detection, and recognition.
-- `tools` - Various tools for working with Cerebrum.
+- `tools` - Various tools for working with Retina.
 
 ## Dependencies
 - Python 3.x
